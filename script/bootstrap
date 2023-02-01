@@ -1,0 +1,45 @@
+# Dependency and tooling installation
+# See https://github.com/github/scripts-to-rule-them-all
+
+#!/usr/bin/env bash
+
+set -eou pipefail
+
+function check_prerequisites {
+  echo '* Checking prerequisites'
+
+  if [[ -d $HOME/.nvm ]] ; then
+    source "$NVM_DIR/nvm.sh"
+  else
+    echo '  - Node version manager missing (https://github.com/nvm-sh/nvm)'
+    echo '    This is optional but scripts will work better if it is present.'
+  fi
+
+  return 0
+}
+
+function prepare_node {
+  echo '* Setting up node env'
+
+  if command -v nvm &> /dev/null; then
+    nvm use --install
+  else
+    echo "  - Using node version $(node -v) ($(which node))"
+  fi
+}
+
+function install_node_dependencies {
+  echo '* Installing node dependencies'
+  npm install
+}
+
+# navigate to root of repo
+pushd $(git rev-parse --show-toplevel) > /dev/null
+
+check_prerequisites || exit 1
+
+prepare_node && \
+install_node_dependencies
+
+# back to where we were
+popd > /dev/null

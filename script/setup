@@ -1,0 +1,14 @@
+# Setup to initial state
+# See https://github.com/github/scripts-to-rule-them-all
+
+#!/usr/bin/env bash
+
+set -eou pipefail
+
+# navigate to root of repo
+pushd $(git rev-parse --show-toplevel) > /dev/null
+
+script/bootstrap
+
+# back to where we were
+popd > /dev/null
