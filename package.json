@@ -1,0 +1,27 @@
+{
+  "name": "ocx",
+  "version": "0.3.0",
+  "description": "A collection of libraries and binaries for converting Open Cap Table Format (OCF) packages to Excel",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepublish": "tsc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/captable/ocx.git"
+  },
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/captable/ocx/issues"
+  },
+  "homepage": "https://github.com/captable/ocx#readme",
+  "devDependencies": {
+    "typescript": "^4.9.5"
+  },
+  "engines": {
+    "npm": "^9.4"
+  }
+}
