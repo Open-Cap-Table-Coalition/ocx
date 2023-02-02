@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Setup to initial state
+# Run tests
 # See https://github.com/github/scripts-to-rule-them-all
 
 set -eou pipefail
@@ -8,7 +8,7 @@ set -eou pipefail
 # navigate to root of repo
 pushd $(git rev-parse --show-toplevel) > /dev/null
 
-script/bootstrap
+npm test -- $@
 
 # back to where we were
 popd > /dev/null

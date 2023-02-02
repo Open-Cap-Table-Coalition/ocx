@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Setup to initial state
+# Update after pulling new changes
 # See https://github.com/github/scripts-to-rule-them-all
 
 set -eou pipefail

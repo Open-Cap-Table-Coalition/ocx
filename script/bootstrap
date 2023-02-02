@@ -1,7 +1,7 @@
+#!/usr/bin/env bash
+
 # Dependency and tooling installation
 # See https://github.com/github/scripts-to-rule-them-all
-
-#!/usr/bin/env bash
 
 set -eou pipefail
 
