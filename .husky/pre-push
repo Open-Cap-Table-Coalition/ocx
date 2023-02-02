@@ -2,7 +2,8 @@
 . "$(dirname -- "$0")/_/husky.sh"
 
 echo "* Stashing uncommited changes"
-git stash push --include-untracked --message "husky pre-push stash"
+_STASH_NAME="husky.pre-push.$(date +%s)"
+git stash push --include-untracked --message "$_STASH_NAME"
 
 echo "* Pulling main"
 git pull --rebase origin main
@@ -16,4 +17,4 @@ if ! ./script/test ; then
   false
 fi
 
-git stash pop
+git stash pop $(git stash list | grep "$_STASH_NAME" | cut -d: -f1) || true
