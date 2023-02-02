@@ -6,9 +6,10 @@ git stash push --include-untracked --message "husky pre-push stash"
 
 echo "* Pulling main"
 git pull --rebase origin main
+./script/update
 
 echo "* Running tests"
-if ! npm test; then
+if ! ./script/test ; then
   echo '  - Committed changes do not pass tests, please fix before pushing.'
   echo '    Your uncommitted changes are stashed and can be restored by'
   echo '    running `git stash pop`.'
