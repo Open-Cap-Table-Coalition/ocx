@@ -1,0 +1,18 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+echo "* Stashing uncommited changes"
+git stash push --include-untracked --message "husky pre-push stash"
+
+echo "* Pulling main"
+git pull --rebase origin main
+
+echo "* Running tests"
+if ! npm test; then
+  echo '  - Committed changes do not pass tests, please fix before pushing.'
+  echo '    Your uncommitted changes are stashed and can be restored by'
+  echo '    running `git stash pop`.'
+  false
+fi
+
+git stash pop
