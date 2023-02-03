@@ -20,6 +20,18 @@ The `script` folder follows the ["Scripts to Rule Them All"][scripts] pattern;
 for example you should be able to run `script/update` every time you pull new
 changes or checkout a different branch.
 
+### Running the CLI
+
+If you want to run the `ocf2ocx` CLI based on what is in your local code,
+there are two ways.
+
+1. `npm run cli` will build the TypeScript and then invoke the build output.
+   Note to pass options you will need a `--` to keep `npm` from capturing them;
+   e.g.: `npm run cli --version` will give you the version of `npm` you are
+   using, `npm run cli -- --version` will output the version of the CLI.
+2. `npm link` will make `ocf2ocx` globally available -- but you will need to
+   remember to run `npm run build` to apply your updates.
+
 ### Development Process
 
 For initial development, we will be using [Ship / Show / Ask][ssa]. Because of
