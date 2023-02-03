@@ -4,14 +4,14 @@
   "description": "A collection of libraries and binaries for converting Open Cap Table Format (OCF) packages to Excel",
   "main": "dist/index.js",
   "bin": {
-    "ocf2ocx": "dist/cli/index.js"
+    "ocf2ocx": "dist/src/cli/index.js"
   },
   "types": "dist/index.d.ts",
   "scripts": {
     "prepack": "npm run build",
     "prepare": "husky install",
     "test": "jest --passWithNoTests",
-    "cli": "npm run build && node dist/cli/index.js",
+    "cli": "npm run build && node dist/src/cli/index.js",
     "build": "tsc",
     "prettier": "prettier --ignore-unknown --write",
     "lint": "eslint --max-warnings=0 --ext .js,.ts .",

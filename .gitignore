@@ -11,3 +11,7 @@ package-lock.json
 # TypeScript
 # - compiler output
 dist
+
+# Excel files are ignored in general because we'll
+# likely make a lot of them when tinkering
+*.xlsx
