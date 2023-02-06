@@ -1,7 +1,10 @@
 import Workbook from "./workbook";
 
+import OCFPackage from "./ocf-package";
+
 const OCX = {
-  Workbook: Workbook,
+  OCFPackage,
+  Workbook,
 };
 
 export default OCX;
