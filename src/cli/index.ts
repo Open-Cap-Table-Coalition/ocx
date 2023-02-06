@@ -6,6 +6,8 @@ import { version } from "../../package.json";
 import Excel from "exceljs";
 import OCX from "../";
 
+import * as pipeline from "./pipeline-steps";
+
 const program = new Command();
 
 program
@@ -14,7 +16,11 @@ program
   .version(version)
   .showHelpAfterError()
   .argument("<src>", "Directory or .zip archive containing OCF Manifest File")
-  .action((/* src */) => {
+  .action((src) => {
+    const files = pipeline.extractFilesetFromPath(src);
+
+    /* const ocfpkg = */ OCX.OCFPackage.createFromFileset(files);
+
     const workbook = new Excel.Workbook();
     new OCX.Workbook(workbook);
     workbook.xlsx.writeFile("ocf2ocx.xlsx").then(() => {
