@@ -17,15 +17,25 @@ program
   .showHelpAfterError()
   .argument("<src>", "Directory or .zip archive containing OCF Manifest File")
   .action((src) => {
-    const files = pipeline.extractFilesetFromPath(src);
+    try {
+      console.log(`* Searching ${src} for a manifest file`);
+      const files = pipeline.extractFilesetFromPath(src);
+      const ocfpkg = OCX.OCFPackage.createFromFileset(files);
+      console.log(`  Found OCF Manifest File ${ocfpkg.manifestFile.path}`);
 
-    /* const ocfpkg = */ OCX.OCFPackage.createFromFileset(files);
-
-    const workbook = new Excel.Workbook();
-    new OCX.Workbook(workbook);
-    workbook.xlsx.writeFile("ocf2ocx.xlsx").then(() => {
-      console.log("wrote to ocf2ocx.xlsx");
-    });
+      const workbook = new Excel.Workbook();
+      new OCX.Workbook(workbook);
+      workbook.xlsx.writeFile("ocf2ocx.xlsx").then(() => {
+        console.log("wrote to ocf2ocx.xlsx");
+      });
+    } catch (e: unknown) {
+      if (e instanceof Error) {
+        console.error(e.message);
+      } else {
+        console.error("Unknown error occurred.");
+      }
+      process.exit(1);
+    }
   });
 
 program.parse();

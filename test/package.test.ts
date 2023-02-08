@@ -58,16 +58,17 @@ describe("ocf-package", () => {
     });
 
     test("load succeeds if a valid manifest file is found, even if a malformed JSON file is found first", () => {
-      const ocfpkg = () =>
-        OCX.OCFPackage.createFromFileset([
-          mockManifestFile({}),
-          mockManifestFile({
-            readAsText: () => {
-              "{ ";
-            },
-          }),
-        ]);
-      expect(ocfpkg()).toBeInstanceOf(OCX.OCFPackage);
+      const ocfpkg = OCX.OCFPackage.createFromFileset([
+        mockManifestFile({}),
+        mockManifestFile({
+          readAsText: () => {
+            "{ ";
+          },
+        }),
+      ]);
+
+      expect(ocfpkg).toBeInstanceOf(OCX.OCFPackage);
+      expect(ocfpkg.manifestFile.path).toBe(mockManifestFile({}).path);
     });
   });
 });

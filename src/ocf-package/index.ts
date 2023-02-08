@@ -1,7 +1,7 @@
 interface File {
-  path: string;
-  sizeInBytes: number;
-  readAsText: () => string;
+  readonly path: string;
+  readonly sizeInBytes: number;
+  readonly readAsText: () => string;
 }
 
 class OCFPackage {
@@ -47,7 +47,7 @@ class OCFPackage {
     return false;
   }
 
-  private constructor(private manifestFile: File) {}
+  private constructor(public readonly manifestFile: File) {}
 }
 
 export default OCFPackage;
