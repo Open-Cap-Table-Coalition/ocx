@@ -1,10 +1,11 @@
-# OCX Tools
+# Open Cap Table Format -> Excel Conversion Tools
+
+This repository houses the code necessary to convert a set of [Open Cap Table
+Format][ocf] files into a standardized "OCX" Excel spreadsheet. The primary
+product produced is a command-line tool, `ocf2ocx`, but the underlying
+components of this tool are intended to also be directly usable.
 
 ## Architecture
-
-_TODO_
-
-## Testing
 
 _TODO_
 
@@ -13,17 +14,22 @@ _TODO_
 ### Getting Started
 
 If you have [Node Version Manager][nvm] (`nvm`) installed, you can get started
-by running `script/setup` from the root of the repository. You can then
-verify your setup is successful by running `script/test`.
+by running `script/setup` from the root of the repository. You can then verify
+your setup is successful by running `script/test`.
 
 The `script` folder follows the ["Scripts to Rule Them All"][scripts] pattern;
 for example you should be able to run `script/update` every time you pull new
 changes or checkout a different branch.
 
+### Testing
+
+Jest tests are in the `test` folder and can be run via `script/test`, or by
+running `npm test`.
+
 ### Running the CLI
 
-If you want to run the `ocf2ocx` CLI based on what is in your local code,
-there are two ways.
+If you want to run the `ocf2ocx` CLI based on what is in your local code, there
+are two ways.
 
 1. `npm run cli` will build the TypeScript and then invoke the build output.
    Note to pass options you will need a `--` to keep `npm` from capturing them;
@@ -53,3 +59,4 @@ included in the package.json as a dependency; you can run using `npx adr`.
 [scripts]: https://github.com/github/scripts-to-rule-them-all
 [ssa]: https://martinfowler.com/articles/ship-show-ask.html
 [husky]: https://typicode.github.io/husky
+[ocf]: https://open-cap-table-coalition.github.io/Open-Cap-Format-OCF/
