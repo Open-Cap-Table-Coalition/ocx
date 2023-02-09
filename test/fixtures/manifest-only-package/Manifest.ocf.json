@@ -1,0 +1,20 @@
+{
+  "ocf_version": "1.0.0",
+  "file_type": "OCF_MANIFEST_FILE",
+  "issuer": {
+    "object_type": "ISSUER",
+    "id": "d3373e0a-4dd9-430f-8a56-3281f2800ede",
+    "legal_name": "ACME Industries",
+    "formation_date": "2017-07-14",
+    "country_of_formation": "US"
+  },
+  "as_of": "2022-03-22",
+  "generated_at": "2022-03-22T01:23:45-06:00",
+  "stock_plans_files": [],
+  "stock_legend_templates_files": [],
+  "stock_classes_files": [],
+  "transactions_files": [],
+  "stakeholders_files": [],
+  "vesting_terms_files": [],
+  "valuations_files": []
+}
