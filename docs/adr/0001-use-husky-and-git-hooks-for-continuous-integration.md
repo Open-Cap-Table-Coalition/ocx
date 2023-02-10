@@ -9,10 +9,10 @@ Date: 2023-02-02
 ## Context
 
 During early development, the team is adopting
-["Ship / Show / Ask"](https://martinfowler.com/articles/ship-show-ask.html)
-as its collaboration model. In both **Ship** and **Show**, developers will
-be pushing changes to `main` directly, or merging without approval of a
-second developer.
+["Ship / Show / Ask"](https://martinfowler.com/articles/ship-show-ask.html) as
+its collaboration model. In both **Ship** and **Show**, developers will be
+pushing changes to `main` directly, or merging without approval of a second
+developer.
 
 As a new project, there is no Continuous Integration (CI) solution in place.
 
