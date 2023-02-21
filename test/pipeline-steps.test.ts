@@ -67,7 +67,7 @@ describe("extractFilesetFromPath", () => {
   }
 
   afterAll(() => {
-    fs.rmdirSync(emptyDirectoryPath, { recursive: true });
+    fs.rmSync(emptyDirectoryPath, { recursive: true });
     fs.unlinkSync(exampleFilePath);
   });
 });
