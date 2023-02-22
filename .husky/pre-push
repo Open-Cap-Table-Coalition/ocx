@@ -1,8 +1,9 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
-echo "* Stashing uncommited changes"
 _STASH_NAME="husky.pre-push.$(date +%s)"
+
+echo "* Stashing uncommited changes ($_STASH_NAME)"
 git stash push --include-untracked --message "$_STASH_NAME"
 
 echo "* Pulling main"
@@ -17,4 +18,7 @@ if ! ./script/test ; then
   false
 fi
 
-git stash pop $(git stash list | grep "$_STASH_NAME" | cut -d: -f1) || true
+if git stash list | grep "$_STASH_NAME"; then
+  echo "* Restoring stashed changes ($_STASH_NAME)"
+  git stash pop $(git stash list | grep "$_STASH_NAME" | cut -d: -f1)
+fi
