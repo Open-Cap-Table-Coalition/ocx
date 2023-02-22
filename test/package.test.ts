@@ -88,6 +88,19 @@ describe("ocf-package", () => {
     });
   });
 
+  describe("object enumeration", () => {
+    test("issuer is emitted", () => {
+      const fixture = extractFilesetFromPath(
+        fixturePath("manifest-only-package")
+      );
+      const ocfpkg = OCX.OCFPackage.createFromFileset(fixture);
+
+      const firstObject = ocfpkg.objects().next().value;
+      expect(firstObject?.id).toBe("d3373e0a-4dd9-430f-8a56-3281f2800ede");
+      expect(firstObject?.object_type).toBe("ISSUER");
+    });
+  });
+
   function fixturePath(fixtureName: string) {
     return `test/fixtures/${fixtureName}`;
   }
