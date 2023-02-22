@@ -14,7 +14,7 @@ describe("ocf-package", () => {
     };
   }
 
-  describe("load from fileset", () => {
+  describe("loading from fileset", () => {
     test("load fails if fileset is empty", () => {
       const ocfpkg = () => OCX.OCFPackage.createFromFileset([]);
 
@@ -74,16 +74,18 @@ describe("ocf-package", () => {
     });
   });
 
-  describe("loads timestamps", () => {
-    const fixture = extractFilesetFromPath(
-      fixturePath("manifest-only-package")
-    );
-    const ocfpkg = OCX.OCFPackage.createFromFileset(fixture);
+  describe("manifest data", () => {
+    test("timestamp properties", () => {
+      const fixture = extractFilesetFromPath(
+        fixturePath("manifest-only-package")
+      );
+      const ocfpkg = OCX.OCFPackage.createFromFileset(fixture);
 
-    expect(ocfpkg.asOfDate).toEqual(new Date("2022-03-22"));
-    expect(ocfpkg.generatedAtTimestamp).toEqual(
-      new Date("2022-03-22T01:23:45-06:00")
-    );
+      expect(ocfpkg.asOfDate).toEqual(new Date("2022-03-22"));
+      expect(ocfpkg.generatedAtTimestamp).toEqual(
+        new Date("2022-03-22T01:23:45-06:00")
+      );
+    });
   });
 
   function fixturePath(fixtureName: string) {

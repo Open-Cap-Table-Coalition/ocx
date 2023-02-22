@@ -22,7 +22,9 @@ program
       const files = pipeline.extractFilesetFromPath(src);
       const ocfpkg = OCX.OCFPackage.createFromFileset(files);
       console.log(`- Found OCF Manifest File ${ocfpkg.manifestFile.path}`);
-      console.log(`  Effective Date: ${ocfpkg.asOfDate.toLocaleDateString()}`);
+
+      const model = new OCX.Model(ocfpkg.asOfDate, ocfpkg.generatedAtTimestamp);
+      console.log(`  Effective Date: ${model.asOfDate.toLocaleDateString()}`);
 
       const workbook = new Excel.Workbook();
       new OCX.Workbook(workbook);
