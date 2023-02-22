@@ -21,7 +21,8 @@ program
       console.log(`* Searching ${src} for a manifest file`);
       const files = pipeline.extractFilesetFromPath(src);
       const ocfpkg = OCX.OCFPackage.createFromFileset(files);
-      console.log(`  Found OCF Manifest File ${ocfpkg.manifestFile.path}`);
+      console.log(`- Found OCF Manifest File ${ocfpkg.manifestFile.path}`);
+      console.log(`  Effective Date: ${ocfpkg.asOfDate.toLocaleDateString()}`);
 
       const workbook = new Excel.Workbook();
       new OCX.Workbook(workbook);

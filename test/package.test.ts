@@ -1,5 +1,7 @@
 import { describe, expect, test } from "@jest/globals";
 
+import { extractFilesetFromPath } from "../src/cli/pipeline-steps";
+
 import OCX from "../src";
 
 describe("ocf-package", () => {
@@ -71,4 +73,20 @@ describe("ocf-package", () => {
       expect(ocfpkg.manifestFile.path).toBe(mockManifestFile({}).path);
     });
   });
+
+  describe("loads timestamps", () => {
+    const fixture = extractFilesetFromPath(
+      fixturePath("manifest-only-package")
+    );
+    const ocfpkg = OCX.OCFPackage.createFromFileset(fixture);
+
+    expect(ocfpkg.asOfDate).toEqual(new Date("2022-03-22"));
+    expect(ocfpkg.generatedAtTimestamp).toEqual(
+      new Date("2022-03-22T01:23:45-06:00")
+    );
+  });
+
+  function fixturePath(fixtureName: string) {
+    return `test/fixtures/${fixtureName}`;
+  }
 });

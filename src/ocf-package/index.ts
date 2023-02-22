@@ -5,8 +5,8 @@ interface File {
 }
 
 class OCFPackage {
-  // TODO this probably isn't the right way to do this but it got the job done
-  // quickly
+  // This probably isn't the right way to define new error types
+  // but it got the job done quickly.
   static NoManifestFound = new Error("No manifest file found");
   static MultipleManifestFilesFound = new Error(
     "Multiple manifest files found"
@@ -29,6 +29,9 @@ class OCFPackage {
     return new OCFPackage(files[0]);
   }
 
+  readonly asOfDate: Date;
+  readonly generatedAtTimestamp: Date;
+
   private static isDotJson(file: File): boolean {
     return file.path.toLowerCase().endsWith(".json");
   }
@@ -47,7 +50,13 @@ class OCFPackage {
     return false;
   }
 
-  private constructor(public readonly manifestFile: File) {}
+  private constructor(public readonly manifestFile: File) {
+    // We parsed the file once before in `couldBeManifestFile`; we
+    // could avoid that double parse
+    const parsedManifest = JSON.parse(manifestFile.readAsText());
+    this.asOfDate = new Date(parsedManifest.as_of);
+    this.generatedAtTimestamp = new Date(parsedManifest.generated_at);
+  }
 }
 
 export default OCFPackage;
