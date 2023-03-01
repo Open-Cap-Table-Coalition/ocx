@@ -4,6 +4,8 @@ import { Command } from "commander";
 import { version } from "../../package.json";
 
 import Excel from "exceljs";
+import ExcelJSWriter from "../workbook/exceljs-writer";
+
 import OCX from "../";
 
 import * as pipeline from "./pipeline-steps";
@@ -27,7 +29,7 @@ program
       console.log(`  Effective Date: ${model.asOfDate.toLocaleDateString()}`);
 
       const workbook = new Excel.Workbook();
-      new OCX.Workbook(workbook, model);
+      new OCX.Workbook(new ExcelJSWriter(workbook), model);
       workbook.xlsx.writeFile("ocf2ocx.xlsx").then(() => {
         console.log("wrote to ocf2ocx.xlsx");
       });

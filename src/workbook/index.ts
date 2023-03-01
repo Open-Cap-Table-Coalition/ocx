@@ -7,9 +7,7 @@ interface WorkbookWriter {
 }
 
 interface WorksheetWriter {
-  getCell: (address: string) => {
-    value: Date;
-  };
+  setDateCell: (address: string, value: Date) => void;
 }
 
 // This is a case of "the client defines the interface". The
@@ -20,13 +18,13 @@ interface Model {
   asOfDate: Date;
 }
 
-export class Workbook {
+class Workbook {
   constructor(private workbook: WorkbookWriter, private model: Model) {
     this.workbook.addWorksheet("Summary Snapshot");
     this.workbook.addWorksheet("Detailed Snapshot");
     this.workbook.addWorksheet("Voting by SH Group");
     const context = this.workbook.addWorksheet("Context");
-    context.getCell("A1").value = model.asOfDate;
+    context.setDateCell("A1", model.asOfDate);
   }
 }
 
