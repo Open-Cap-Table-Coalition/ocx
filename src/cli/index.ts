@@ -27,7 +27,7 @@ program
       console.log(`  Effective Date: ${model.asOfDate.toLocaleDateString()}`);
 
       const workbook = new Excel.Workbook();
-      new OCX.Workbook(workbook);
+      new OCX.Workbook(workbook, model);
       workbook.xlsx.writeFile("ocf2ocx.xlsx").then(() => {
         console.log("wrote to ocf2ocx.xlsx");
       });
