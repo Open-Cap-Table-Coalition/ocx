@@ -1,4 +1,5 @@
 import Excel from "exceljs";
+import { Style } from "exceljs";
 
 class ExcelJSWriter {
   private readonly workbook;
@@ -35,26 +36,37 @@ class ExcelJSWorksheet {
 class ExcelJSLinePrinter {
   private col: number;
   private row: number;
+  private currentStyle: Partial<Style>;
 
   constructor(private readonly worksheet: Excel.Worksheet) {
     this.col = 0;
     this.row = 0;
+    this.currentStyle = {};
   }
 
-  public nextRow(/* opts: object*/) {
+  public nextRow(opts?: { height?: number }) {
     this.col = 0;
     this.row += 1;
+
+    if (opts?.height) {
+      this.worksheet.getRow(this.row).height = opts.height;
+    }
     return this;
   }
 
-  public createRange(name: string /*, style: object*/) {
+  public createRange(name: string, style?: Partial<Style>) {
     console.log(name);
+    this.currentStyle = style || {};
     return this;
   }
 
-  public addCell(value: Date | string | null /*, opts?: object*/) {
+  public addCell(value: Date | string | null, style?: Partial<Style>) {
     this.col += 1;
     this.worksheet.getCell(this.row, this.col).value = value;
+    this.worksheet.getCell(this.row, this.col).style = {
+      ...this.currentStyle,
+      ...style,
+    };
     return this;
   }
 

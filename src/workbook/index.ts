@@ -1,3 +1,5 @@
+import { Borders, Fill, Font, Style } from "exceljs";
+
 // WorkbookWriter is our own interface that reduces / limits
 // the interface of ExcelJS to the pieces we use. This means
 // there will be less to implement in the future if we need
@@ -15,9 +17,12 @@ interface WorksheetWriter {
 }
 
 interface WorksheetLinePrinter {
-  nextRow: (/*opts: { height?: number }*/) => WorksheetLinePrinter;
-  createRange: (name: string /*, style: object */) => WorksheetLinePrinter;
-  addCell: (value: Date | string /*, opts?: object */) => WorksheetLinePrinter;
+  nextRow: (opts?: { height?: number }) => WorksheetLinePrinter;
+  createRange: (name: string, style?: Partial<Style>) => WorksheetLinePrinter;
+  addCell: (
+    value: Date | string,
+    style?: Partial<Style>
+  ) => WorksheetLinePrinter;
   addBlankCell: () => WorksheetLinePrinter;
   addBlankCells: (n: number) => WorksheetLinePrinter;
   rangeComplete: () => void;
@@ -43,15 +48,48 @@ class Workbook {
   private addContextSheet() {
     const context = this.workbook.addWorksheet2("Context");
 
-    context.nextRow(/*{ height: 59.5 }*/);
+    context.nextRow({ height: 59.5 });
 
     context
-      .createRange("context.header" /*, { fillColor: "#2a39c4" }*/)
-      .addCell(this.model.asOfDate /*, { name: "context.header.date" } */)
+      .createRange("context.header", {
+        fill: this.headerFill,
+        font: this.headerFont,
+        border: this.headerBorder,
+      })
+      .addCell(this.model.asOfDate, {
+        alignment: { vertical: "bottom", horizontal: "right" },
+        numFmt: "yyyy.mm.dd;@",
+      })
       .addBlankCell()
-      .addCell("Context")
+      .addCell("Context", {
+        alignment: { vertical: "middle", horizontal: "left" },
+      })
       .addBlankCells(3)
       .rangeComplete();
+  }
+
+  private get headerFill(): Fill {
+    return {
+      type: "pattern",
+      pattern: "solid",
+      fgColor: { argb: "2a39c4" },
+    };
+  }
+
+  private get headerFont(): Partial<Font> {
+    return {
+      name: "Calibri",
+      bold: true,
+      color: { argb: "ffffff" },
+      size: 10,
+    };
+  }
+
+  private get headerBorder(): Partial<Borders> {
+    return {
+      top: { style: "thin" },
+      bottom: { style: "double" },
+    };
   }
 }
 
