@@ -4,10 +4,23 @@
 // to create a different writer.
 interface WorkbookWriter {
   addWorksheet: (name?: string) => WorksheetWriter;
+  addWorksheet2: (name?: string) => WorksheetLinePrinter;
 }
 
 interface WorksheetWriter {
   setDateCell: (address: string, value: Date) => void;
+  setStringCell: (address: string, value: string) => void;
+
+  setRowHeight: (row: number, height: number) => void;
+}
+
+interface WorksheetLinePrinter {
+  nextRow: (/*opts: { height?: number }*/) => WorksheetLinePrinter;
+  createRange: (name: string /*, style: object */) => WorksheetLinePrinter;
+  addCell: (value: Date | string /*, opts?: object */) => WorksheetLinePrinter;
+  addBlankCell: () => WorksheetLinePrinter;
+  addBlankCells: (n: number) => WorksheetLinePrinter;
+  rangeComplete: () => void;
 }
 
 // This is a case of "the client defines the interface". The
@@ -23,8 +36,22 @@ class Workbook {
     this.workbook.addWorksheet("Summary Snapshot");
     this.workbook.addWorksheet("Detailed Snapshot");
     this.workbook.addWorksheet("Voting by SH Group");
-    const context = this.workbook.addWorksheet("Context");
-    context.setDateCell("A1", model.asOfDate);
+
+    this.addContextSheet();
+  }
+
+  private addContextSheet() {
+    const context = this.workbook.addWorksheet2("Context");
+
+    context.nextRow(/*{ height: 59.5 }*/);
+
+    context
+      .createRange("context.header" /*, { fillColor: "#2a39c4" }*/)
+      .addCell(this.model.asOfDate /*, { name: "context.header.date" } */)
+      .addBlankCell()
+      .addCell("Context")
+      .addBlankCells(3)
+      .rangeComplete();
   }
 }
 
