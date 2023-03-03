@@ -55,7 +55,6 @@ class ExcelJSLinePrinter {
   }
 
   public createRange(name: string, style?: Partial<Style>) {
-    console.log(name);
     this.currentStyle = style || {};
     return this;
   }
@@ -84,7 +83,7 @@ class ExcelJSLinePrinter {
     this.col += 1;
     this.worksheet.getCell(this.row, this.col).value = {
       formula,
-      date1904: false, // I don't actually know what this does but the type system requires it.
+      date1904: false, // Unclear what this is for but it is required by the type system
     };
     this.worksheet.getCell(this.row, this.col).style = {
       ...this.currentStyle,

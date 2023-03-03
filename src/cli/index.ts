@@ -28,6 +28,10 @@ program
       const model = new OCX.Model(ocfpkg.asOfDate, ocfpkg.generatedAtTimestamp);
       console.log(`  Effective Date: ${model.asOfDate.toLocaleDateString()}`);
 
+      for (const object of ocfpkg.objects()) {
+        model.consume(object);
+      }
+
       const workbook = new Excel.Workbook();
       new OCX.Workbook(new ExcelJSWriter(workbook), model);
       workbook.xlsx.writeFile("ocf2ocx.xlsx").then(() => {

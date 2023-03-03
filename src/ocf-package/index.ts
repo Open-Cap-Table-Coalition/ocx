@@ -60,7 +60,6 @@ class OCFPackage {
   public *objects(): Generator<OCFObject> {
     // first the issuer from the manifest
     const parsedManifest = JSON.parse(this.manifestFile.readAsText());
-
     if (isOCFObject(parsedManifest.issuer)) {
       yield parsedManifest.issuer;
     } else {

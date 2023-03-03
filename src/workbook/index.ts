@@ -38,6 +38,7 @@ interface WorksheetLinePrinter {
 // create the interface we need here.
 interface Model {
   asOfDate: Date;
+  issuerName: string;
 }
 
 class Workbook {
@@ -64,7 +65,12 @@ class Workbook {
         alignment: { vertical: "bottom", horizontal: "right" },
         numFmt: "yyyy.mm.dd;@",
       })
-      .addBlankCell();
+      .addBlankCell()
+      .addCell(`${this.model.issuerName} Summary Capitalization`, {
+        alignment: { vertical: "middle", horizontal: "left" },
+      })
+      .addBlankCells(3)
+      .rangeComplete();
   }
 
   private addContextSheet() {

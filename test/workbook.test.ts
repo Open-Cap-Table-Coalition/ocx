@@ -8,6 +8,7 @@ import ExcelJSWriter from "../src/workbook/exceljs-writer";
 describe("workbook", () => {
   const fakeModel = {
     asOfDate: new Date("2022-07-14"),
+    issuerName: "ACME Corp",
   };
 
   test("worksheets", () => {
@@ -25,6 +26,9 @@ describe("workbook", () => {
     new OCX.Workbook(new ExcelJSWriter(excel), fakeModel);
 
     expect(excel.worksheets[0].getCell("A1").formula).toEqual("Context!A1");
+    expect(excel.worksheets[0].getCell("C1").value).toBe(
+      `${fakeModel.issuerName} Summary Capitalization`
+    );
   });
 
   describe("Context sheet", () => {
