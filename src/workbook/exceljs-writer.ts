@@ -79,6 +79,20 @@ class ExcelJSLinePrinter {
     }
     return this;
   }
+
+  public addFormulaCell(formula: string, style?: Partial<Style>) {
+    this.col += 1;
+    this.worksheet.getCell(this.row, this.col).value = {
+      formula,
+      date1904: false, // I don't actually know what this does but the type system requires it.
+    };
+    this.worksheet.getCell(this.row, this.col).style = {
+      ...this.currentStyle,
+      ...style,
+    };
+    return this;
+  }
+
   public rangeComplete() {
     // could add the range to the actual worksheet
     // or could just keep track of in our own structure

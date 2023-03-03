@@ -20,6 +20,13 @@ describe("workbook", () => {
     expect(excel.worksheets[3].name).toBe("Context");
   });
 
+  describe("Summary snapshot sheet", () => {
+    const excel = new Excel.Workbook();
+    new OCX.Workbook(new ExcelJSWriter(excel), fakeModel);
+
+    expect(excel.worksheets[0].getCell("A1").formula).toEqual("Context!A1");
+  });
+
   describe("Context sheet", () => {
     const excel = new Excel.Workbook();
     new OCX.Workbook(new ExcelJSWriter(excel), fakeModel);

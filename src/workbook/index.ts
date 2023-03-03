@@ -23,6 +23,10 @@ interface WorksheetLinePrinter {
     value: Date | string,
     style?: Partial<Style>
   ) => WorksheetLinePrinter;
+  addFormulaCell: (
+    formula: string,
+    style?: Partial<Style>
+  ) => WorksheetLinePrinter;
   addBlankCell: () => WorksheetLinePrinter;
   addBlankCells: (n: number) => WorksheetLinePrinter;
   rangeComplete: () => void;
@@ -38,11 +42,29 @@ interface Model {
 
 class Workbook {
   constructor(private workbook: WorkbookWriter, private model: Model) {
-    this.workbook.addWorksheet("Summary Snapshot");
+    this.addSummarySheet();
     this.workbook.addWorksheet("Detailed Snapshot");
     this.workbook.addWorksheet("Voting by SH Group");
 
     this.addContextSheet();
+  }
+
+  private addSummarySheet() {
+    const summary = this.workbook.addWorksheet2("Summary Snapshot");
+
+    summary.nextRow({ height: 59.5 });
+
+    summary
+      .createRange("summary.header", {
+        fill: this.headerFill,
+        font: this.headerFont,
+        border: this.headerBorder,
+      })
+      .addFormulaCell("Context!A1", {
+        alignment: { vertical: "bottom", horizontal: "right" },
+        numFmt: "yyyy.mm.dd;@",
+      })
+      .addBlankCell();
   }
 
   private addContextSheet() {
