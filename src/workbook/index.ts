@@ -44,9 +44,8 @@ interface Model {
 class Workbook {
   constructor(private workbook: WorkbookWriter, private model: Model) {
     this.addSummarySheet();
-    this.workbook.addWorksheet("Detailed Snapshot");
-    this.workbook.addWorksheet("Voting by SH Group");
-
+    this.addDetailSheet();
+    this.addVotingDetailsSheet();
     this.addContextSheet();
   }
 
@@ -67,6 +66,52 @@ class Workbook {
       })
       .addBlankCell()
       .addCell(`${this.model.issuerName} Summary Capitalization`, {
+        alignment: { vertical: "middle", horizontal: "left" },
+      })
+      .addBlankCells(3)
+      .rangeComplete();
+  }
+
+  private addDetailSheet() {
+    const details = this.workbook.addWorksheet2("Detailed Snapshot");
+
+    details.nextRow({ height: 59.5 });
+
+    details
+      .createRange("details.header", {
+        fill: this.headerFill,
+        font: this.headerFont,
+        border: this.headerBorder,
+      })
+      .addFormulaCell("Context!A1", {
+        alignment: { vertical: "bottom", horizontal: "right" },
+        numFmt: "yyyy.mm.dd;@",
+      })
+      .addBlankCell()
+      .addCell(`${this.model.issuerName} Capitalization by Holder`, {
+        alignment: { vertical: "middle", horizontal: "left" },
+      })
+      .addBlankCells(3)
+      .rangeComplete();
+  }
+
+  private addVotingDetailsSheet() {
+    const voting = this.workbook.addWorksheet2("Voting by SH Group");
+
+    voting.nextRow({ height: 59.5 });
+
+    voting
+      .createRange("voting.header", {
+        fill: this.headerFill,
+        font: this.headerFont,
+        border: this.headerBorder,
+      })
+      .addFormulaCell("Context!A1", {
+        alignment: { vertical: "bottom", horizontal: "right" },
+        numFmt: "yyyy.mm.dd;@",
+      })
+      .addBlankCell()
+      .addCell("Voting Power by Shareholder Group", {
         alignment: { vertical: "middle", horizontal: "left" },
       })
       .addBlankCells(3)
