@@ -25,5 +25,6 @@ describe("workbook", () => {
     new OCX.Workbook(new ExcelJSWriter(excel), fakeModel);
 
     expect(excel.worksheets[3].getCell("A1").value).toEqual(fakeModel.asOfDate);
+    expect(excel.worksheets[3].getCell("C1").value).toBe("Context");
   });
 });
