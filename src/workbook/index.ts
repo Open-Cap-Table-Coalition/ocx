@@ -1,7 +1,6 @@
-import { Borders, Fill, Font } from "exceljs";
-
 import StakeholderSheet from "./stakeholder-sheet";
 import { Model, WorksheetLinePrinter } from "./interfaces";
+import Styles from "./styles";
 
 // WorkbookWriter is our own interface that reduces / limits
 // the interface of ExcelJS to the pieces we use. This means
@@ -31,9 +30,9 @@ class Workbook {
 
     summary
       .createRange("summary.header", {
-        fill: this.headerFill,
-        font: this.headerFont,
-        border: this.headerBorder,
+        fill: Styles.headerFill,
+        font: Styles.headerFont,
+        border: Styles.headerBorder,
       })
       .addFormulaCell("Context!A1", {
         alignment: { vertical: "bottom", horizontal: "right" },
@@ -54,9 +53,9 @@ class Workbook {
 
     voting
       .createRange("voting.header", {
-        fill: this.headerFill,
-        font: this.headerFont,
-        border: this.headerBorder,
+        fill: Styles.headerFill,
+        font: Styles.headerFont,
+        border: Styles.headerBorder,
       })
       .addFormulaCell("Context!A1", {
         alignment: { vertical: "bottom", horizontal: "right" },
@@ -77,9 +76,9 @@ class Workbook {
 
     context
       .createRange("context.header", {
-        fill: this.headerFill,
-        font: this.headerFont,
-        border: this.headerBorder,
+        fill: Styles.headerFill,
+        font: Styles.headerFont,
+        border: Styles.headerBorder,
       })
       .addCell(this.model.asOfDate, {
         alignment: { vertical: "bottom", horizontal: "right" },
@@ -91,30 +90,6 @@ class Workbook {
       })
       .addBlankCells(3)
       .rangeComplete();
-  }
-
-  private get headerFill(): Fill {
-    return {
-      type: "pattern",
-      pattern: "solid",
-      fgColor: { argb: "2a39c4" },
-    };
-  }
-
-  private get headerFont(): Partial<Font> {
-    return {
-      name: "Calibri",
-      bold: true,
-      color: { argb: "ffffff" },
-      size: 10,
-    };
-  }
-
-  private get headerBorder(): Partial<Borders> {
-    return {
-      top: { style: "thin" },
-      bottom: { style: "double" },
-    };
   }
 }
 
