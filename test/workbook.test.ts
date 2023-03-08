@@ -16,7 +16,7 @@ describe("workbook", () => {
     new OCX.Workbook(new ExcelJSWriter(excel), fakeModel);
 
     expect(excel.worksheets[0].name).toBe("Summary Snapshot");
-    expect(excel.worksheets[1].name).toBe("Detailed Snapshot");
+    expect(excel.worksheets[1].name).toBe("Stakeholder Snapshot");
     expect(excel.worksheets[2].name).toBe("Voting by SH Group");
     expect(excel.worksheets[3].name).toBe("Context");
   });

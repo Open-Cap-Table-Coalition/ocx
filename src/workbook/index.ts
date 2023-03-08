@@ -1,4 +1,7 @@
-import { Borders, Fill, Font, Style } from "exceljs";
+import { Borders, Fill, Font } from "exceljs";
+
+import StakeholderSheet from "./stakeholder-sheet";
+import { Model, WorksheetLinePrinter } from "./interfaces";
 
 // WorkbookWriter is our own interface that reduces / limits
 // the interface of ExcelJS to the pieces we use. This means
@@ -8,35 +11,15 @@ interface WorkbookWriter {
   addWorksheet: (name?: string) => WorksheetLinePrinter;
 }
 
-interface WorksheetLinePrinter {
-  nextRow: (opts?: { height?: number }) => WorksheetLinePrinter;
-  createRange: (name: string, style?: Partial<Style>) => WorksheetLinePrinter;
-  addCell: (
-    value: Date | string,
-    style?: Partial<Style>
-  ) => WorksheetLinePrinter;
-  addFormulaCell: (
-    formula: string,
-    style?: Partial<Style>
-  ) => WorksheetLinePrinter;
-  addBlankCell: () => WorksheetLinePrinter;
-  addBlankCells: (n: number) => WorksheetLinePrinter;
-  rangeComplete: () => void;
-}
-
-// This is a case of "the client defines the interface". The
-// OCX.Model class is the concrete implementation, but we don't
-// want OCX packages to depend directly on one another. So, we
-// create the interface we need here.
-interface Model {
-  asOfDate: Date;
-  issuerName: string;
-}
-
 class Workbook {
+  private readonly stakeholders: StakeholderSheet;
+
   constructor(private workbook: WorkbookWriter, private model: Model) {
     this.addSummarySheet();
-    this.addDetailSheet();
+    this.stakeholders = new StakeholderSheet(
+      workbook.addWorksheet("Stakeholder Snapshot"),
+      this.model
+    );
     this.addVotingDetailsSheet();
     this.addContextSheet();
   }
@@ -58,29 +41,6 @@ class Workbook {
       })
       .addBlankCell()
       .addCell(`${this.model.issuerName} Summary Capitalization`, {
-        alignment: { vertical: "middle", horizontal: "left" },
-      })
-      .addBlankCells(3)
-      .rangeComplete();
-  }
-
-  private addDetailSheet() {
-    const details = this.workbook.addWorksheet("Detailed Snapshot");
-
-    details.nextRow({ height: 59.5 });
-
-    details
-      .createRange("details.header", {
-        fill: this.headerFill,
-        font: this.headerFont,
-        border: this.headerBorder,
-      })
-      .addFormulaCell("Context!A1", {
-        alignment: { vertical: "bottom", horizontal: "right" },
-        numFmt: "yyyy.mm.dd;@",
-      })
-      .addBlankCell()
-      .addCell(`${this.model.issuerName} Capitalization by Holder`, {
         alignment: { vertical: "middle", horizontal: "left" },
       })
       .addBlankCells(3)
