@@ -1,6 +1,6 @@
 import { describe, expect, test } from "@jest/globals";
 
-import OCX from "../src";
+import OCX from "src";
 
 describe("model", () => {
   test("creation", () => {

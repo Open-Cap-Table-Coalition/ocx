@@ -2,8 +2,8 @@ import { describe, expect, test } from "@jest/globals";
 
 import Excel from "exceljs";
 
-import OCX from "../src";
-import ExcelJSWriter from "../src/workbook/exceljs-writer";
+import OCX from "src";
+import ExcelJSWriter from "src/workbook/exceljs-writer";
 
 describe("workbook", () => {
   const fakeModel = {

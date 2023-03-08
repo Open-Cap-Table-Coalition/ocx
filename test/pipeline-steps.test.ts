@@ -1,5 +1,5 @@
 import { describe, expect, test, afterAll } from "@jest/globals";
-import { extractFilesetFromPath } from "../src/cli/pipeline-steps";
+import { extractFilesetFromPath } from "src/cli/pipeline-steps";
 import fs from "fs";
 
 describe("extractFilesetFromPath", () => {

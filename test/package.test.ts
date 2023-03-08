@@ -2,7 +2,7 @@ import { describe, expect, test } from "@jest/globals";
 
 import { extractFilesetFromPath } from "../src/cli/pipeline-steps";
 
-import OCX from "../src";
+import OCX from "src";
 
 describe("ocf-package", () => {
   function mockManifestFile(attrOverrides: object) {
