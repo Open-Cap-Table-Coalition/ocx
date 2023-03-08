@@ -5,15 +5,7 @@ import { Borders, Fill, Font, Style } from "exceljs";
 // there will be less to implement in the future if we need
 // to create a different writer.
 interface WorkbookWriter {
-  addWorksheet: (name?: string) => WorksheetWriter;
-  addWorksheet2: (name?: string) => WorksheetLinePrinter;
-}
-
-interface WorksheetWriter {
-  setDateCell: (address: string, value: Date) => void;
-  setStringCell: (address: string, value: string) => void;
-
-  setRowHeight: (row: number, height: number) => void;
+  addWorksheet: (name?: string) => WorksheetLinePrinter;
 }
 
 interface WorksheetLinePrinter {
@@ -50,7 +42,7 @@ class Workbook {
   }
 
   private addSummarySheet() {
-    const summary = this.workbook.addWorksheet2("Summary Snapshot");
+    const summary = this.workbook.addWorksheet("Summary Snapshot");
 
     summary.nextRow({ height: 59.5 });
 
@@ -73,7 +65,7 @@ class Workbook {
   }
 
   private addDetailSheet() {
-    const details = this.workbook.addWorksheet2("Detailed Snapshot");
+    const details = this.workbook.addWorksheet("Detailed Snapshot");
 
     details.nextRow({ height: 59.5 });
 
@@ -96,7 +88,7 @@ class Workbook {
   }
 
   private addVotingDetailsSheet() {
-    const voting = this.workbook.addWorksheet2("Voting by SH Group");
+    const voting = this.workbook.addWorksheet("Voting by SH Group");
 
     voting.nextRow({ height: 59.5 });
 
@@ -119,7 +111,7 @@ class Workbook {
   }
 
   private addContextSheet() {
-    const context = this.workbook.addWorksheet2("Context");
+    const context = this.workbook.addWorksheet("Context");
 
     context.nextRow({ height: 59.5 });
 

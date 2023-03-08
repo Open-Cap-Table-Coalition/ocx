@@ -8,28 +8,8 @@ class ExcelJSWriter {
     this.workbook = workbook || new Excel.Workbook();
   }
 
-  public addWorksheet(name?: string): ExcelJSWorksheet {
-    return new ExcelJSWorksheet(this.workbook.addWorksheet(name));
-  }
-
-  public addWorksheet2(name?: string): ExcelJSLinePrinter {
+  public addWorksheet(name?: string): ExcelJSLinePrinter {
     return new ExcelJSLinePrinter(this.workbook.addWorksheet(name));
-  }
-}
-
-class ExcelJSWorksheet {
-  constructor(private readonly worksheet: Excel.Worksheet) {}
-
-  public setDateCell(address: string, value: Date) {
-    this.worksheet.getCell(address).value = value;
-  }
-
-  public setStringCell(address: string, value: string) {
-    this.worksheet.getCell(address).value = value;
-  }
-
-  public setRowHeight(row: number, height: number) {
-    this.worksheet.getRow(row).height = height;
   }
 }
 
