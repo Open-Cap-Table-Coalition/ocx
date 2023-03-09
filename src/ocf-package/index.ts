@@ -51,7 +51,7 @@ class OCFPackage {
       throw this.MultipleManifestFilesFound;
     }
 
-    return new OCFPackage(files[0]);
+    return new OCFPackage(candidateFiles[0]);
   }
 
   readonly asOfDate: Date;

@@ -11,7 +11,7 @@ interface StakeholderModel {
 export interface Model {
   asOfDate: Date;
   issuerName: string;
-  stakeholders: Array<StakeholderModel>;
+  stakeholders?: Array<StakeholderModel>;
 }
 
 export interface WorksheetLinePrinter {
