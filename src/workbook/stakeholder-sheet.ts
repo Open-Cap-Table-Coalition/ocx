@@ -40,7 +40,7 @@ class StakeholderSheet {
 
     for (const stakeholder of model.stakeholders || []) {
       writer.nextRow();
-      writer.addCell(stakeholder.legal_name);
+      writer.addCell(stakeholder.display_name);
     }
 
     worksheet.nextRow();

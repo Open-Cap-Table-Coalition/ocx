@@ -32,10 +32,10 @@ describe(StakeholderSheet, () => {
       issuerName: "Fred",
       stakeholders: Array.of(
         {
-          legal_name: "Stockholder 1",
+          display_name: "Stockholder 1",
         },
         {
-          legal_name: "Optionholder 42",
+          display_name: "Optionholder 42",
         }
       ),
     });
