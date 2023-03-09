@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 
 import { Command } from "commander";
-import { version } from "package.json";
+import { version } from "../../package.json";
 
 import Excel from "exceljs";
-import ExcelJSWriter from "src/workbook/exceljs-writer";
+import ExcelJSWriter from "../../src/workbook/exceljs-writer";
 
-import OCX from "src";
+import OCX from "../../src";
 
 import * as pipeline from "./pipeline-steps";
 
