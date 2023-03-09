@@ -9,6 +9,7 @@ describe("workbook", () => {
   const fakeModel = {
     asOfDate: new Date("2022-07-14"),
     issuerName: "ACME Corp",
+    stakeholders: [],
   };
 
   test("worksheets", () => {

@@ -9,7 +9,7 @@ class StakeholderSheet {
     worksheet.nextRow({ height: 59.5 });
 
     worksheet
-      .createRange("details.header", {
+      .createRange("stakeholders.header", {
         fill: Styles.headerFill,
         font: Styles.headerFont,
         border: Styles.headerBorder,
@@ -24,6 +24,26 @@ class StakeholderSheet {
       })
       .addBlankCells(3)
       .rangeComplete();
+
+    worksheet.nextRow();
+
+    const writer = worksheet
+      .createRange("stakeholders.holdings")
+      .createRange("subheader", {
+        fill: Styles.subheaderFill,
+        font: Styles.subheaderFont,
+        border: Styles.subheaderBorder,
+        alignment: { vertical: "bottom", horizontal: "center" },
+      })
+      .addCell("Stakeholder")
+      .addCell("Stakeholder Group");
+
+    for (const stakeholder of model.stakeholders || []) {
+      writer.nextRow();
+      writer.addCell(stakeholder.legal_name);
+    }
+
+    worksheet.nextRow();
   }
 }
 

@@ -24,6 +24,29 @@ class Styles {
       bottom: { style: "double" },
     };
   }
+
+  public static get subheaderFill(): Fill {
+    return {
+      type: "pattern",
+      pattern: "solid",
+      fgColor: { argb: "ddebf7" },
+    };
+  }
+
+  public static get subheaderFont(): Partial<Font> {
+    return {
+      name: "Calibri",
+      bold: true,
+      color: { argb: "000000" },
+      size: 10,
+    };
+  }
+
+  public static get subheaderBorder(): Partial<Borders> {
+    return {
+      bottom: { style: "thin" },
+    };
+  }
 }
 
 export default Styles;
