@@ -47,6 +47,7 @@
   },
   "dependencies": {
     "commander": "^10.0.0",
-    "exceljs": "^4.3.0"
+    "exceljs": "^4.3.0",
+    "odiff": "^1.4.3"
   }
 }
