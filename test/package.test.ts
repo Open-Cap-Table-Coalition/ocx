@@ -114,6 +114,7 @@ describe("ocf-package", () => {
       }
 
       expect((objectIds.get("STAKEHOLDER") ?? new Set()).size).toBe(22);
+      expect((objectIds.get("STOCK_CLASS") ?? new Set()).size).toBe(3);
     });
   });
 

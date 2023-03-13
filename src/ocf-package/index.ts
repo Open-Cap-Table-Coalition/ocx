@@ -93,6 +93,33 @@ class OCFPackage {
         }
       }
     }
+
+    if ("stock_classes_files" in parsedManifest) {
+      for (const eachFile of parsedManifest.stock_classes_files) {
+        if ("filepath" in eachFile) {
+          // find filepath in full file set and load
+          const file = this.allFiles.find((f) =>
+            f.isSameAs(eachFile["filepath"])
+          );
+          if (file) {
+            try {
+              const parsedFile = JSON.parse(file.readAsText());
+              if ("items" in parsedFile) {
+                for (const item of parsedFile["items"]) {
+                  if (isOCFObject(item)) {
+                    yield item;
+                  } else {
+                    console.warn("Encountered non-OCF object");
+                  }
+                }
+              }
+            } catch (e: unknown) {
+              // TODO: LOG and skip? Fail?
+            }
+          }
+        }
+      }
+    }
   }
 
   private static isDotJson(file: File): boolean {
