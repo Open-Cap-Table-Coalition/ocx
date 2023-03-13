@@ -1,0 +1,31 @@
+{
+  "file_type": "OCF_TRANSACTIONS_FILE",
+  "items": [
+    {
+      "object_type": "TX_WARRANT_ISSUANCE",
+      "id": "a34ee0fb-2343-49f4-9356-8239c2a16926-issuance",
+      "security_id": "a34ee0fb-2343-49f4-9356-8239c2a16926",
+      "date": "2016-10-29",
+      "security_law_exemptions": [],
+      "stakeholder_id": "ec00ed3e-f15c-45e4-b0b2-09fc9d13b41c",
+      "custom_id": "W-1",
+      "quantity": "275000",
+      "exercise_triggers": [],
+      "purchase_price": { "amount": "0.0000000000", "currency": "USD" },
+      "exercise_price": { "amount": "0.1000000000", "currency": "USD" }
+    },
+    {
+      "object_type": "TX_WARRANT_ISSUANCE",
+      "id": "33472e12-f188-49bb-8f02-b0fe7fa3535c-issuance",
+      "security_id": "33472e12-f188-49bb-8f02-b0fe7fa3535c",
+      "date": "2019-07-15",
+      "security_law_exemptions": [],
+      "stakeholder_id": "24fac0db-13b5-4928-88f8-07da4f45b8e3",
+      "custom_id": "W-2",
+      "quantity": "100000",
+      "exercise_triggers": [],
+      "purchase_price": { "amount": "0.0000000000", "currency": "USD" },
+      "exercise_price": { "amount": "0.1000000000", "currency": "USD" }
+    }
+  ]
+}
