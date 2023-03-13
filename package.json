@@ -31,8 +31,10 @@
   },
   "homepage": "https://github.com/captable/ocx#readme",
   "devDependencies": {
+    "@types/big.js": "^6.1.6",
     "@typescript-eslint/eslint-plugin": "^5.50.0",
     "@typescript-eslint/parser": "^5.50.0",
+    "big.js": "^6.2.1",
     "eslint": "^8.33.0",
     "husky": "^8.0.3",
     "jest": "^29.4.1",

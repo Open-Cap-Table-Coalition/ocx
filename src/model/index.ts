@@ -4,6 +4,8 @@ import {
   StockClassModel,
 } from "src/workbook/interfaces";
 
+import Calculations from "./calculations";
+
 class Model implements WorkbookModel {
   public issuerName = "";
   private stakeholders_: StakeholderModel[] = [];
@@ -64,12 +66,30 @@ class Model implements WorkbookModel {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private STOCK_CLASS(value: any) {
+    const conversion_ratio = this.getStockClassConversionRatio(
+      value?.conversion_rights
+    );
+
     this.stockClasses_.push({
       id: value?.id,
       display_name: value?.name,
       is_preferred: value?.class_type !== "COMMON",
-      conversion_ratio: 1.0,
+      conversion_ratio,
     });
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  private getStockClassConversionRatio(value: any): number {
+    const mechanism = Array.of(value).flat()[0]?.conversion_mechanism;
+    if (mechanism?.ratio === null || mechanism?.type !== "RATIO_CONVERSION") {
+      return 1;
+    }
+
+    // TODO: The toNumber call here is necessary because we have `number` on the
+    // interface between the model and the workbook. However, we should probably
+    // look at putting the `Big` types directly on the interface to avoid
+    // precision loss.
+    return Calculations.convertRatioToDecimalNumber(mechanism.ratio).toNumber();
   }
 }
 

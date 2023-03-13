@@ -46,15 +46,44 @@ describe(OCX.Model, () => {
 
     test("common stock", () => {
       const model = subject();
-      const fakeStockClassA = fakeCommonStockClass("Class A");
-      model.consume(fakeStockClassA);
+      const commonStockClass = fakeCommonStockClass("Class A");
+      model.consume(commonStockClass);
       expect(model.stockClasses).toHaveLength(1);
       const modelClass = model.stockClasses[0];
 
-      expect(modelClass.id).toBe(fakeStockClassA.id);
-      expect(modelClass.display_name).toBe(fakeStockClassA.name);
+      expect(modelClass.id).toBe(commonStockClass.id);
+      expect(modelClass.display_name).toBe(commonStockClass.name);
       expect(modelClass.is_preferred).toBe(false);
       expect(modelClass.conversion_ratio).toEqual(1);
+    });
+
+    test("preferred stock w/ no conversion rights", () => {
+      const model = subject();
+      const preferredStockClass = fakePreferredStockClass("Series Seed");
+      model.consume(preferredStockClass);
+      expect(model.stockClasses).toHaveLength(1);
+      const modelClass = model.stockClasses[0];
+
+      expect(modelClass.id).toBe(preferredStockClass.id);
+      expect(modelClass.display_name).toBe(preferredStockClass.name);
+      expect(modelClass.is_preferred).toBe(true);
+      expect(modelClass.conversion_ratio).toEqual(1);
+    });
+
+    test("preferred stock w/ conversion rights", () => {
+      const model = subject();
+      const preferredStockClass = fakePreferredStockClass("Series A", {
+        convertsFrom: "1",
+        to: "3",
+      });
+      model.consume(preferredStockClass);
+      expect(model.stockClasses).toHaveLength(1);
+      const modelClass = model.stockClasses[0];
+
+      expect(modelClass.id).toBe(preferredStockClass.id);
+      expect(modelClass.display_name).toBe(preferredStockClass.name);
+      expect(modelClass.is_preferred).toBe(true);
+      expect(modelClass.conversion_ratio).toEqual(3);
     });
   });
 
@@ -65,6 +94,32 @@ describe(OCX.Model, () => {
       name: `${id} Common Stock`,
       board_approval_date: new Date(),
       class_type: "COMMON",
+    };
+  }
+
+  function fakePreferredStockClass(
+    id: string,
+    conversionRatio?: { convertsFrom: string; to: string }
+  ) {
+    return {
+      id: id,
+      object_type: "STOCK_CLASS",
+      name: `${id} Preferred Stock`,
+      board_approval_date: new Date(),
+      class_type: "PREFERRED",
+      conversion_rights: conversionRatio
+        ? [
+            {
+              conversion_mechanism: {
+                type: "RATIO_CONVERSION",
+                ratio: {
+                  numerator: conversionRatio.to,
+                  denominator: conversionRatio.convertsFrom,
+                },
+              },
+            },
+          ]
+        : [],
     };
   }
 
