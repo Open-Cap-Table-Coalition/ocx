@@ -6,6 +6,9 @@ function adaptEntryToFileInterface(basepath: string, entry: fs.Dirent) {
 
   return {
     path: fullpath,
+    isSameAs: (containerRelativePath: string) =>
+      path.resolve(fullpath) ===
+      path.resolve(path.join(basepath, containerRelativePath)),
     sizeInBytes: fs.statSync(fullpath).size,
     readAsText: () => fs.readFileSync(fullpath, "utf8"),
   };

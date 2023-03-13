@@ -1,5 +1,6 @@
 interface File {
   readonly path: string;
+  readonly isSameAs: (containerRelativePath: string) => boolean;
   readonly sizeInBytes: number;
   readonly readAsText: () => string;
 }
@@ -51,7 +52,7 @@ class OCFPackage {
       throw this.MultipleManifestFilesFound;
     }
 
-    return new OCFPackage(candidateFiles[0]);
+    return new OCFPackage(candidateFiles[0], files);
   }
 
   readonly asOfDate: Date;
@@ -64,6 +65,33 @@ class OCFPackage {
       yield parsedManifest.issuer;
     } else {
       console.warn("Encountered non-OCF object");
+    }
+
+    if ("stakeholders_files" in parsedManifest) {
+      for (const eachFile of parsedManifest.stakeholders_files) {
+        if ("filepath" in eachFile) {
+          // find filepath in full file set and load
+          const file = this.allFiles.find((f) =>
+            f.isSameAs(eachFile["filepath"])
+          );
+          if (file) {
+            try {
+              const parsedFile = JSON.parse(file.readAsText());
+              if ("items" in parsedFile) {
+                for (const item of parsedFile["items"]) {
+                  if (isOCFObject(item)) {
+                    yield item;
+                  } else {
+                    console.warn("Encountered non-OCF object");
+                  }
+                }
+              }
+            } catch (e: unknown) {
+              // TODO: LOG and skip? Fail?
+            }
+          }
+        }
+      }
     }
   }
 
@@ -85,7 +113,10 @@ class OCFPackage {
     return false;
   }
 
-  private constructor(public readonly manifestFile: File) {
+  private constructor(
+    public readonly manifestFile: File,
+    private readonly allFiles: File[]
+  ) {
     // We parsed the file once before in `couldBeManifestFile`; we
     // could avoid that double parse
     const parsedManifest = JSON.parse(manifestFile.readAsText());

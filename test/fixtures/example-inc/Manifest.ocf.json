@@ -1,0 +1,68 @@
+{
+  "ocf_version": "1.0.0-b1",
+  "file_type": "OCF_MANIFEST_FILE",
+  "as_of": "2023-03-02",
+  "generated_at": "2023-03-02T14:40:04.118575Z",
+  "issuer": {
+    "object_type": "ISSUER",
+    "id": "d88b734e-cf3a-47f5-8c2b-8236c2cbad1c",
+    "formation_date": "2015-01-01",
+    "legal_name": "Example, Inc.",
+    "country_of_formation": "US"
+  },
+  "comments": [],
+  "stock_plans_files": [
+    {
+      "filepath": "./StockPlans.ocf.json",
+      "md5": "3a18fa6ff3082e0a2ab60f431c0543c1"
+    }
+  ],
+  "stock_legend_templates_files": [
+    {
+      "filepath": "./StockLegends.ocf.json",
+      "md5": "090fe5af744fd7886eec63509681df6b"
+    }
+  ],
+  "stock_classes_files": [
+    {
+      "filepath": "./StockClasses.ocf.json",
+      "md5": "2c132bf2a3df600bfa64bca4170761ab"
+    }
+  ],
+  "vesting_terms_files": [
+    {
+      "filepath": "./VestingTerms.ocf.json",
+      "md5": "593fd3a1fde6e2df5733d316864ec095"
+    }
+  ],
+  "valuations_files": [
+    {
+      "filepath": "./Valuations.ocf.json",
+      "md5": "2e4920dfe8d95c058eb4131241001471"
+    }
+  ],
+  "transactions_files": [
+    {
+      "filepath": "./WarrantTransactions.ocf.json",
+      "md5": "6595d2984044ed8bed1c38b10c6ade73"
+    },
+    {
+      "filepath": "./StockTransactions.ocf.json",
+      "md5": "317789a684d15604be75e46d0ee44906"
+    },
+    {
+      "filepath": "./PlanSecurityTransactions.ocf.json",
+      "md5": "dffa408c27e598f91aa01e9e36359109"
+    },
+    {
+      "filepath": "./ConvertibleSecurityTransactions.ocf.json",
+      "md5": "1a11ed28922ce04a1171b7ded054e25c"
+    }
+  ],
+  "stakeholders_files": [
+    {
+      "filepath": "./Stakeholders.ocf.json",
+      "md5": "7879d2bcb2a4df4e2b371368ff12dbeb"
+    }
+  ]
+}

@@ -1,0 +1,40 @@
+{
+  "file_type": "OCF_VALUATIONS_FILE",
+  "items": [
+    {
+      "object_type": "VALUATION",
+      "id": "b30a9192-b9b5-4d83-8a58-7cb737dfb5ed",
+      "price_per_share": { "amount": "0.5000000000", "currency": "USD" },
+      "effective_date": "2017-10-29",
+      "valuation_type": "409A"
+    },
+    {
+      "object_type": "VALUATION",
+      "id": "1aae70f2-0ff0-4e8a-ae6b-0e3c6ad196d3",
+      "price_per_share": { "amount": "0.6300000000", "currency": "USD" },
+      "effective_date": "2018-09-30",
+      "valuation_type": "409A"
+    },
+    {
+      "object_type": "VALUATION",
+      "id": "2e370d5f-05dc-4779-b28e-214ce34bea90",
+      "price_per_share": { "amount": "3.1500000000", "currency": "USD" },
+      "effective_date": "2022-01-01",
+      "valuation_type": "409A"
+    },
+    {
+      "object_type": "VALUATION",
+      "id": "79c6f1e5-effc-4245-afab-68ac15b77218",
+      "price_per_share": { "amount": "2.1000000000", "currency": "USD" },
+      "effective_date": "2020-02-25",
+      "valuation_type": "409A"
+    },
+    {
+      "object_type": "VALUATION",
+      "id": "d5e5f89a-4057-4bc5-b128-9ea74f9f12c4",
+      "price_per_share": { "amount": "2.0000000000", "currency": "USD" },
+      "effective_date": "2021-02-28",
+      "valuation_type": "409A"
+    }
+  ]
+}

@@ -1,0 +1,320 @@
+{
+  "file_type": "OCF_TRANSACTIONS_FILE",
+  "items": [
+    {
+      "object_type": "TX_CONVERTIBLE_ISSUANCE",
+      "id": "17b994a7-ad6e-4dd4-9f7e-a13cbc02a07d-issuance",
+      "security_id": "17b994a7-ad6e-4dd4-9f7e-a13cbc02a07d",
+      "date": "2016-10-29",
+      "security_law_exemptions": [],
+      "convertible_type": "SAFE",
+      "stakeholder_id": "b16e00b1-187d-4e4c-9fe1-31df0b2fe7bb",
+      "custom_id": "SAFE-2",
+      "investment_amount": { "amount": "50000.0000000000", "currency": "USD" },
+      "conversion_triggers": [
+        {
+          "type": "UNSPECIFIED",
+          "trigger_id": "17b994a7-ad6e-4dd4-9f7e-a13cbc02a07d-conversion-trigger",
+          "conversion_right": {
+            "type": "CONVERTIBLE_CONVERSION_RIGHT",
+            "conversion_mechanism": {
+              "type": "SAFE_CONVERSION",
+              "conversion_valuation_cap": {
+                "amount": "5000000.0000000000",
+                "currency": "USD"
+              }
+            }
+          }
+        }
+      ],
+      "seniority": 1
+    },
+    {
+      "object_type": "TX_CONVERTIBLE_CONVERSION",
+      "id": "17b994a7-ad6e-4dd4-9f7e-a13cbc02a07d-conversion",
+      "security_id": "17b994a7-ad6e-4dd4-9f7e-a13cbc02a07d",
+      "date": "2022-04-12",
+      "quantity_converted": "51000.0000000000",
+      "trigger_id": "17b994a7-ad6e-4dd4-9f7e-a13cbc02a07d-conversion-trigger",
+      "reason_text": "Manually recorded",
+      "resulting_security_ids": ["7fe381d9-9d29-49c5-9f70-550295f130e1"]
+    },
+    {
+      "object_type": "TX_CONVERTIBLE_ISSUANCE",
+      "id": "0e7ae902-fd0e-4876-b0c8-d3534c27daca-issuance",
+      "security_id": "0e7ae902-fd0e-4876-b0c8-d3534c27daca",
+      "date": "2016-10-29",
+      "security_law_exemptions": [],
+      "convertible_type": "SAFE",
+      "stakeholder_id": "24fac0db-13b5-4928-88f8-07da4f45b8e3",
+      "custom_id": "SAFE-3",
+      "investment_amount": { "amount": "50000.0000000000", "currency": "USD" },
+      "conversion_triggers": [
+        {
+          "type": "UNSPECIFIED",
+          "trigger_id": "0e7ae902-fd0e-4876-b0c8-d3534c27daca-conversion-trigger",
+          "conversion_right": {
+            "type": "CONVERTIBLE_CONVERSION_RIGHT",
+            "conversion_mechanism": {
+              "type": "SAFE_CONVERSION",
+              "conversion_discount": "0.2000000000",
+              "conversion_valuation_cap": {
+                "amount": "5000000.0000000000",
+                "currency": "USD"
+              },
+              "conversion_mfn": false
+            }
+          }
+        }
+      ],
+      "seniority": 1
+    },
+    {
+      "object_type": "TX_CONVERTIBLE_CONVERSION",
+      "id": "0e7ae902-fd0e-4876-b0c8-d3534c27daca-conversion",
+      "security_id": "0e7ae902-fd0e-4876-b0c8-d3534c27daca",
+      "date": "2021-11-03",
+      "quantity_converted": "90909.0000000000",
+      "trigger_id": "0e7ae902-fd0e-4876-b0c8-d3534c27daca-conversion-trigger",
+      "reason_text": "Manually recorded",
+      "resulting_security_ids": ["bb9202cd-d4b0-4365-a1a2-c93081ac095a"]
+    },
+    {
+      "object_type": "TX_CONVERTIBLE_ISSUANCE",
+      "id": "8369578e-feeb-4fee-bed0-df567f462fbc-issuance",
+      "security_id": "8369578e-feeb-4fee-bed0-df567f462fbc",
+      "date": "2016-10-29",
+      "security_law_exemptions": [],
+      "convertible_type": "SAFE",
+      "stakeholder_id": "ec00ed3e-f15c-45e4-b0b2-09fc9d13b41c",
+      "custom_id": "SAFE-1",
+      "investment_amount": { "amount": "25000.0000000000", "currency": "USD" },
+      "conversion_triggers": [
+        {
+          "type": "UNSPECIFIED",
+          "trigger_id": "8369578e-feeb-4fee-bed0-df567f462fbc-conversion-trigger",
+          "conversion_right": {
+            "type": "CONVERTIBLE_CONVERSION_RIGHT",
+            "conversion_mechanism": {
+              "type": "SAFE_CONVERSION",
+              "conversion_valuation_cap": {
+                "amount": "5000000.0000000000",
+                "currency": "USD"
+              }
+            }
+          }
+        }
+      ],
+      "seniority": 1
+    },
+    {
+      "object_type": "TX_CONVERTIBLE_ISSUANCE",
+      "id": "74ce98b5-77c8-4e3c-b8f8-7a577072a00c-issuance",
+      "security_id": "74ce98b5-77c8-4e3c-b8f8-7a577072a00c",
+      "date": "2019-01-29",
+      "security_law_exemptions": [],
+      "convertible_type": "SAFE",
+      "stakeholder_id": "0a157b28-53b8-479f-83cb-2d259a595054",
+      "custom_id": "SAFE-4",
+      "investment_amount": { "amount": "150000.0000000000", "currency": "USD" },
+      "conversion_triggers": [
+        {
+          "type": "UNSPECIFIED",
+          "trigger_id": "74ce98b5-77c8-4e3c-b8f8-7a577072a00c-conversion-trigger",
+          "conversion_right": {
+            "type": "CONVERTIBLE_CONVERSION_RIGHT",
+            "conversion_mechanism": {
+              "type": "FIXED_PERCENT_OF_CAPITALIZATION_CONVERSION",
+              "converts_to_percent": "0.0700000000"
+            }
+          }
+        }
+      ],
+      "seniority": 1
+    },
+    {
+      "object_type": "TX_CONVERTIBLE_ISSUANCE",
+      "id": "43d26a14-3201-4097-853d-3cc7a475913a-issuance",
+      "security_id": "43d26a14-3201-4097-853d-3cc7a475913a",
+      "date": "2019-01-29",
+      "security_law_exemptions": [],
+      "convertible_type": "SAFE",
+      "stakeholder_id": "0a157b28-53b8-479f-83cb-2d259a595054",
+      "custom_id": "SAFE-7",
+      "investment_amount": { "amount": "150000.0000000000", "currency": "USD" },
+      "conversion_triggers": [
+        {
+          "type": "UNSPECIFIED",
+          "trigger_id": "43d26a14-3201-4097-853d-3cc7a475913a-conversion-trigger",
+          "conversion_right": {
+            "type": "CONVERTIBLE_CONVERSION_RIGHT",
+            "conversion_mechanism": {
+              "type": "SAFE_CONVERSION",
+              "conversion_mfn": false
+            }
+          }
+        }
+      ],
+      "seniority": 1
+    },
+    {
+      "object_type": "TX_CONVERTIBLE_ISSUANCE",
+      "id": "dea4aa1f-e7a1-4686-b988-1c5f5c6b7b6d-issuance",
+      "security_id": "dea4aa1f-e7a1-4686-b988-1c5f5c6b7b6d",
+      "date": "2019-09-10",
+      "security_law_exemptions": [],
+      "convertible_type": "SAFE",
+      "stakeholder_id": "ec00ed3e-f15c-45e4-b0b2-09fc9d13b41c",
+      "custom_id": "SAFE-5",
+      "investment_amount": { "amount": "250000.0000000000", "currency": "USD" },
+      "conversion_triggers": [
+        {
+          "type": "UNSPECIFIED",
+          "trigger_id": "dea4aa1f-e7a1-4686-b988-1c5f5c6b7b6d-conversion-trigger",
+          "conversion_right": {
+            "type": "CONVERTIBLE_CONVERSION_RIGHT",
+            "conversion_mechanism": {
+              "type": "SAFE_CONVERSION",
+              "conversion_mfn": true
+            }
+          }
+        }
+      ],
+      "seniority": 1
+    },
+    {
+      "object_type": "TX_CONVERTIBLE_ISSUANCE",
+      "id": "86df3acd-892f-496c-9f7b-1bad48dfd58e-issuance",
+      "security_id": "86df3acd-892f-496c-9f7b-1bad48dfd58e",
+      "date": "2020-10-12",
+      "security_law_exemptions": [],
+      "convertible_type": "SAFE",
+      "stakeholder_id": "de1d7c8e-c15d-474a-a446-faa4e346090e",
+      "custom_id": "Note-1",
+      "investment_amount": { "amount": "100000.0000000000", "currency": "USD" },
+      "conversion_triggers": [
+        {
+          "type": "UNSPECIFIED",
+          "trigger_id": "86df3acd-892f-496c-9f7b-1bad48dfd58e-conversion-trigger",
+          "conversion_right": {
+            "type": "CONVERTIBLE_CONVERSION_RIGHT",
+            "conversion_mechanism": {
+              "type": "SAFE_CONVERSION",
+              "conversion_discount": "0.1000000000",
+              "conversion_valuation_cap": {
+                "amount": "10000000.0000000000",
+                "currency": "USD"
+              }
+            }
+          }
+        }
+      ],
+      "seniority": 1
+    },
+    {
+      "object_type": "TX_CONVERTIBLE_CONVERSION",
+      "id": "86df3acd-892f-496c-9f7b-1bad48dfd58e-conversion",
+      "security_id": "86df3acd-892f-496c-9f7b-1bad48dfd58e",
+      "date": "2022-09-07",
+      "quantity_converted": "50000.0000000000",
+      "trigger_id": "86df3acd-892f-496c-9f7b-1bad48dfd58e-conversion-trigger",
+      "reason_text": "Manually recorded",
+      "resulting_security_ids": ["ea7faf23-413d-495e-995b-2153cbc76d47"]
+    },
+    {
+      "object_type": "TX_CONVERTIBLE_ISSUANCE",
+      "id": "bfc97746-865e-4835-8154-fcb6239aaa79-issuance",
+      "security_id": "bfc97746-865e-4835-8154-fcb6239aaa79",
+      "date": "2021-03-01",
+      "security_law_exemptions": [],
+      "convertible_type": "NOTE",
+      "stakeholder_id": "7ab70ca2-7be1-4972-8ce0-7dc46f847cf5",
+      "custom_id": "Note-2",
+      "investment_amount": { "amount": "10000.0000000000", "currency": "USD" },
+      "conversion_triggers": [
+        {
+          "type": "UNSPECIFIED",
+          "trigger_id": "bfc97746-865e-4835-8154-fcb6239aaa79-conversion-trigger",
+          "conversion_right": {
+            "type": "CONVERTIBLE_CONVERSION_RIGHT",
+            "conversion_mechanism": {
+              "type": "CONVERTIBLE_NOTE_CONVERSION",
+              "interest_rate": "5.0000000000",
+              "day_count_convention": "ACTUAL_365",
+              "interest_payout": "DEFERRED",
+              "interest_accrual_period": "ANNUAL",
+              "compounding_type": "SIMPLE",
+              "conversion_discount": "0.2000000000",
+              "conversion_valuation_cap": {
+                "amount": "10000000.0000000000",
+                "currency": "USD"
+              }
+            }
+          }
+        }
+      ],
+      "seniority": 1
+    },
+    {
+      "object_type": "TX_CONVERTIBLE_ISSUANCE",
+      "id": "fefa625a-dbf2-4bab-bd7b-1b363a573c2a-issuance",
+      "security_id": "fefa625a-dbf2-4bab-bd7b-1b363a573c2a",
+      "date": "2022-05-31",
+      "security_law_exemptions": [
+        { "description": "Other", "jurisdiction": "XX" }
+      ],
+      "convertible_type": "SAFE",
+      "stakeholder_id": "bfe87277-295f-4667-a5f8-067d627080b3",
+      "custom_id": "SAFE-6",
+      "investment_amount": { "amount": "10000.0000000000", "currency": "USD" },
+      "conversion_triggers": [
+        {
+          "type": "UNSPECIFIED",
+          "trigger_id": "fefa625a-dbf2-4bab-bd7b-1b363a573c2a-conversion-trigger",
+          "conversion_right": {
+            "type": "CONVERTIBLE_CONVERSION_RIGHT",
+            "conversion_mechanism": {
+              "type": "SAFE_CONVERSION",
+              "conversion_discount": "0.2000000000",
+              "conversion_valuation_cap": {
+                "amount": "10000000.0000000000",
+                "currency": "USD"
+              }
+            }
+          }
+        }
+      ],
+      "seniority": 1
+    },
+    {
+      "object_type": "TX_CONVERTIBLE_ISSUANCE",
+      "id": "7e3cde72-e558-43a1-a467-234d6685bccd-issuance",
+      "security_id": "7e3cde72-e558-43a1-a467-234d6685bccd",
+      "date": "2022-12-13",
+      "security_law_exemptions": [],
+      "convertible_type": "SAFE",
+      "stakeholder_id": "bfe87277-295f-4667-a5f8-067d627080b3",
+      "custom_id": "SAFE-8",
+      "investment_amount": { "amount": "10000.0000000000", "currency": "USD" },
+      "conversion_triggers": [
+        {
+          "type": "UNSPECIFIED",
+          "trigger_id": "7e3cde72-e558-43a1-a467-234d6685bccd-conversion-trigger",
+          "conversion_right": {
+            "type": "CONVERTIBLE_CONVERSION_RIGHT",
+            "conversion_mechanism": {
+              "type": "SAFE_CONVERSION",
+              "conversion_discount": "0.2000000000",
+              "conversion_valuation_cap": {
+                "amount": "6000000.0000000000",
+                "currency": "USD"
+              },
+              "conversion_mfn": false
+            }
+          }
+        }
+      ],
+      "seniority": 1
+    }
+  ]
+}

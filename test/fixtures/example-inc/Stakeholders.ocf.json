@@ -1,0 +1,137 @@
+{
+  "file_type": "OCF_STAKEHOLDERS_FILE",
+  "items": [
+    {
+      "object_type": "STAKEHOLDER",
+      "id": "c6ab4053-897f-4ad7-9a0f-2367316ebc2d",
+      "stakeholder_type": "INDIVIDUAL",
+      "name": { "legal_name": "M C" }
+    },
+    {
+      "object_type": "STAKEHOLDER",
+      "id": "93825800-9235-48fc-9007-80d8ac899b47",
+      "stakeholder_type": "INDIVIDUAL",
+      "name": { "legal_name": "Vincent Venture" }
+    },
+    {
+      "object_type": "STAKEHOLDER",
+      "id": "1fffd17b-264a-49b8-b337-47bc09174ca7",
+      "stakeholder_type": "INDIVIDUAL",
+      "name": { "legal_name": "Quentin Quality" }
+    },
+    {
+      "object_type": "STAKEHOLDER",
+      "id": "247ea27e-eb0a-4cf3-9981-03d48880d961",
+      "stakeholder_type": "INDIVIDUAL",
+      "name": { "legal_name": "Aaron Advisor" }
+    },
+    {
+      "object_type": "STAKEHOLDER",
+      "id": "22fe4a23-cbf6-4e0b-b9a9-dce9a9827fae",
+      "stakeholder_type": "INDIVIDUAL",
+      "name": { "legal_name": "Sammy Sales" }
+    },
+    {
+      "object_type": "STAKEHOLDER",
+      "id": "de1d7c8e-c15d-474a-a446-faa4e346090e",
+      "stakeholder_type": "INSTITUTION",
+      "name": { "legal_name": "Fundy McFunderson Funds" }
+    },
+    {
+      "object_type": "STAKEHOLDER",
+      "id": "b16e00b1-187d-4e4c-9fe1-31df0b2fe7bb",
+      "stakeholder_type": "INDIVIDUAL",
+      "name": { "legal_name": "Adam Angel" }
+    },
+    {
+      "object_type": "STAKEHOLDER",
+      "id": "6b6dfc67-16f9-4660-9e0e-26d67951ca3a",
+      "stakeholder_type": "INDIVIDUAL",
+      "name": { "legal_name": "A B" }
+    },
+    {
+      "object_type": "STAKEHOLDER",
+      "id": "a3468071-09fb-44ed-93e3-290deb5bbc56",
+      "stakeholder_type": "INDIVIDUAL",
+      "name": { "legal_name": "Eddie Engineer" }
+    },
+    {
+      "object_type": "STAKEHOLDER",
+      "id": "24fac0db-13b5-4928-88f8-07da4f45b8e3",
+      "stakeholder_type": "INSTITUTION",
+      "name": { "legal_name": "Seed Venture Fund V" }
+    },
+    {
+      "object_type": "STAKEHOLDER",
+      "id": "0a157b28-53b8-479f-83cb-2d259a595054",
+      "stakeholder_type": "INDIVIDUAL",
+      "name": { "legal_name": "J B" }
+    },
+    {
+      "object_type": "STAKEHOLDER",
+      "id": "247e3692-4347-4a56-9fbe-565b9efdfda6",
+      "stakeholder_type": "INDIVIDUAL",
+      "name": { "legal_name": "R F" }
+    },
+    {
+      "object_type": "STAKEHOLDER",
+      "id": "c6727a95-0d33-41f7-bc71-be392a2621a4",
+      "stakeholder_type": "INDIVIDUAL",
+      "name": { "legal_name": "J M" }
+    },
+    {
+      "object_type": "STAKEHOLDER",
+      "id": "0f981342-793c-41ad-82bc-37984bbaab9f",
+      "stakeholder_type": "INDIVIDUAL",
+      "name": { "legal_name": "R D" }
+    },
+    {
+      "object_type": "STAKEHOLDER",
+      "id": "bfe87277-295f-4667-a5f8-067d627080b3",
+      "stakeholder_type": "INDIVIDUAL",
+      "name": { "legal_name": "Irene Investor" }
+    },
+    {
+      "object_type": "STAKEHOLDER",
+      "id": "13af8449-3819-43e1-948b-29fead8c2346",
+      "stakeholder_type": "INDIVIDUAL",
+      "name": { "legal_name": "Fiona Founder" }
+    },
+    {
+      "object_type": "STAKEHOLDER",
+      "id": "ec00ed3e-f15c-45e4-b0b2-09fc9d13b41c",
+      "stakeholder_type": "INDIVIDUAL",
+      "name": { "legal_name": "Alana Angel" }
+    },
+    {
+      "object_type": "STAKEHOLDER",
+      "id": "a7b3dfae-7194-46cc-8b4a-bbb6f4f8e224",
+      "stakeholder_type": "INSTITUTION",
+      "name": { "legal_name": "Seed Venture Fund IV" }
+    },
+    {
+      "object_type": "STAKEHOLDER",
+      "id": "7ab70ca2-7be1-4972-8ce0-7dc46f847cf5",
+      "stakeholder_type": "INSTITUTION",
+      "name": { "legal_name": "Seed Venture Fund V" }
+    },
+    {
+      "object_type": "STAKEHOLDER",
+      "id": "df8d55ee-87bc-46e1-b4cc-868cd814fb25",
+      "stakeholder_type": "INDIVIDUAL",
+      "name": { "legal_name": "Amos Admin" }
+    },
+    {
+      "object_type": "STAKEHOLDER",
+      "id": "a2ec9e84-4543-47a3-9c21-911dd167c115",
+      "stakeholder_type": "INDIVIDUAL",
+      "name": { "legal_name": "Elenore Engineer" }
+    },
+    {
+      "object_type": "STAKEHOLDER",
+      "id": "6fd0b858-f815-419b-b246-7f7f33c82a7a",
+      "stakeholder_type": "INDIVIDUAL",
+      "name": { "legal_name": "Dean Dev" }
+    }
+  ]
+}

@@ -1,0 +1,732 @@
+{
+  "file_type": "OCF_VESTING_TERMS_FILE",
+  "items": [
+    {
+      "id": "44a94848-eeaf-4bfe-9a9c-9c0d3438ebb4",
+      "name": "7m monthly, 0y cliff",
+      "description": "",
+      "object_type": "VESTING_TERMS",
+      "allocation_type": "CUMULATIVE_ROUND_DOWN",
+      "vesting_conditions": [
+        {
+          "id": "vesting-start",
+          "quantity": "0",
+          "trigger": { "type": "VESTING_START_DATE" },
+          "next_condition_ids": ["monthly-vesting"]
+        },
+        {
+          "id": "monthly-vesting",
+          "trigger": {
+            "type": "VESTING_SCHEDULE_RELATIVE",
+            "relative_to_condition_id": "vesting-start",
+            "period": {
+              "length": 1,
+              "type": "MONTHS",
+              "occurrences": 7,
+              "day_of_month": "VESTING_START_DAY_OR_LAST_DAY_OF_MONTH"
+            }
+          },
+          "portion": {
+            "numerator": "1",
+            "denominator": "7",
+            "remainder": true
+          },
+          "next_condition_ids": []
+        }
+      ]
+    },
+    {
+      "id": "1d2ae786-3f90-4ee3-b7db-61cb950a392a",
+      "name": "10 / 20 / 30 / 40",
+      "description": "",
+      "object_type": "VESTING_TERMS",
+      "allocation_type": "CUMULATIVE_ROUND_DOWN",
+      "vesting_conditions": [
+        {
+          "id": "vesting-start",
+          "quantity": "0",
+          "trigger": { "type": "VESTING_START_DATE" },
+          "next_condition_ids": ["244993e9-2317-4366-bd1b-9d6a4dc36a9f"]
+        },
+        {
+          "id": "244993e9-2317-4366-bd1b-9d6a4dc36a9f",
+          "trigger": {
+            "type": "VESTING_SCHEDULE_RELATIVE",
+            "relative_to_condition_id": "vesting-start",
+            "period": {
+              "occurrences": 1,
+              "type": "MONTHS",
+              "length": 12,
+              "day_of_month": "VESTING_START_DAY_OR_LAST_DAY_OF_MONTH"
+            }
+          },
+          "portion": {
+            "numerator": "10",
+            "denominator": "100",
+            "remainder": false
+          },
+          "next_condition_ids": ["4f354e47-69dd-4775-8adc-479cc4280c66"]
+        },
+        {
+          "id": "4f354e47-69dd-4775-8adc-479cc4280c66",
+          "trigger": {
+            "type": "VESTING_SCHEDULE_RELATIVE",
+            "relative_to_condition_id": "244993e9-2317-4366-bd1b-9d6a4dc36a9f",
+            "period": {
+              "occurrences": 1,
+              "type": "MONTHS",
+              "length": 12,
+              "day_of_month": "VESTING_START_DAY_OR_LAST_DAY_OF_MONTH"
+            }
+          },
+          "portion": {
+            "numerator": "20",
+            "denominator": "100",
+            "remainder": false
+          },
+          "next_condition_ids": ["b5e9f849-0ea9-4b0c-a5eb-777cee122fc8"]
+        },
+        {
+          "id": "b5e9f849-0ea9-4b0c-a5eb-777cee122fc8",
+          "trigger": {
+            "type": "VESTING_SCHEDULE_RELATIVE",
+            "relative_to_condition_id": "4f354e47-69dd-4775-8adc-479cc4280c66",
+            "period": {
+              "occurrences": 1,
+              "type": "MONTHS",
+              "length": 12,
+              "day_of_month": "VESTING_START_DAY_OR_LAST_DAY_OF_MONTH"
+            }
+          },
+          "portion": {
+            "numerator": "30",
+            "denominator": "100",
+            "remainder": false
+          },
+          "next_condition_ids": ["ac6f6024-aece-4f9b-9e0a-a867351c676e"]
+        },
+        {
+          "id": "ac6f6024-aece-4f9b-9e0a-a867351c676e",
+          "trigger": {
+            "type": "VESTING_SCHEDULE_RELATIVE",
+            "relative_to_condition_id": "b5e9f849-0ea9-4b0c-a5eb-777cee122fc8",
+            "period": {
+              "occurrences": 1,
+              "type": "MONTHS",
+              "length": 12,
+              "day_of_month": "VESTING_START_DAY_OR_LAST_DAY_OF_MONTH"
+            }
+          },
+          "portion": {
+            "numerator": "40",
+            "denominator": "100",
+            "remainder": false
+          },
+          "next_condition_ids": []
+        }
+      ]
+    },
+    {
+      "id": "b7a3eb9e-08f1-4302-9c66-cf5db4e06409",
+      "name": "4y monthly, 1y cliff, 10% upfront",
+      "description": "",
+      "object_type": "VESTING_TERMS",
+      "allocation_type": "CUMULATIVE_ROUND_DOWN",
+      "vesting_conditions": [
+        {
+          "id": "vesting-start",
+          "quantity": "0",
+          "trigger": { "type": "VESTING_START_DATE" },
+          "next_condition_ids": ["upfront"]
+        },
+        {
+          "id": "upfront",
+          "trigger": { "type": "VESTING_EVENT" },
+          "portion": {
+            "numerator": "10",
+            "denominator": "100",
+            "remainder": false
+          },
+          "next_condition_ids": ["cliff"]
+        },
+        {
+          "id": "cliff",
+          "trigger": {
+            "type": "VESTING_SCHEDULE_RELATIVE",
+            "period": {
+              "length": 12,
+              "type": "MONTHS",
+              "occurrences": 1,
+              "day_of_month": "VESTING_START_DAY_OR_LAST_DAY_OF_MONTH"
+            },
+            "relative_to_condition_id": "vesting-start"
+          },
+          "portion": {
+            "numerator": "12",
+            "denominator": "48",
+            "remainder": true
+          },
+          "next_condition_ids": ["monthly-vesting"]
+        },
+        {
+          "id": "monthly-vesting",
+          "trigger": {
+            "type": "VESTING_SCHEDULE_RELATIVE",
+            "relative_to_condition_id": "cliff",
+            "period": {
+              "length": 1,
+              "type": "MONTHS",
+              "occurrences": 36,
+              "day_of_month": "VESTING_START_DAY_OR_LAST_DAY_OF_MONTH"
+            }
+          },
+          "portion": {
+            "numerator": "1",
+            "denominator": "36",
+            "remainder": true
+          },
+          "next_condition_ids": []
+        }
+      ]
+    },
+    {
+      "id": "0f0bf327-8ce4-402c-812f-1dd329a09455",
+      "name": "Milestone-based Engineer",
+      "description": "Milestone based on hitting tech spec goals set forth by CEO",
+      "object_type": "VESTING_TERMS",
+      "allocation_type": "CUMULATIVE_ROUND_DOWN",
+      "vesting_conditions": [
+        {
+          "id": "vesting-start",
+          "quantity": "0",
+          "trigger": { "type": "VESTING_START_DATE" },
+          "next_condition_ids": ["84df869d-0491-4cf8-ad69-df8191dcdfea"]
+        },
+        {
+          "id": "84df869d-0491-4cf8-ad69-df8191dcdfea",
+          "trigger": {
+            "type": "VESTING_SCHEDULE_RELATIVE",
+            "relative_to_condition_id": "vesting-start",
+            "period": {
+              "occurrences": 1,
+              "type": "MONTHS",
+              "length": 3,
+              "day_of_month": "VESTING_START_DAY_OR_LAST_DAY_OF_MONTH"
+            }
+          },
+          "portion": {
+            "numerator": "25",
+            "denominator": "100",
+            "remainder": false
+          },
+          "next_condition_ids": ["b07e9a87-1535-41fa-8beb-12ceae0b8b96"]
+        },
+        {
+          "id": "b07e9a87-1535-41fa-8beb-12ceae0b8b96",
+          "trigger": {
+            "type": "VESTING_SCHEDULE_RELATIVE",
+            "relative_to_condition_id": "84df869d-0491-4cf8-ad69-df8191dcdfea",
+            "period": {
+              "occurrences": 1,
+              "type": "MONTHS",
+              "length": 3,
+              "day_of_month": "VESTING_START_DAY_OR_LAST_DAY_OF_MONTH"
+            }
+          },
+          "portion": {
+            "numerator": "25",
+            "denominator": "100",
+            "remainder": false
+          },
+          "next_condition_ids": ["da756092-c33d-434e-9b78-ddef7d161dd6"]
+        },
+        {
+          "id": "da756092-c33d-434e-9b78-ddef7d161dd6",
+          "trigger": {
+            "type": "VESTING_SCHEDULE_RELATIVE",
+            "relative_to_condition_id": "b07e9a87-1535-41fa-8beb-12ceae0b8b96",
+            "period": {
+              "occurrences": 1,
+              "type": "MONTHS",
+              "length": 6,
+              "day_of_month": "VESTING_START_DAY_OR_LAST_DAY_OF_MONTH"
+            }
+          },
+          "portion": {
+            "numerator": "25",
+            "denominator": "100",
+            "remainder": false
+          },
+          "next_condition_ids": ["4fff9479-78a9-4ccb-a8fa-0d20e3f08777"]
+        },
+        {
+          "id": "4fff9479-78a9-4ccb-a8fa-0d20e3f08777",
+          "trigger": {
+            "type": "VESTING_SCHEDULE_RELATIVE",
+            "relative_to_condition_id": "da756092-c33d-434e-9b78-ddef7d161dd6",
+            "period": {
+              "occurrences": 1,
+              "type": "MONTHS",
+              "length": 6,
+              "day_of_month": "VESTING_START_DAY_OR_LAST_DAY_OF_MONTH"
+            }
+          },
+          "portion": {
+            "numerator": "25",
+            "denominator": "100",
+            "remainder": false
+          },
+          "next_condition_ids": []
+        }
+      ]
+    },
+    {
+      "id": "7d7b7b43-2556-4290-a1aa-23c7f304c2e8",
+      "name": "Default - 4y monthly, 1y cliff",
+      "description": "",
+      "object_type": "VESTING_TERMS",
+      "allocation_type": "CUMULATIVE_ROUND_DOWN",
+      "vesting_conditions": [
+        {
+          "id": "vesting-start",
+          "quantity": "0",
+          "trigger": { "type": "VESTING_START_DATE" },
+          "next_condition_ids": ["cliff"]
+        },
+        {
+          "id": "cliff",
+          "trigger": {
+            "type": "VESTING_SCHEDULE_RELATIVE",
+            "period": {
+              "length": 12,
+              "type": "MONTHS",
+              "occurrences": 1,
+              "day_of_month": "VESTING_START_DAY_OR_LAST_DAY_OF_MONTH"
+            },
+            "relative_to_condition_id": "vesting-start"
+          },
+          "portion": {
+            "numerator": "12",
+            "denominator": "48",
+            "remainder": true
+          },
+          "next_condition_ids": ["monthly-vesting"]
+        },
+        {
+          "id": "monthly-vesting",
+          "trigger": {
+            "type": "VESTING_SCHEDULE_RELATIVE",
+            "relative_to_condition_id": "cliff",
+            "period": {
+              "length": 1,
+              "type": "MONTHS",
+              "occurrences": 36,
+              "day_of_month": "VESTING_START_DAY_OR_LAST_DAY_OF_MONTH"
+            }
+          },
+          "portion": {
+            "numerator": "1",
+            "denominator": "36",
+            "remainder": true
+          },
+          "next_condition_ids": []
+        }
+      ]
+    },
+    {
+      "id": "78cd3748-2a44-4e6e-a3f9-8e0d94ae145e",
+      "name": "5 Year EE Vesting",
+      "description": "50% vests over 4 years in 3 month increments, remaining 50% vests over 1 year in 3 month increments.",
+      "object_type": "VESTING_TERMS",
+      "allocation_type": "CUMULATIVE_ROUND_DOWN",
+      "vesting_conditions": [
+        {
+          "id": "vesting-start",
+          "quantity": "0",
+          "trigger": { "type": "VESTING_START_DATE" },
+          "next_condition_ids": ["5ac73112-4a46-43db-ae5e-69dbb2c23b62"]
+        },
+        {
+          "id": "5ac73112-4a46-43db-ae5e-69dbb2c23b62",
+          "trigger": {
+            "type": "VESTING_SCHEDULE_RELATIVE",
+            "relative_to_condition_id": "vesting-start",
+            "period": {
+              "occurrences": 1,
+              "type": "MONTHS",
+              "length": 3,
+              "day_of_month": "VESTING_START_DAY_OR_LAST_DAY_OF_MONTH"
+            }
+          },
+          "portion": {
+            "numerator": "3.125",
+            "denominator": "100",
+            "remainder": false
+          },
+          "next_condition_ids": ["d9c4de7f-afea-47a7-a950-65a56b662ffd"]
+        },
+        {
+          "id": "d9c4de7f-afea-47a7-a950-65a56b662ffd",
+          "trigger": {
+            "type": "VESTING_SCHEDULE_RELATIVE",
+            "relative_to_condition_id": "5ac73112-4a46-43db-ae5e-69dbb2c23b62",
+            "period": {
+              "occurrences": 1,
+              "type": "MONTHS",
+              "length": 3,
+              "day_of_month": "VESTING_START_DAY_OR_LAST_DAY_OF_MONTH"
+            }
+          },
+          "portion": {
+            "numerator": "3.125",
+            "denominator": "100",
+            "remainder": false
+          },
+          "next_condition_ids": ["6065989c-e5c9-43fb-8be8-dd9f1f00d5b4"]
+        },
+        {
+          "id": "6065989c-e5c9-43fb-8be8-dd9f1f00d5b4",
+          "trigger": {
+            "type": "VESTING_SCHEDULE_RELATIVE",
+            "relative_to_condition_id": "d9c4de7f-afea-47a7-a950-65a56b662ffd",
+            "period": {
+              "occurrences": 1,
+              "type": "MONTHS",
+              "length": 3,
+              "day_of_month": "VESTING_START_DAY_OR_LAST_DAY_OF_MONTH"
+            }
+          },
+          "portion": {
+            "numerator": "3.125",
+            "denominator": "100",
+            "remainder": false
+          },
+          "next_condition_ids": ["f6cf6836-13b3-4c6d-86b9-54fe6330fcd5"]
+        },
+        {
+          "id": "f6cf6836-13b3-4c6d-86b9-54fe6330fcd5",
+          "trigger": {
+            "type": "VESTING_SCHEDULE_RELATIVE",
+            "relative_to_condition_id": "6065989c-e5c9-43fb-8be8-dd9f1f00d5b4",
+            "period": {
+              "occurrences": 1,
+              "type": "MONTHS",
+              "length": 3,
+              "day_of_month": "VESTING_START_DAY_OR_LAST_DAY_OF_MONTH"
+            }
+          },
+          "portion": {
+            "numerator": "3.125",
+            "denominator": "100",
+            "remainder": false
+          },
+          "next_condition_ids": ["3c1ccdc5-a077-4e6b-a7a1-30a8b7b66da0"]
+        },
+        {
+          "id": "3c1ccdc5-a077-4e6b-a7a1-30a8b7b66da0",
+          "trigger": {
+            "type": "VESTING_SCHEDULE_RELATIVE",
+            "relative_to_condition_id": "f6cf6836-13b3-4c6d-86b9-54fe6330fcd5",
+            "period": {
+              "occurrences": 1,
+              "type": "MONTHS",
+              "length": 3,
+              "day_of_month": "VESTING_START_DAY_OR_LAST_DAY_OF_MONTH"
+            }
+          },
+          "portion": {
+            "numerator": "3.125",
+            "denominator": "100",
+            "remainder": false
+          },
+          "next_condition_ids": ["ae61f55d-fb7e-4361-8728-21d0e0035331"]
+        },
+        {
+          "id": "ae61f55d-fb7e-4361-8728-21d0e0035331",
+          "trigger": {
+            "type": "VESTING_SCHEDULE_RELATIVE",
+            "relative_to_condition_id": "3c1ccdc5-a077-4e6b-a7a1-30a8b7b66da0",
+            "period": {
+              "occurrences": 1,
+              "type": "MONTHS",
+              "length": 3,
+              "day_of_month": "VESTING_START_DAY_OR_LAST_DAY_OF_MONTH"
+            }
+          },
+          "portion": {
+            "numerator": "3.125",
+            "denominator": "100",
+            "remainder": false
+          },
+          "next_condition_ids": ["db5eedc3-7e41-45e1-a65f-13cd1bbaf14e"]
+        },
+        {
+          "id": "db5eedc3-7e41-45e1-a65f-13cd1bbaf14e",
+          "trigger": {
+            "type": "VESTING_SCHEDULE_RELATIVE",
+            "relative_to_condition_id": "ae61f55d-fb7e-4361-8728-21d0e0035331",
+            "period": {
+              "occurrences": 1,
+              "type": "MONTHS",
+              "length": 3,
+              "day_of_month": "VESTING_START_DAY_OR_LAST_DAY_OF_MONTH"
+            }
+          },
+          "portion": {
+            "numerator": "3.125",
+            "denominator": "100",
+            "remainder": false
+          },
+          "next_condition_ids": ["35cd3193-198e-4b5c-922b-f5a40995e0d0"]
+        },
+        {
+          "id": "35cd3193-198e-4b5c-922b-f5a40995e0d0",
+          "trigger": {
+            "type": "VESTING_SCHEDULE_RELATIVE",
+            "relative_to_condition_id": "db5eedc3-7e41-45e1-a65f-13cd1bbaf14e",
+            "period": {
+              "occurrences": 1,
+              "type": "MONTHS",
+              "length": 3,
+              "day_of_month": "VESTING_START_DAY_OR_LAST_DAY_OF_MONTH"
+            }
+          },
+          "portion": {
+            "numerator": "3.125",
+            "denominator": "100",
+            "remainder": false
+          },
+          "next_condition_ids": ["c1ec8345-1301-490a-8f38-948307f0c727"]
+        },
+        {
+          "id": "c1ec8345-1301-490a-8f38-948307f0c727",
+          "trigger": {
+            "type": "VESTING_SCHEDULE_RELATIVE",
+            "relative_to_condition_id": "35cd3193-198e-4b5c-922b-f5a40995e0d0",
+            "period": {
+              "occurrences": 1,
+              "type": "MONTHS",
+              "length": 3,
+              "day_of_month": "VESTING_START_DAY_OR_LAST_DAY_OF_MONTH"
+            }
+          },
+          "portion": {
+            "numerator": "3.125",
+            "denominator": "100",
+            "remainder": false
+          },
+          "next_condition_ids": ["a1d3f77e-9c13-4e45-b3b3-db0ce909d24f"]
+        },
+        {
+          "id": "a1d3f77e-9c13-4e45-b3b3-db0ce909d24f",
+          "trigger": {
+            "type": "VESTING_SCHEDULE_RELATIVE",
+            "relative_to_condition_id": "c1ec8345-1301-490a-8f38-948307f0c727",
+            "period": {
+              "occurrences": 1,
+              "type": "MONTHS",
+              "length": 3,
+              "day_of_month": "VESTING_START_DAY_OR_LAST_DAY_OF_MONTH"
+            }
+          },
+          "portion": {
+            "numerator": "3.125",
+            "denominator": "100",
+            "remainder": false
+          },
+          "next_condition_ids": ["bd8e4839-7439-435e-977b-0b8419e18134"]
+        },
+        {
+          "id": "bd8e4839-7439-435e-977b-0b8419e18134",
+          "trigger": {
+            "type": "VESTING_SCHEDULE_RELATIVE",
+            "relative_to_condition_id": "a1d3f77e-9c13-4e45-b3b3-db0ce909d24f",
+            "period": {
+              "occurrences": 1,
+              "type": "MONTHS",
+              "length": 3,
+              "day_of_month": "VESTING_START_DAY_OR_LAST_DAY_OF_MONTH"
+            }
+          },
+          "portion": {
+            "numerator": "3.125",
+            "denominator": "100",
+            "remainder": false
+          },
+          "next_condition_ids": ["e018bcc8-03ba-4cd1-bb2d-577bfa032e38"]
+        },
+        {
+          "id": "e018bcc8-03ba-4cd1-bb2d-577bfa032e38",
+          "trigger": {
+            "type": "VESTING_SCHEDULE_RELATIVE",
+            "relative_to_condition_id": "bd8e4839-7439-435e-977b-0b8419e18134",
+            "period": {
+              "occurrences": 1,
+              "type": "MONTHS",
+              "length": 3,
+              "day_of_month": "VESTING_START_DAY_OR_LAST_DAY_OF_MONTH"
+            }
+          },
+          "portion": {
+            "numerator": "3.125",
+            "denominator": "100",
+            "remainder": false
+          },
+          "next_condition_ids": ["418a16e0-efa6-4ca8-b887-8531759fdc65"]
+        },
+        {
+          "id": "418a16e0-efa6-4ca8-b887-8531759fdc65",
+          "trigger": {
+            "type": "VESTING_SCHEDULE_RELATIVE",
+            "relative_to_condition_id": "e018bcc8-03ba-4cd1-bb2d-577bfa032e38",
+            "period": {
+              "occurrences": 1,
+              "type": "MONTHS",
+              "length": 3,
+              "day_of_month": "VESTING_START_DAY_OR_LAST_DAY_OF_MONTH"
+            }
+          },
+          "portion": {
+            "numerator": "3.125",
+            "denominator": "100",
+            "remainder": false
+          },
+          "next_condition_ids": ["ed2863fe-7eb6-432a-bf2d-602f3972b5ff"]
+        },
+        {
+          "id": "ed2863fe-7eb6-432a-bf2d-602f3972b5ff",
+          "trigger": {
+            "type": "VESTING_SCHEDULE_RELATIVE",
+            "relative_to_condition_id": "418a16e0-efa6-4ca8-b887-8531759fdc65",
+            "period": {
+              "occurrences": 1,
+              "type": "MONTHS",
+              "length": 3,
+              "day_of_month": "VESTING_START_DAY_OR_LAST_DAY_OF_MONTH"
+            }
+          },
+          "portion": {
+            "numerator": "3.125",
+            "denominator": "100",
+            "remainder": false
+          },
+          "next_condition_ids": ["dbec2f0c-1861-405e-be33-b67baff0f40e"]
+        },
+        {
+          "id": "dbec2f0c-1861-405e-be33-b67baff0f40e",
+          "trigger": {
+            "type": "VESTING_SCHEDULE_RELATIVE",
+            "relative_to_condition_id": "ed2863fe-7eb6-432a-bf2d-602f3972b5ff",
+            "period": {
+              "occurrences": 1,
+              "type": "MONTHS",
+              "length": 3,
+              "day_of_month": "VESTING_START_DAY_OR_LAST_DAY_OF_MONTH"
+            }
+          },
+          "portion": {
+            "numerator": "3.125",
+            "denominator": "100",
+            "remainder": false
+          },
+          "next_condition_ids": ["05d9ea50-8258-4b36-9574-314279702d25"]
+        },
+        {
+          "id": "05d9ea50-8258-4b36-9574-314279702d25",
+          "trigger": {
+            "type": "VESTING_SCHEDULE_RELATIVE",
+            "relative_to_condition_id": "dbec2f0c-1861-405e-be33-b67baff0f40e",
+            "period": {
+              "occurrences": 1,
+              "type": "MONTHS",
+              "length": 3,
+              "day_of_month": "VESTING_START_DAY_OR_LAST_DAY_OF_MONTH"
+            }
+          },
+          "portion": {
+            "numerator": "3.125",
+            "denominator": "100",
+            "remainder": false
+          },
+          "next_condition_ids": ["4dcc641b-162b-4553-babe-57d8f73fc2cf"]
+        },
+        {
+          "id": "4dcc641b-162b-4553-babe-57d8f73fc2cf",
+          "trigger": {
+            "type": "VESTING_SCHEDULE_RELATIVE",
+            "relative_to_condition_id": "05d9ea50-8258-4b36-9574-314279702d25",
+            "period": {
+              "occurrences": 1,
+              "type": "MONTHS",
+              "length": 3,
+              "day_of_month": "VESTING_START_DAY_OR_LAST_DAY_OF_MONTH"
+            }
+          },
+          "portion": {
+            "numerator": "12.5",
+            "denominator": "100",
+            "remainder": false
+          },
+          "next_condition_ids": ["3254ac51-09de-4e8a-b72c-225a459c7223"]
+        },
+        {
+          "id": "3254ac51-09de-4e8a-b72c-225a459c7223",
+          "trigger": {
+            "type": "VESTING_SCHEDULE_RELATIVE",
+            "relative_to_condition_id": "4dcc641b-162b-4553-babe-57d8f73fc2cf",
+            "period": {
+              "occurrences": 1,
+              "type": "MONTHS",
+              "length": 3,
+              "day_of_month": "VESTING_START_DAY_OR_LAST_DAY_OF_MONTH"
+            }
+          },
+          "portion": {
+            "numerator": "12.5",
+            "denominator": "100",
+            "remainder": false
+          },
+          "next_condition_ids": ["95013363-3f01-4bc7-a4da-acaa594a748e"]
+        },
+        {
+          "id": "95013363-3f01-4bc7-a4da-acaa594a748e",
+          "trigger": {
+            "type": "VESTING_SCHEDULE_RELATIVE",
+            "relative_to_condition_id": "3254ac51-09de-4e8a-b72c-225a459c7223",
+            "period": {
+              "occurrences": 1,
+              "type": "MONTHS",
+              "length": 3,
+              "day_of_month": "VESTING_START_DAY_OR_LAST_DAY_OF_MONTH"
+            }
+          },
+          "portion": {
+            "numerator": "12.5",
+            "denominator": "100",
+            "remainder": false
+          },
+          "next_condition_ids": ["9a28477c-a510-45b9-afa0-72c818e4597f"]
+        },
+        {
+          "id": "9a28477c-a510-45b9-afa0-72c818e4597f",
+          "trigger": {
+            "type": "VESTING_SCHEDULE_RELATIVE",
+            "relative_to_condition_id": "95013363-3f01-4bc7-a4da-acaa594a748e",
+            "period": {
+              "occurrences": 1,
+              "type": "MONTHS",
+              "length": 3,
+              "day_of_month": "VESTING_START_DAY_OR_LAST_DAY_OF_MONTH"
+            }
+          },
+          "portion": {
+            "numerator": "12.5",
+            "denominator": "100",
+            "remainder": false
+          },
+          "next_condition_ids": []
+        }
+      ]
+    }
+  ]
+}

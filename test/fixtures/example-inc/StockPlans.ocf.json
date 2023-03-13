@@ -1,0 +1,13 @@
+{
+  "file_type": "OCF_STOCK_PLANS_FILE",
+  "items": [
+    {
+      "object_type": "STOCK_PLAN",
+      "id": "e36bb60e-09bb-4a01-bae4-a9d0f09ac96f",
+      "plan_name": "2015 Stock Plan",
+      "current_shares_reserved": "2000000",
+      "board_approval_date": "2019-09-18",
+      "stock_class_id": "bf2f9aed-c8ad-4223-afe6-956341d886a1"
+    }
+  ]
+}

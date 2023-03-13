@@ -1,0 +1,38 @@
+{
+  "file_type": "OCF_STOCK_CLASSES_FILE",
+  "items": [
+    {
+      "object_type": "STOCK_CLASS",
+      "id": "b632d505-4f4e-49ec-ae32-c3c05e480c72",
+      "name": "Series A1 Preferred",
+      "class_type": "PREFERRED",
+      "default_id_prefix": "PS-",
+      "current_shares_authorized": "1000000",
+      "board_approval_date": "2022-03-01",
+      "seniority": "3",
+      "votes_per_share": { "omitted": true, "comment": "Data not available" }
+    },
+    {
+      "object_type": "STOCK_CLASS",
+      "id": "bf2f9aed-c8ad-4223-afe6-956341d886a1",
+      "name": "Common",
+      "class_type": "COMMON",
+      "default_id_prefix": "CS-",
+      "current_shares_authorized": "20000000",
+      "board_approval_date": "2022-10-01",
+      "seniority": "1",
+      "votes_per_share": { "omitted": true, "comment": "Data not available" }
+    },
+    {
+      "object_type": "STOCK_CLASS",
+      "id": "d42f5d1b-14ef-4321-9833-a175e6af51ff",
+      "name": "Series A Preferred",
+      "class_type": "PREFERRED",
+      "default_id_prefix": "PS-",
+      "current_shares_authorized": "2500000",
+      "board_approval_date": "2019-07-01",
+      "seniority": "2",
+      "votes_per_share": { "omitted": true, "comment": "Data not available" }
+    }
+  ]
+}

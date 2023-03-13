@@ -1,6 +1,15 @@
-import { Borders, Fill, Font } from "exceljs";
+import { Borders, Fill, Font, Style } from "exceljs";
 
 class Styles {
+  public static get text(): Partial<Style> {
+    return {
+      fill: { type: "pattern", pattern: "none" },
+      font: { name: "Calibri", bold: false, color: { argb: "000000" } },
+      border: {},
+      alignment: {},
+    };
+  }
+
   public static get headerFill(): Fill {
     return {
       type: "pattern",

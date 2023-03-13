@@ -1,0 +1,926 @@
+{
+  "file_type": "OCF_TRANSACTIONS_FILE",
+  "items": [
+    {
+      "object_type": "TX_PLAN_SECURITY_ISSUANCE",
+      "id": "8db31403-cdd9-401b-8cb2-870be86bc649-issuance",
+      "security_id": "8db31403-cdd9-401b-8cb2-870be86bc649",
+      "date": "2022-04-11",
+      "security_law_exemptions": [],
+      "stakeholder_id": "13af8449-3819-43e1-948b-29fead8c2346",
+      "custom_id": "O-10",
+      "stock_plan_id": "e36bb60e-09bb-4a01-bae4-a9d0f09ac96f",
+      "compensation_type": "OPTION",
+      "quantity": "10000",
+      "exercise_price": { "amount": "0.1000000000", "currency": "USD" },
+      "expiration_date": "2031-07-06",
+      "termination_exercise_windows": [
+        {
+          "reason": "VOLUNTARY_GOOD_CAUSE",
+          "period": 90,
+          "period_type": "DAYS"
+        },
+        { "reason": "INVOLUNTARY_DEATH", "period": 90, "period_type": "DAYS" },
+        {
+          "reason": "INVOLUNTARY_DISABILITY",
+          "period": 90,
+          "period_type": "DAYS"
+        },
+        {
+          "reason": "VOLUNTARY_RETIREMENT",
+          "period": 90,
+          "period_type": "DAYS"
+        }
+      ],
+      "option_grant_type": "ISO",
+      "vesting_terms_id": "0c28a6b5-aecd-43fe-b2e9-437105e600ca"
+    },
+    {
+      "object_type": "TX_PLAN_SECURITY_ISSUANCE",
+      "id": "209bd738-8c60-4ded-a805-b3a5d0ba14fb-issuance",
+      "security_id": "209bd738-8c60-4ded-a805-b3a5d0ba14fb",
+      "date": "2023-03-02",
+      "security_law_exemptions": [
+        { "description": "Rule 701", "jurisdiction": "US" }
+      ],
+      "stakeholder_id": "a3468071-09fb-44ed-93e3-290deb5bbc56",
+      "custom_id": "O-3",
+      "stock_plan_id": "e36bb60e-09bb-4a01-bae4-a9d0f09ac96f",
+      "compensation_type": "OPTION",
+      "quantity": "133000",
+      "exercise_price": { "amount": "0.0250000000", "currency": "USD" },
+      "expiration_date": "2029-01-16",
+      "termination_exercise_windows": [],
+      "option_grant_type": "ISO",
+      "vesting_terms_id": "b8a11302-9591-4ed3-a322-1aa201fcf1b3"
+    },
+    {
+      "object_type": "TX_PLAN_SECURITY_ISSUANCE",
+      "id": "47770985-af4a-4aa9-bb32-30ea10b1cf1f-issuance",
+      "security_id": "47770985-af4a-4aa9-bb32-30ea10b1cf1f",
+      "date": "2022-08-25",
+      "security_law_exemptions": [],
+      "stakeholder_id": "6fd0b858-f815-419b-b246-7f7f33c82a7a",
+      "custom_id": "O-28",
+      "stock_plan_id": "e36bb60e-09bb-4a01-bae4-a9d0f09ac96f",
+      "compensation_type": "OPTION",
+      "quantity": "5000",
+      "exercise_price": { "amount": "0.6500000000", "currency": "USD" },
+      "expiration_date": "2032-08-25",
+      "termination_exercise_windows": [
+        {
+          "reason": "VOLUNTARY_GOOD_CAUSE",
+          "period": 90,
+          "period_type": "DAYS"
+        },
+        { "reason": "INVOLUNTARY_DEATH", "period": 90, "period_type": "DAYS" },
+        {
+          "reason": "INVOLUNTARY_DISABILITY",
+          "period": 90,
+          "period_type": "DAYS"
+        },
+        {
+          "reason": "VOLUNTARY_RETIREMENT",
+          "period": 90,
+          "period_type": "DAYS"
+        }
+      ],
+      "option_grant_type": "ISO",
+      "vesting_terms_id": "6fdbeab5-0dec-4a02-9973-45dd9d8a0662"
+    },
+    {
+      "object_type": "TX_PLAN_SECURITY_ISSUANCE",
+      "id": "990fbe55-0054-4627-a37d-503da3908432-issuance",
+      "security_id": "990fbe55-0054-4627-a37d-503da3908432",
+      "date": "2022-06-27",
+      "security_law_exemptions": [],
+      "stakeholder_id": "a2ec9e84-4543-47a3-9c21-911dd167c115",
+      "custom_id": "O-27",
+      "stock_plan_id": "e36bb60e-09bb-4a01-bae4-a9d0f09ac96f",
+      "compensation_type": "OPTION",
+      "quantity": "500",
+      "exercise_price": { "amount": "0.0100000000", "currency": "USD" },
+      "expiration_date": "2032-06-27",
+      "termination_exercise_windows": [],
+      "option_grant_type": "ISO",
+      "vesting_terms_id": "0c28a6b5-aecd-43fe-b2e9-437105e600ca"
+    },
+    {
+      "object_type": "TX_PLAN_SECURITY_ISSUANCE",
+      "id": "377a5d1c-7911-45fa-9a5a-58a5ac9d415a-issuance",
+      "security_id": "377a5d1c-7911-45fa-9a5a-58a5ac9d415a",
+      "date": "2022-06-14",
+      "security_law_exemptions": [],
+      "stakeholder_id": "df8d55ee-87bc-46e1-b4cc-868cd814fb25",
+      "custom_id": "O-26",
+      "stock_plan_id": "e36bb60e-09bb-4a01-bae4-a9d0f09ac96f",
+      "compensation_type": "OPTION",
+      "quantity": "5000",
+      "exercise_price": { "amount": "0.0100000000", "currency": "USD" },
+      "expiration_date": "2032-06-14",
+      "termination_exercise_windows": [
+        {
+          "reason": "VOLUNTARY_GOOD_CAUSE",
+          "period": 90,
+          "period_type": "DAYS"
+        },
+        { "reason": "INVOLUNTARY_DEATH", "period": 90, "period_type": "DAYS" },
+        {
+          "reason": "INVOLUNTARY_DISABILITY",
+          "period": 90,
+          "period_type": "DAYS"
+        },
+        {
+          "reason": "VOLUNTARY_RETIREMENT",
+          "period": 90,
+          "period_type": "DAYS"
+        }
+      ],
+      "option_grant_type": "ISO",
+      "vesting_terms_id": "0c28a6b5-aecd-43fe-b2e9-437105e600ca"
+    },
+    {
+      "object_type": "TX_PLAN_SECURITY_ISSUANCE",
+      "id": "d42d880f-788c-423b-b48c-e773275c1831-issuance",
+      "security_id": "d42d880f-788c-423b-b48c-e773275c1831",
+      "date": "2022-06-07",
+      "security_law_exemptions": [
+        { "description": "Rule 701", "jurisdiction": "US" }
+      ],
+      "stakeholder_id": "6fd0b858-f815-419b-b246-7f7f33c82a7a",
+      "custom_id": "O-23",
+      "stock_plan_id": "e36bb60e-09bb-4a01-bae4-a9d0f09ac96f",
+      "compensation_type": "OPTION",
+      "quantity": "50000",
+      "exercise_price": { "amount": "0.0350000000", "currency": "USD" },
+      "expiration_date": "2042-06-01",
+      "termination_exercise_windows": [
+        {
+          "reason": "VOLUNTARY_GOOD_CAUSE",
+          "period": 90,
+          "period_type": "DAYS"
+        },
+        { "reason": "INVOLUNTARY_DEATH", "period": 90, "period_type": "DAYS" },
+        {
+          "reason": "INVOLUNTARY_DISABILITY",
+          "period": 90,
+          "period_type": "DAYS"
+        },
+        {
+          "reason": "VOLUNTARY_RETIREMENT",
+          "period": 90,
+          "period_type": "DAYS"
+        }
+      ],
+      "option_grant_type": "ISO",
+      "vesting_terms_id": "0c28a6b5-aecd-43fe-b2e9-437105e600ca"
+    },
+    {
+      "object_type": "TX_PLAN_SECURITY_ISSUANCE",
+      "id": "9a1197e7-f898-4ce0-85d5-8c1661784b5a-issuance",
+      "security_id": "9a1197e7-f898-4ce0-85d5-8c1661784b5a",
+      "date": "2022-06-13",
+      "security_law_exemptions": [],
+      "stakeholder_id": "bfe87277-295f-4667-a5f8-067d627080b3",
+      "custom_id": "O-21",
+      "stock_plan_id": "e36bb60e-09bb-4a01-bae4-a9d0f09ac96f",
+      "compensation_type": "OPTION",
+      "quantity": "3000",
+      "exercise_price": { "amount": "0.3000000000", "currency": "USD" },
+      "expiration_date": "2032-05-09",
+      "termination_exercise_windows": [],
+      "option_grant_type": "ISO",
+      "vesting_terms_id": "b8a11302-9591-4ed3-a322-1aa201fcf1b3"
+    },
+    {
+      "object_type": "TX_PLAN_SECURITY_ISSUANCE",
+      "id": "477c65b6-b7a6-44fc-ad3e-b11f92bd6a45-issuance",
+      "security_id": "477c65b6-b7a6-44fc-ad3e-b11f92bd6a45",
+      "date": "2022-05-06",
+      "security_law_exemptions": [],
+      "stakeholder_id": "22fe4a23-cbf6-4e0b-b9a9-dce9a9827fae",
+      "custom_id": "O-18",
+      "stock_plan_id": "e36bb60e-09bb-4a01-bae4-a9d0f09ac96f",
+      "compensation_type": "OPTION",
+      "quantity": "15000",
+      "exercise_price": { "amount": "0.3500000000", "currency": "USD" },
+      "expiration_date": "2032-05-06",
+      "termination_exercise_windows": [
+        {
+          "reason": "VOLUNTARY_GOOD_CAUSE",
+          "period": 90,
+          "period_type": "DAYS"
+        },
+        { "reason": "INVOLUNTARY_DEATH", "period": 90, "period_type": "DAYS" },
+        {
+          "reason": "INVOLUNTARY_DISABILITY",
+          "period": 90,
+          "period_type": "DAYS"
+        },
+        {
+          "reason": "VOLUNTARY_RETIREMENT",
+          "period": 90,
+          "period_type": "DAYS"
+        }
+      ],
+      "option_grant_type": "ISO",
+      "vesting_terms_id": "939f0a10-fa2e-49ef-8e28-b0f899add4cb"
+    },
+    {
+      "object_type": "TX_PLAN_SECURITY_ISSUANCE",
+      "id": "d886eb03-eba3-484b-9fab-7bc59526ff2a-issuance",
+      "security_id": "d886eb03-eba3-484b-9fab-7bc59526ff2a",
+      "date": "2023-03-02",
+      "security_law_exemptions": [
+        { "description": "Rule 701", "jurisdiction": "US" }
+      ],
+      "stakeholder_id": "df8d55ee-87bc-46e1-b4cc-868cd814fb25",
+      "custom_id": "O-6",
+      "stock_plan_id": "e36bb60e-09bb-4a01-bae4-a9d0f09ac96f",
+      "compensation_type": "OPTION",
+      "quantity": "75000",
+      "exercise_price": { "amount": "0.1500000000", "currency": "USD" },
+      "expiration_date": "2029-02-18",
+      "termination_exercise_windows": [],
+      "option_grant_type": "ISO",
+      "vesting_terms_id": "0c28a6b5-aecd-43fe-b2e9-437105e600ca"
+    },
+    {
+      "object_type": "TX_PLAN_SECURITY_ISSUANCE",
+      "id": "6f538cec-3bd3-4250-ba5a-39f058bae011-issuance",
+      "security_id": "6f538cec-3bd3-4250-ba5a-39f058bae011",
+      "date": "2022-03-29",
+      "security_law_exemptions": [],
+      "stakeholder_id": "0f981342-793c-41ad-82bc-37984bbaab9f",
+      "custom_id": "O-17",
+      "stock_plan_id": "e36bb60e-09bb-4a01-bae4-a9d0f09ac96f",
+      "compensation_type": "OPTION",
+      "quantity": "10000",
+      "exercise_price": { "amount": "0.3500000000", "currency": "USD" },
+      "expiration_date": "2032-03-29",
+      "termination_exercise_windows": [
+        {
+          "reason": "VOLUNTARY_GOOD_CAUSE",
+          "period": 90,
+          "period_type": "DAYS"
+        },
+        { "reason": "INVOLUNTARY_DEATH", "period": 90, "period_type": "DAYS" },
+        {
+          "reason": "INVOLUNTARY_DISABILITY",
+          "period": 90,
+          "period_type": "DAYS"
+        },
+        {
+          "reason": "VOLUNTARY_RETIREMENT",
+          "period": 90,
+          "period_type": "DAYS"
+        }
+      ],
+      "option_grant_type": "ISO",
+      "vesting_terms_id": "b8a11302-9591-4ed3-a322-1aa201fcf1b3"
+    },
+    {
+      "object_type": "TX_PLAN_SECURITY_ISSUANCE",
+      "id": "407df67b-3ebf-4fdd-aa2f-d09171393359-issuance",
+      "security_id": "407df67b-3ebf-4fdd-aa2f-d09171393359",
+      "date": "2022-03-15",
+      "security_law_exemptions": [],
+      "stakeholder_id": "a3468071-09fb-44ed-93e3-290deb5bbc56",
+      "custom_id": "O-16",
+      "stock_plan_id": "e36bb60e-09bb-4a01-bae4-a9d0f09ac96f",
+      "compensation_type": "OPTION",
+      "quantity": "50000",
+      "exercise_price": { "amount": "0.3500000000", "currency": "USD" },
+      "expiration_date": "2032-03-15",
+      "termination_exercise_windows": [
+        {
+          "reason": "VOLUNTARY_GOOD_CAUSE",
+          "period": 90,
+          "period_type": "DAYS"
+        },
+        { "reason": "INVOLUNTARY_DEATH", "period": 90, "period_type": "DAYS" },
+        {
+          "reason": "INVOLUNTARY_DISABILITY",
+          "period": 90,
+          "period_type": "DAYS"
+        },
+        {
+          "reason": "VOLUNTARY_RETIREMENT",
+          "period": 90,
+          "period_type": "DAYS"
+        }
+      ],
+      "option_grant_type": "ISO",
+      "vesting_terms_id": "939f0a10-fa2e-49ef-8e28-b0f899add4cb"
+    },
+    {
+      "object_type": "TX_PLAN_SECURITY_ISSUANCE",
+      "id": "bdf684e8-497e-4c5d-9d76-5d2167273c79-issuance",
+      "security_id": "bdf684e8-497e-4c5d-9d76-5d2167273c79",
+      "date": "2022-03-14",
+      "security_law_exemptions": [],
+      "stakeholder_id": "a3468071-09fb-44ed-93e3-290deb5bbc56",
+      "custom_id": "O-15",
+      "stock_plan_id": "e36bb60e-09bb-4a01-bae4-a9d0f09ac96f",
+      "compensation_type": "OPTION",
+      "quantity": "50000",
+      "exercise_price": { "amount": "0.3500000000", "currency": "USD" },
+      "expiration_date": "2032-03-14",
+      "termination_exercise_windows": [],
+      "option_grant_type": "ISO",
+      "vesting_terms_id": "1ae252ba-8cfd-4284-a479-0a9cc9043473"
+    },
+    {
+      "object_type": "TX_PLAN_SECURITY_ISSUANCE",
+      "id": "1a77334c-75e0-471f-a3e0-77349b964bbb-issuance",
+      "security_id": "1a77334c-75e0-471f-a3e0-77349b964bbb",
+      "date": "2022-03-12",
+      "security_law_exemptions": [],
+      "stakeholder_id": "c6727a95-0d33-41f7-bc71-be392a2621a4",
+      "custom_id": "O-14",
+      "stock_plan_id": "e36bb60e-09bb-4a01-bae4-a9d0f09ac96f",
+      "compensation_type": "OPTION",
+      "quantity": "10000",
+      "exercise_price": { "amount": "0.8500000000", "currency": "USD" },
+      "expiration_date": "2032-03-12",
+      "termination_exercise_windows": [
+        {
+          "reason": "VOLUNTARY_GOOD_CAUSE",
+          "period": 90,
+          "period_type": "DAYS"
+        },
+        { "reason": "INVOLUNTARY_DEATH", "period": 90, "period_type": "DAYS" },
+        {
+          "reason": "INVOLUNTARY_DISABILITY",
+          "period": 90,
+          "period_type": "DAYS"
+        },
+        {
+          "reason": "VOLUNTARY_RETIREMENT",
+          "period": 90,
+          "period_type": "DAYS"
+        }
+      ],
+      "option_grant_type": "ISO",
+      "vesting_terms_id": "0c28a6b5-aecd-43fe-b2e9-437105e600ca"
+    },
+    {
+      "object_type": "TX_PLAN_SECURITY_ISSUANCE",
+      "id": "e1d0fb08-4311-4f90-a09b-a8d79619c6db-issuance",
+      "security_id": "e1d0fb08-4311-4f90-a09b-a8d79619c6db",
+      "date": "2022-03-13",
+      "security_law_exemptions": [],
+      "stakeholder_id": "247e3692-4347-4a56-9fbe-565b9efdfda6",
+      "custom_id": "O-13",
+      "stock_plan_id": "e36bb60e-09bb-4a01-bae4-a9d0f09ac96f",
+      "compensation_type": "OPTION",
+      "quantity": "10000",
+      "exercise_price": { "amount": "0.8500000000", "currency": "USD" },
+      "expiration_date": "2032-03-11",
+      "termination_exercise_windows": [
+        {
+          "reason": "VOLUNTARY_GOOD_CAUSE",
+          "period": 90,
+          "period_type": "DAYS"
+        },
+        { "reason": "INVOLUNTARY_DEATH", "period": 90, "period_type": "DAYS" },
+        {
+          "reason": "INVOLUNTARY_DISABILITY",
+          "period": 90,
+          "period_type": "DAYS"
+        },
+        {
+          "reason": "VOLUNTARY_RETIREMENT",
+          "period": 90,
+          "period_type": "DAYS"
+        }
+      ],
+      "option_grant_type": "ISO",
+      "vesting_terms_id": "1ae252ba-8cfd-4284-a479-0a9cc9043473"
+    },
+    {
+      "object_type": "TX_PLAN_SECURITY_ISSUANCE",
+      "id": "55273f8e-729a-47ad-a483-6a31cffde478-issuance",
+      "security_id": "55273f8e-729a-47ad-a483-6a31cffde478",
+      "date": "2023-03-02",
+      "security_law_exemptions": [
+        { "description": "Rule 701", "jurisdiction": "US" }
+      ],
+      "stakeholder_id": "6b6dfc67-16f9-4660-9e0e-26d67951ca3a",
+      "custom_id": "O-5",
+      "stock_plan_id": "e36bb60e-09bb-4a01-bae4-a9d0f09ac96f",
+      "compensation_type": "OPTION",
+      "quantity": "100000",
+      "exercise_price": { "amount": "0.0250000000", "currency": "USD" },
+      "expiration_date": "2025-10-01",
+      "termination_exercise_windows": [
+        {
+          "reason": "VOLUNTARY_GOOD_CAUSE",
+          "period": 90,
+          "period_type": "DAYS"
+        },
+        { "reason": "INVOLUNTARY_DEATH", "period": 90, "period_type": "DAYS" },
+        {
+          "reason": "INVOLUNTARY_DISABILITY",
+          "period": 90,
+          "period_type": "DAYS"
+        },
+        {
+          "reason": "VOLUNTARY_RETIREMENT",
+          "period": 90,
+          "period_type": "DAYS"
+        }
+      ],
+      "option_grant_type": "ISO",
+      "vesting_terms_id": "0c28a6b5-aecd-43fe-b2e9-437105e600ca"
+    },
+    {
+      "object_type": "TX_PLAN_SECURITY_ISSUANCE",
+      "id": "efbe35a7-8b03-49d1-b80b-963452f50193-issuance",
+      "security_id": "efbe35a7-8b03-49d1-b80b-963452f50193",
+      "date": "2023-03-02",
+      "security_law_exemptions": [],
+      "stakeholder_id": "a3468071-09fb-44ed-93e3-290deb5bbc56",
+      "custom_id": "O-8",
+      "stock_plan_id": "e36bb60e-09bb-4a01-bae4-a9d0f09ac96f",
+      "compensation_type": "OPTION",
+      "quantity": "50000",
+      "exercise_price": { "amount": "0.0250000000", "currency": "USD" },
+      "expiration_date": "2023-03-02",
+      "termination_exercise_windows": [],
+      "option_grant_type": "ISO"
+    },
+    {
+      "object_type": "TX_PLAN_SECURITY_ISSUANCE",
+      "id": "a79fce94-9c4a-41df-814f-aef937ae19c6-issuance",
+      "security_id": "a79fce94-9c4a-41df-814f-aef937ae19c6",
+      "date": "2023-03-02",
+      "security_law_exemptions": [],
+      "stakeholder_id": "93825800-9235-48fc-9007-80d8ac899b47",
+      "custom_id": "O-9",
+      "stock_plan_id": "e36bb60e-09bb-4a01-bae4-a9d0f09ac96f",
+      "compensation_type": "OPTION",
+      "quantity": "10000",
+      "exercise_price": { "amount": "1.1000000000", "currency": "USD" },
+      "expiration_date": "2030-09-22",
+      "termination_exercise_windows": [],
+      "option_grant_type": "NSO",
+      "vesting_terms_id": "6fdbeab5-0dec-4a02-9973-45dd9d8a0662"
+    },
+    {
+      "object_type": "TX_PLAN_SECURITY_ISSUANCE",
+      "id": "66499c49-2066-4534-8d42-ccc95ff6a275-issuance",
+      "security_id": "66499c49-2066-4534-8d42-ccc95ff6a275",
+      "date": "2023-03-02",
+      "security_law_exemptions": [
+        { "description": "Rule 701", "jurisdiction": "US" }
+      ],
+      "stakeholder_id": "6fd0b858-f815-419b-b246-7f7f33c82a7a",
+      "custom_id": "O-4",
+      "stock_plan_id": "e36bb60e-09bb-4a01-bae4-a9d0f09ac96f",
+      "compensation_type": "OPTION",
+      "quantity": "183000",
+      "exercise_price": { "amount": "0.0250000000", "currency": "USD" },
+      "expiration_date": "2025-06-01",
+      "termination_exercise_windows": [],
+      "option_grant_type": "ISO",
+      "vesting_terms_id": "0c28a6b5-aecd-43fe-b2e9-437105e600ca"
+    },
+    {
+      "object_type": "TX_PLAN_SECURITY_ISSUANCE",
+      "id": "5a50bd52-8551-4cd7-8ca9-fc7885226c52-issuance",
+      "security_id": "5a50bd52-8551-4cd7-8ca9-fc7885226c52",
+      "date": "2023-03-02",
+      "security_law_exemptions": [
+        { "description": "Rule 701", "jurisdiction": "US" }
+      ],
+      "stakeholder_id": "247ea27e-eb0a-4cf3-9981-03d48880d961",
+      "custom_id": "O-7",
+      "stock_plan_id": "e36bb60e-09bb-4a01-bae4-a9d0f09ac96f",
+      "compensation_type": "OPTION",
+      "quantity": "28000",
+      "exercise_price": { "amount": "0.1500000000", "currency": "USD" },
+      "expiration_date": "2029-01-24",
+      "termination_exercise_windows": [],
+      "option_grant_type": "ISO",
+      "vesting_terms_id": "0c28a6b5-aecd-43fe-b2e9-437105e600ca"
+    },
+    {
+      "object_type": "TX_PLAN_SECURITY_ACCEPTANCE",
+      "id": "6f538cec-3bd3-4250-ba5a-39f058bae011-acceptance",
+      "security_id": "6f538cec-3bd3-4250-ba5a-39f058bae011",
+      "date": "2022-03-29"
+    },
+    {
+      "object_type": "TX_PLAN_SECURITY_ACCEPTANCE",
+      "id": "1a77334c-75e0-471f-a3e0-77349b964bbb-acceptance",
+      "security_id": "1a77334c-75e0-471f-a3e0-77349b964bbb",
+      "date": "2022-03-12"
+    },
+    {
+      "object_type": "TX_PLAN_SECURITY_ACCEPTANCE",
+      "id": "e1d0fb08-4311-4f90-a09b-a8d79619c6db-acceptance",
+      "security_id": "e1d0fb08-4311-4f90-a09b-a8d79619c6db",
+      "date": "2022-03-14"
+    },
+    {
+      "object_type": "TX_PLAN_SECURITY_CANCELLATION",
+      "id": "209bd738-8c60-4ded-a805-b3a5d0ba14fb-cancellation",
+      "security_id": "209bd738-8c60-4ded-a805-b3a5d0ba14fb",
+      "date": "2022-08-27",
+      "reason_text": "Lapsed",
+      "quantity": "133000"
+    },
+    {
+      "object_type": "TX_PLAN_SECURITY_CANCELLATION",
+      "id": "47770985-af4a-4aa9-bb32-30ea10b1cf1f-cancellation",
+      "security_id": "47770985-af4a-4aa9-bb32-30ea10b1cf1f",
+      "date": "2022-11-23",
+      "reason_text": "Lapsed",
+      "quantity": "5000"
+    },
+    {
+      "object_type": "TX_PLAN_SECURITY_CANCELLATION",
+      "id": "477c65b6-b7a6-44fc-ad3e-b11f92bd6a45-cancellation",
+      "security_id": "477c65b6-b7a6-44fc-ad3e-b11f92bd6a45",
+      "date": "2022-01-02",
+      "reason_text": "Lapsed",
+      "quantity": "15000"
+    },
+    {
+      "object_type": "TX_PLAN_SECURITY_CANCELLATION",
+      "id": "bdf684e8-497e-4c5d-9d76-5d2167273c79-cancellation",
+      "security_id": "bdf684e8-497e-4c5d-9d76-5d2167273c79",
+      "date": "2022-08-27",
+      "reason_text": "Lapsed",
+      "quantity": "50000"
+    },
+    {
+      "object_type": "TX_PLAN_SECURITY_CANCELLATION",
+      "id": "efbe35a7-8b03-49d1-b80b-963452f50193-cancellation",
+      "security_id": "efbe35a7-8b03-49d1-b80b-963452f50193",
+      "date": "2022-01-02",
+      "reason_text": "Lapsed",
+      "quantity": "50000"
+    },
+    {
+      "object_type": "TX_PLAN_SECURITY_CANCELLATION",
+      "id": "5a50bd52-8551-4cd7-8ca9-fc7885226c52-cancellation",
+      "security_id": "5a50bd52-8551-4cd7-8ca9-fc7885226c52",
+      "date": "2019-05-15",
+      "reason_text": "Lapsed",
+      "quantity": "28000"
+    },
+    {
+      "object_type": "TX_PLAN_SECURITY_EXERCISE",
+      "id": "efbe35a7-8b03-49d1-b80b-963452f50193-exercise",
+      "security_id": "efbe35a7-8b03-49d1-b80b-963452f50193",
+      "date": "2019-01-03",
+      "resulting_security_ids": ["0aa2d9cd-4214-4b1c-abc3-aaeb22f90a10"],
+      "quantity": "50000"
+    },
+    {
+      "object_type": "TX_PLAN_SECURITY_EXERCISE",
+      "id": "477c65b6-b7a6-44fc-ad3e-b11f92bd6a45-exercise",
+      "security_id": "477c65b6-b7a6-44fc-ad3e-b11f92bd6a45",
+      "date": "2022-05-25",
+      "resulting_security_ids": ["22f4b65d-293c-4d96-9f14-75bd203540a1"],
+      "quantity": "145"
+    },
+    {
+      "object_type": "TX_PLAN_SECURITY_EXERCISE",
+      "id": "990fbe55-0054-4627-a37d-503da3908432-exercise",
+      "security_id": "990fbe55-0054-4627-a37d-503da3908432",
+      "date": "2022-08-02",
+      "resulting_security_ids": ["d503e119-8616-433f-bed6-101268565fe1"],
+      "quantity": "250"
+    },
+    {
+      "object_type": "TX_PLAN_SECURITY_EXERCISE",
+      "id": "407df67b-3ebf-4fdd-aa2f-d09171393359-exercise",
+      "security_id": "407df67b-3ebf-4fdd-aa2f-d09171393359",
+      "date": "2022-08-26",
+      "resulting_security_ids": ["f347d7f6-0e1c-47c4-aaca-275650e8219c"],
+      "quantity": "12500"
+    },
+    {
+      "object_type": "TX_PLAN_SECURITY_EXERCISE",
+      "id": "377a5d1c-7911-45fa-9a5a-58a5ac9d415a-exercise",
+      "security_id": "377a5d1c-7911-45fa-9a5a-58a5ac9d415a",
+      "date": "2022-09-02",
+      "resulting_security_ids": ["5dcec3da-6505-48a3-aa1d-cd5a1a7c5432"],
+      "quantity": "1000"
+    },
+    {
+      "object_type": "TX_PLAN_SECURITY_EXERCISE",
+      "id": "a79fce94-9c4a-41df-814f-aef937ae19c6-exercise",
+      "security_id": "a79fce94-9c4a-41df-814f-aef937ae19c6",
+      "date": "2022-10-23",
+      "resulting_security_ids": ["b758623b-4ab7-4054-9706-cc4c41379f0f"],
+      "quantity": "6000"
+    },
+    {
+      "object_type": "TX_PLAN_SECURITY_EXERCISE",
+      "id": "47770985-af4a-4aa9-bb32-30ea10b1cf1f-exercise",
+      "security_id": "47770985-af4a-4aa9-bb32-30ea10b1cf1f",
+      "date": "2022-11-23",
+      "resulting_security_ids": ["5443b251-b794-4540-99fa-274cfa25ea96"],
+      "quantity": "1000"
+    },
+    {
+      "object_type": "TX_VESTING_START",
+      "id": "8db31403-cdd9-401b-8cb2-870be86bc649-vesting-start-txn",
+      "security_id": "8db31403-cdd9-401b-8cb2-870be86bc649",
+      "date": "2021-07-06",
+      "vesting_condition_id": "vesting-start"
+    },
+    {
+      "object_type": "TX_VESTING_START",
+      "id": "209bd738-8c60-4ded-a805-b3a5d0ba14fb-vesting-start-txn",
+      "security_id": "209bd738-8c60-4ded-a805-b3a5d0ba14fb",
+      "date": "2018-11-09",
+      "vesting_condition_id": "vesting-start"
+    },
+    {
+      "object_type": "TX_VESTING_START",
+      "id": "47770985-af4a-4aa9-bb32-30ea10b1cf1f-vesting-start-txn",
+      "security_id": "47770985-af4a-4aa9-bb32-30ea10b1cf1f",
+      "date": "2020-08-25",
+      "vesting_condition_id": "vesting-start"
+    },
+    {
+      "object_type": "TX_VESTING_START",
+      "id": "990fbe55-0054-4627-a37d-503da3908432-vesting-start-txn",
+      "security_id": "990fbe55-0054-4627-a37d-503da3908432",
+      "date": "2020-07-14",
+      "vesting_condition_id": "vesting-start"
+    },
+    {
+      "object_type": "TX_VESTING_START",
+      "id": "377a5d1c-7911-45fa-9a5a-58a5ac9d415a-vesting-start-txn",
+      "security_id": "377a5d1c-7911-45fa-9a5a-58a5ac9d415a",
+      "date": "2022-06-14",
+      "vesting_condition_id": "vesting-start"
+    },
+    {
+      "object_type": "TX_VESTING_START",
+      "id": "d42d880f-788c-423b-b48c-e773275c1831-vesting-start-txn",
+      "security_id": "d42d880f-788c-423b-b48c-e773275c1831",
+      "date": "2022-06-01",
+      "vesting_condition_id": "vesting-start"
+    },
+    {
+      "object_type": "TX_VESTING_START",
+      "id": "9a1197e7-f898-4ce0-85d5-8c1661784b5a-vesting-start-txn",
+      "security_id": "9a1197e7-f898-4ce0-85d5-8c1661784b5a",
+      "date": "2022-03-14",
+      "vesting_condition_id": "vesting-start"
+    },
+    {
+      "object_type": "TX_VESTING_START",
+      "id": "477c65b6-b7a6-44fc-ad3e-b11f92bd6a45-vesting-start-txn",
+      "security_id": "477c65b6-b7a6-44fc-ad3e-b11f92bd6a45",
+      "date": "2022-04-04",
+      "vesting_condition_id": "vesting-start"
+    },
+    {
+      "object_type": "TX_VESTING_START",
+      "id": "d886eb03-eba3-484b-9fab-7bc59526ff2a-vesting-start-txn",
+      "security_id": "d886eb03-eba3-484b-9fab-7bc59526ff2a",
+      "date": "2016-01-01",
+      "vesting_condition_id": "vesting-start"
+    },
+    {
+      "object_type": "TX_VESTING_START",
+      "id": "6f538cec-3bd3-4250-ba5a-39f058bae011-vesting-start-txn",
+      "security_id": "6f538cec-3bd3-4250-ba5a-39f058bae011",
+      "date": "2022-03-29",
+      "vesting_condition_id": "vesting-start"
+    },
+    {
+      "object_type": "TX_VESTING_START",
+      "id": "407df67b-3ebf-4fdd-aa2f-d09171393359-vesting-start-txn",
+      "security_id": "407df67b-3ebf-4fdd-aa2f-d09171393359",
+      "date": "2021-03-15",
+      "vesting_condition_id": "vesting-start"
+    },
+    {
+      "object_type": "TX_VESTING_START",
+      "id": "bdf684e8-497e-4c5d-9d76-5d2167273c79-vesting-start-txn",
+      "security_id": "bdf684e8-497e-4c5d-9d76-5d2167273c79",
+      "date": "2022-03-14",
+      "vesting_condition_id": "vesting-start"
+    },
+    {
+      "object_type": "TX_VESTING_START",
+      "id": "1a77334c-75e0-471f-a3e0-77349b964bbb-vesting-start-txn",
+      "security_id": "1a77334c-75e0-471f-a3e0-77349b964bbb",
+      "date": "2021-03-12",
+      "vesting_condition_id": "vesting-start"
+    },
+    {
+      "object_type": "TX_VESTING_START",
+      "id": "e1d0fb08-4311-4f90-a09b-a8d79619c6db-vesting-start-txn",
+      "security_id": "e1d0fb08-4311-4f90-a09b-a8d79619c6db",
+      "date": "2021-03-11",
+      "vesting_condition_id": "vesting-start"
+    },
+    {
+      "object_type": "TX_VESTING_START",
+      "id": "55273f8e-729a-47ad-a483-6a31cffde478-vesting-start-txn",
+      "security_id": "55273f8e-729a-47ad-a483-6a31cffde478",
+      "date": "2020-12-01",
+      "vesting_condition_id": "vesting-start"
+    },
+    {
+      "object_type": "TX_VESTING_START",
+      "id": "a79fce94-9c4a-41df-814f-aef937ae19c6-vesting-start-txn",
+      "security_id": "a79fce94-9c4a-41df-814f-aef937ae19c6",
+      "date": "2019-09-01",
+      "vesting_condition_id": "vesting-start"
+    },
+    {
+      "object_type": "TX_VESTING_START",
+      "id": "66499c49-2066-4534-8d42-ccc95ff6a275-vesting-start-txn",
+      "security_id": "66499c49-2066-4534-8d42-ccc95ff6a275",
+      "date": "2015-06-01",
+      "vesting_condition_id": "vesting-start"
+    },
+    {
+      "object_type": "TX_VESTING_START",
+      "id": "5a50bd52-8551-4cd7-8ca9-fc7885226c52-vesting-start-txn",
+      "security_id": "5a50bd52-8551-4cd7-8ca9-fc7885226c52",
+      "date": "2016-01-01",
+      "vesting_condition_id": "vesting-start"
+    },
+    {
+      "object_type": "TX_VESTING_EVENT",
+      "id": "477c65b6-b7a6-44fc-ad3e-b11f92bd6a45-upfront-vesting-txn",
+      "security_id": "477c65b6-b7a6-44fc-ad3e-b11f92bd6a45",
+      "date": "2022-04-04",
+      "vesting_condition_id": "upfront"
+    },
+    {
+      "object_type": "TX_VESTING_EVENT",
+      "id": "407df67b-3ebf-4fdd-aa2f-d09171393359-upfront-vesting-txn",
+      "security_id": "407df67b-3ebf-4fdd-aa2f-d09171393359",
+      "date": "2022-11-29",
+      "vesting_condition_id": "upfront"
+    },
+    {
+      "object_type": "TX_PLAN_SECURITY_ISSUANCE",
+      "id": "2b8238fd-cf24-43cb-94c0-bb31251fc36d-issuance",
+      "security_id": "2b8238fd-cf24-43cb-94c0-bb31251fc36d",
+      "date": "2023-03-02",
+      "security_law_exemptions": [
+        { "description": "Rule 701", "jurisdiction": "US" }
+      ],
+      "stakeholder_id": "13af8449-3819-43e1-948b-29fead8c2346",
+      "custom_id": "CS-11",
+      "stock_plan_id": "e36bb60e-09bb-4a01-bae4-a9d0f09ac96f",
+      "compensation_type": "RSU",
+      "quantity": "250000",
+      "exercise_price": { "amount": "0.1500000059", "currency": "USD" },
+      "expiration_date": "2023-03-02",
+      "termination_exercise_windows": [],
+      "vesting_terms_id": "0c28a6b5-aecd-43fe-b2e9-437105e600ca"
+    },
+    {
+      "object_type": "TX_PLAN_SECURITY_ISSUANCE",
+      "id": "ff6326b8-4b75-428b-ae30-3203dbfbedf7-issuance",
+      "security_id": "ff6326b8-4b75-428b-ae30-3203dbfbedf7",
+      "date": "2022-10-14",
+      "security_law_exemptions": [],
+      "stakeholder_id": "13af8449-3819-43e1-948b-29fead8c2346",
+      "custom_id": "CS-21",
+      "stock_plan_id": "e36bb60e-09bb-4a01-bae4-a9d0f09ac96f",
+      "compensation_type": "RSU",
+      "quantity": "200000",
+      "exercise_price": { "amount": "0.1500000059", "currency": "USD" },
+      "expiration_date": "2023-03-02",
+      "termination_exercise_windows": []
+    },
+    {
+      "object_type": "TX_PLAN_SECURITY_ISSUANCE",
+      "id": "78f116fd-8b7f-4296-b597-74de7bdb3e5e-issuance",
+      "security_id": "78f116fd-8b7f-4296-b597-74de7bdb3e5e",
+      "date": "2023-03-02",
+      "security_law_exemptions": [],
+      "stakeholder_id": "a2ec9e84-4543-47a3-9c21-911dd167c115",
+      "custom_id": "CS-34",
+      "stock_plan_id": "e36bb60e-09bb-4a01-bae4-a9d0f09ac96f",
+      "compensation_type": "RSU",
+      "quantity": "100000",
+      "exercise_price": { "amount": "1.0000000000", "currency": "USD" },
+      "expiration_date": "2023-03-02",
+      "termination_exercise_windows": []
+    },
+    {
+      "object_type": "TX_PLAN_SECURITY_ISSUANCE",
+      "id": "ed35dd43-a61c-40d7-8aca-2f546d454a7e-issuance",
+      "security_id": "ed35dd43-a61c-40d7-8aca-2f546d454a7e",
+      "date": "2023-03-02",
+      "security_law_exemptions": [],
+      "stakeholder_id": "6fd0b858-f815-419b-b246-7f7f33c82a7a",
+      "custom_id": "CS-35",
+      "stock_plan_id": "e36bb60e-09bb-4a01-bae4-a9d0f09ac96f",
+      "compensation_type": "RSU",
+      "quantity": "250",
+      "exercise_price": { "amount": "0.0000000000", "currency": "USD" },
+      "expiration_date": "2023-03-02",
+      "termination_exercise_windows": [],
+      "vesting_terms_id": "4d105941-73ef-43e1-8f1e-8c8897945833"
+    },
+    {
+      "object_type": "TX_PLAN_SECURITY_ISSUANCE",
+      "id": "9eae2d58-e19c-4362-9b07-acfa23c18f88-issuance",
+      "security_id": "9eae2d58-e19c-4362-9b07-acfa23c18f88",
+      "date": "2023-03-02",
+      "security_law_exemptions": [],
+      "stakeholder_id": "6fd0b858-f815-419b-b246-7f7f33c82a7a",
+      "custom_id": "CS-36",
+      "stock_plan_id": "e36bb60e-09bb-4a01-bae4-a9d0f09ac96f",
+      "compensation_type": "RSU",
+      "quantity": "250",
+      "exercise_price": { "amount": "0.0000000000", "currency": "USD" },
+      "expiration_date": "2023-03-02",
+      "termination_exercise_windows": [],
+      "vesting_terms_id": "0c28a6b5-aecd-43fe-b2e9-437105e600ca"
+    },
+    {
+      "object_type": "TX_PLAN_SECURITY_ISSUANCE",
+      "id": "9768e207-909d-4b26-87c2-30c8e7af42c0-issuance",
+      "security_id": "9768e207-909d-4b26-87c2-30c8e7af42c0",
+      "date": "2023-03-02",
+      "security_law_exemptions": [],
+      "stakeholder_id": "bfe87277-295f-4667-a5f8-067d627080b3",
+      "custom_id": "CS-37",
+      "stock_plan_id": "e36bb60e-09bb-4a01-bae4-a9d0f09ac96f",
+      "compensation_type": "RSU",
+      "quantity": "10000",
+      "exercise_price": { "amount": "100.0000000000", "currency": "USD" },
+      "expiration_date": "2023-03-02",
+      "termination_exercise_windows": []
+    },
+    {
+      "object_type": "TX_PLAN_SECURITY_ISSUANCE",
+      "id": "ef389ee8-b643-4a20-aa9e-e07cde9af93d-issuance",
+      "security_id": "ef389ee8-b643-4a20-aa9e-e07cde9af93d",
+      "date": "2023-03-02",
+      "security_law_exemptions": [],
+      "stakeholder_id": "bfe87277-295f-4667-a5f8-067d627080b3",
+      "custom_id": "CS-38",
+      "stock_plan_id": "e36bb60e-09bb-4a01-bae4-a9d0f09ac96f",
+      "compensation_type": "RSU",
+      "quantity": "24000",
+      "exercise_price": { "amount": "0.0000000000", "currency": "USD" },
+      "expiration_date": "2023-03-02",
+      "termination_exercise_windows": [],
+      "vesting_terms_id": "b8a11302-9591-4ed3-a322-1aa201fcf1b3"
+    },
+    {
+      "object_type": "TX_PLAN_SECURITY_CANCELLATION",
+      "id": "2b8238fd-cf24-43cb-94c0-bb31251fc36d-cancellation",
+      "security_id": "2b8238fd-cf24-43cb-94c0-bb31251fc36d",
+      "reason_text": "Cancelled",
+      "date": "2016-03-22",
+      "quantity": "250000"
+    },
+    {
+      "object_type": "TX_PLAN_SECURITY_CANCELLATION",
+      "id": "9eae2d58-e19c-4362-9b07-acfa23c18f88-cancellation",
+      "security_id": "9eae2d58-e19c-4362-9b07-acfa23c18f88",
+      "reason_text": "Cancelled",
+      "date": "2023-02-13",
+      "quantity": "250"
+    },
+    {
+      "object_type": "TX_VESTING_START",
+      "id": "2b8238fd-cf24-43cb-94c0-bb31251fc36d-vesting-start-txn",
+      "security_id": "2b8238fd-cf24-43cb-94c0-bb31251fc36d",
+      "date": "2016-03-22",
+      "vesting_condition_id": "vesting-start"
+    },
+    {
+      "object_type": "TX_VESTING_START",
+      "id": "ed35dd43-a61c-40d7-8aca-2f546d454a7e-vesting-start-txn",
+      "security_id": "ed35dd43-a61c-40d7-8aca-2f546d454a7e",
+      "date": "2023-02-13",
+      "vesting_condition_id": "vesting-start"
+    },
+    {
+      "object_type": "TX_VESTING_START",
+      "id": "9eae2d58-e19c-4362-9b07-acfa23c18f88-vesting-start-txn",
+      "security_id": "9eae2d58-e19c-4362-9b07-acfa23c18f88",
+      "date": "2023-02-13",
+      "vesting_condition_id": "vesting-start"
+    },
+    {
+      "object_type": "TX_VESTING_START",
+      "id": "ef389ee8-b643-4a20-aa9e-e07cde9af93d-vesting-start-txn",
+      "security_id": "ef389ee8-b643-4a20-aa9e-e07cde9af93d",
+      "date": "2023-02-21",
+      "vesting_condition_id": "vesting-start"
+    }
+  ]
+}
