@@ -58,6 +58,21 @@ describe("extractFilesetFromPath", () => {
     expect(actualContent).toBe(expectedContent);
   });
 
+  test("container relative path matching", () => {
+    const fixture = extractFilesetFromPath(
+      fixturePath("manifest-only-package")
+    );
+
+    expect(fixture[0].isSameAs("Manifest.ocf.json")).toBe(true);
+    expect(fixture[0].isSameAs("./Manifest.ocf.json")).toBe(true);
+    expect(
+      fixture[0].isSameAs("../manifest-only-package/Manifest.ocf.json")
+    ).toBe(true);
+    expect(
+      fixture[0].isSameAs("../ambiguous-manifest-package/Manifest.ocf.json")
+    ).toBe(false);
+  });
+
   function fixturePath(fixtureName: string) {
     return `test/fixtures/${fixtureName}`;
   }

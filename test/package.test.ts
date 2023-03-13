@@ -8,6 +8,7 @@ describe("ocf-package", () => {
   function mockManifestFile(attrOverrides: object) {
     return {
       path: "manifest.json",
+      isSameAs: (p: string) => !!p,
       sizeInBytes: 100, // value doesn't really matter as long as it's below threshold
       readAsText: () => '{ "file_type": "OCF_MANIFEST_FILE" }',
       ...attrOverrides,
@@ -98,6 +99,21 @@ describe("ocf-package", () => {
       const firstObject = ocfpkg.objects().next().value;
       expect(firstObject?.id).toBe("d3373e0a-4dd9-430f-8a56-3281f2800ede");
       expect(firstObject?.object_type).toBe("ISSUER");
+    });
+
+    test("other objects are emitted", () => {
+      const fixture = extractFilesetFromPath(fixturePath("example-inc"));
+      const ocfpkg = OCX.OCFPackage.createFromFileset(fixture);
+
+      const objectIds = new Map<string, Set<string>>();
+
+      for (const obj of ocfpkg.objects()) {
+        const items = objectIds.get(obj.object_type) ?? new Set();
+        items.add(obj.id);
+        objectIds.set(obj.object_type, items);
+      }
+
+      expect((objectIds.get("STAKEHOLDER") ?? new Set()).size).toBe(22);
     });
   });
 
