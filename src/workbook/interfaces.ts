@@ -1,7 +1,15 @@
 import { Style } from "exceljs";
 
 export interface StakeholderModel {
+  id?: string;
   display_name: string;
+}
+
+export interface StockClassModel {
+  id?: string;
+  display_name: string;
+  is_preferred?: boolean;
+  conversion_ratio?: number;
 }
 
 // This is a case of "the client defines the interface". The
@@ -12,6 +20,13 @@ export interface Model {
   asOfDate: Date;
   issuerName: string;
   stakeholders: Array<StakeholderModel>;
+
+  stockClasses?: Array<StockClassModel>;
+
+  getStakeholderStockHoldings?: (
+    stakeholder: StakeholderModel,
+    stockClass: StockClassModel
+  ) => number;
 }
 
 export interface WorksheetLinePrinter {
