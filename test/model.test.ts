@@ -38,6 +38,36 @@ describe(OCX.Model, () => {
     });
   });
 
+  describe("stock classes", () => {
+    test("empty case", () => {
+      const model = subject();
+      expect(model.stockClasses).toHaveLength(0);
+    });
+
+    test("common stock", () => {
+      const model = subject();
+      const fakeStockClassA = fakeCommonStockClass("Class A");
+      model.consume(fakeStockClassA);
+      expect(model.stockClasses).toHaveLength(1);
+      const modelClass = model.stockClasses[0];
+
+      expect(modelClass.id).toBe(fakeStockClassA.id);
+      expect(modelClass.display_name).toBe(fakeStockClassA.name);
+      expect(modelClass.is_preferred).toBe(false);
+      expect(modelClass.conversion_ratio).toEqual(1);
+    });
+  });
+
+  function fakeCommonStockClass(id: string) {
+    return {
+      id: id,
+      object_type: "STOCK_CLASS",
+      name: `${id} Common Stock`,
+      board_approval_date: new Date(),
+      class_type: "COMMON",
+    };
+  }
+
   function fakeStakeholder(id: string): object {
     return {
       id: id,
