@@ -12,16 +12,17 @@ function convertRatioToDecimalNumber(ratio: {
 class OutstandingStockSharesCalculator {
   private value_: Big = Big("0");
   private issuanceAmounts_: Map<string, string> = new Map();
-  private reissuedSecurityIds_: string[] = [];
+  private reissuedSecurityIds_: Set<string> = new Set();
 
   public get value() {
     for (const reissuedSecurityId of this.reissuedSecurityIds_) {
       const reissuedAmount = this.issuanceAmounts_.get(reissuedSecurityId);
       if (reissuedAmount !== undefined) {
         this.issuanceAmounts_.delete(reissuedSecurityId);
+        this.reissuedSecurityIds_.delete(reissuedSecurityId);
         this.value_ = this.value_.minus(reissuedAmount);
       } else {
-        // TODO: Interesting question here; log? raise error? save the reissuance for "later"
+        // TODO: Interesting question here; log? raise error? save the reissuance for "later"?
       }
     }
 
@@ -40,7 +41,7 @@ class OutstandingStockSharesCalculator {
       this.value_ = this.value_.plus(operand);
       this.issuanceAmounts_.set(txn.security_id, operand);
     } else if (txn.object_type === "TX_STOCK_REISSUANCE") {
-      this.reissuedSecurityIds_.push(txn.security_id);
+      this.reissuedSecurityIds_.add(txn.security_id);
     } else {
       this.value_ = this.value_.minus(operand);
     }
