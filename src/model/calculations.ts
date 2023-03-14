@@ -17,7 +17,11 @@ class OutstandingStockSharesCalculator {
 
   public apply(txn: { object_type: string; quantity?: string }) {
     if (txn.quantity) {
-      this.value_ = this.value_.plus(txn.quantity);
+      if (txn.object_type === "TX_STOCK_ISSUANCE") {
+        this.value_ = this.value_.plus(txn.quantity);
+      } else {
+        this.value_ = this.value_.sub(txn.quantity);
+      }
     }
   }
 }
