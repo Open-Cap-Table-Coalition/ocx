@@ -8,6 +8,7 @@ function convertRatioToDecimalNumber(ratio: {
   return quotient;
 }
 
+// Reference: https://docs.google.com/document/d/19iVTJfJxIMr_gQHzMgSAHR6PhCBFEHg0TahjYc8uOac/edit#heading=h.fiexe0ua8jk7
 class OutstandingStockSharesCalculator {
   private value_: Big = Big("0");
   private issuanceAmounts_: Map<string, string> = new Map();
