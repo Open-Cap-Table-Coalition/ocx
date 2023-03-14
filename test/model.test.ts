@@ -73,8 +73,8 @@ describe(OCX.Model, () => {
     test("preferred stock w/ conversion rights", () => {
       const model = subject();
       const preferredStockClass = fakePreferredStockClass("Series A", {
-        convertsFrom: "1",
-        to: "3",
+        convertsFrom: "3",
+        to: "4",
       });
       model.consume(preferredStockClass);
       expect(model.stockClasses).toHaveLength(1);
@@ -83,38 +83,74 @@ describe(OCX.Model, () => {
       expect(modelClass.id).toBe(preferredStockClass.id);
       expect(modelClass.display_name).toBe(preferredStockClass.name);
       expect(modelClass.is_preferred).toBe(true);
-      expect(modelClass.conversion_ratio).toEqual(3);
+      expect(modelClass.conversion_ratio).toEqual(1.3333333333333333);
+    });
+
+    test("stock class sort order", () => {
+      const model = subject();
+      const commonStockClassA = fakeCommonStockClass("Abc", {
+        boardApproved: "2011-01-01",
+      });
+      const commonStockClassB = fakeCommonStockClass("Bcd", {
+        boardApproved: new Date().toISOString(),
+      });
+      const commonStockClassC = fakeCommonStockClass("Cde");
+      const commonStockClassD = fakeCommonStockClass("Def");
+
+      const preferredStockClass001 = fakePreferredStockClass("001", {
+        boardApproved: "2010-01-01",
+      });
+      const preferredStockClass002 = fakePreferredStockClass("002", {
+        boardApproved: new Date().toISOString(),
+      });
+      const preferredStockClass003 = fakePreferredStockClass("003", {
+        boardApproved: preferredStockClass002.board_approval_date,
+      });
+      const preferredStockClass004 = fakePreferredStockClass("004");
+
+      model.consume(preferredStockClass004);
+      model.consume(preferredStockClass003);
+      model.consume(preferredStockClass002);
+      model.consume(preferredStockClass001);
+      model.consume(commonStockClassD);
+      model.consume(commonStockClassC);
+      model.consume(commonStockClassB);
+      model.consume(commonStockClassA);
+
+      expect(model.stockClasses.map((sc) => sc.id).join(" ")).toEqual(
+        "Abc Bcd Cde Def 001 002 003 004"
+      );
     });
   });
 
-  function fakeCommonStockClass(id: string) {
+  function fakeCommonStockClass(id: string, opts?: { boardApproved?: string }) {
     return {
       id: id,
       object_type: "STOCK_CLASS",
       name: `${id} Common Stock`,
-      board_approval_date: new Date(),
+      board_approval_date: opts?.boardApproved,
       class_type: "COMMON",
     };
   }
 
   function fakePreferredStockClass(
     id: string,
-    conversionRatio?: { convertsFrom: string; to: string }
+    opts?: { convertsFrom?: string; to?: string; boardApproved?: string }
   ) {
     return {
       id: id,
       object_type: "STOCK_CLASS",
       name: `${id} Preferred Stock`,
-      board_approval_date: new Date(),
+      board_approval_date: opts?.boardApproved,
       class_type: "PREFERRED",
-      conversion_rights: conversionRatio
+      conversion_rights: opts?.convertsFrom
         ? [
             {
               conversion_mechanism: {
                 type: "RATIO_CONVERSION",
                 ratio: {
-                  numerator: conversionRatio.to,
-                  denominator: conversionRatio.convertsFrom,
+                  numerator: opts.to,
+                  denominator: opts.convertsFrom,
                 },
               },
             },

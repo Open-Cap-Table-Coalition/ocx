@@ -1,15 +1,20 @@
 import {
   Model as WorkbookModel,
   StakeholderModel,
-  StockClassModel,
+  StockClassModel as WorkbookStockClassModel,
 } from "src/workbook/interfaces";
 
 import Calculations from "./calculations";
+
+interface StockClassModel extends WorkbookStockClassModel {
+  board_approval_date: Date | null;
+}
 
 class Model implements WorkbookModel {
   public issuerName = "";
   private stakeholders_: StakeholderModel[] = [];
   private stockClasses_: StockClassModel[] = [];
+  private sortedStockClasses_: StockClassModel[] = [];
 
   constructor(
     public readonly asOfDate: Date,
@@ -40,7 +45,36 @@ class Model implements WorkbookModel {
   }
 
   public get stockClasses() {
-    return this.stockClasses_;
+    if (this.sortedStockClasses_.length !== this.stockClasses_.length) {
+      this.sortedStockClasses_ = [...this.stockClasses_].sort(
+        this.compareClassesForSort
+      );
+    }
+
+    return this.sortedStockClasses_;
+  }
+
+  private compareClassesForSort(
+    classA: StockClassModel,
+    classB: StockClassModel
+  ) {
+    // Sort criteria 1: Common before preferred
+    if (classA.is_preferred !== classB.is_preferred) {
+      return classA.is_preferred ? 1 : -1;
+    }
+
+    // Sort criteria 2: Older before newer
+    const now = new Date();
+    const dateDiff: number =
+      (classA.board_approval_date ?? now).valueOf() -
+      (classB.board_approval_date ?? now).valueOf();
+
+    if (dateDiff !== 0) {
+      return dateDiff;
+    }
+
+    // Tie-breaker: Sort by name
+    return classA.display_name.localeCompare(classB.display_name);
   }
 
   // This is required on the methods below because an object being
@@ -70,11 +104,17 @@ class Model implements WorkbookModel {
       value?.conversion_rights
     );
 
+    let board_approval_date = null;
+
+    if (value?.board_approval_date) {
+      board_approval_date = new Date(value.board_approval_date);
+    }
     this.stockClasses_.push({
       id: value?.id,
       display_name: value?.name,
       is_preferred: value?.class_type !== "COMMON",
       conversion_ratio,
+      board_approval_date,
     });
   }
 
