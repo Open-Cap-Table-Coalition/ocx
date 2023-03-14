@@ -115,6 +115,38 @@ describe("ocf-package", () => {
 
       expect((objectIds.get("STAKEHOLDER") ?? new Set()).size).toBe(22);
       expect((objectIds.get("STOCK_CLASS") ?? new Set()).size).toBe(3);
+
+      expect((objectIds.get("TX_STOCK_ISSUANCE") ?? new Set()).size).toBe(45);
+      expect((objectIds.get("TX_STOCK_ACCEPTANCE") ?? new Set()).size).toBe(2);
+      expect((objectIds.get("TX_STOCK_CANCELLATION") ?? new Set()).size).toBe(
+        3
+      );
+      expect((objectIds.get("TX_STOCK_REPURCHASE") ?? new Set()).size).toBe(2);
+      expect((objectIds.get("TX_STOCK_TRANSFER") ?? new Set()).size).toBe(3);
+
+      expect(
+        (objectIds.get("TX_PLAN_SECURITY_ISSUANCE") ?? new Set()).size
+      ).toBe(26);
+      expect(
+        (objectIds.get("TX_PLAN_SECURITY_ACCEPTANCE") ?? new Set()).size
+      ).toBe(3);
+      expect(
+        (objectIds.get("TX_PLAN_SECURITY_CANCELLATION") ?? new Set()).size
+      ).toBe(8);
+      expect(
+        (objectIds.get("TX_PLAN_SECURITY_EXERCISE") ?? new Set()).size
+      ).toBe(7);
+
+      expect((objectIds.get("TX_WARRANT_ISSUANCE") ?? new Set()).size).toBe(2);
+
+      expect((objectIds.get("TX_CONVERTIBLE_ISSUANCE") ?? new Set()).size).toBe(
+        10
+      );
+      expect(
+        (objectIds.get("TX_CONVERTIBLE_CONVERSION") ?? new Set()).size
+      ).toBe(3);
+      expect((objectIds.get("TX_VESTING_EVENT") ?? new Set()).size).toBe(2);
+      expect((objectIds.get("TX_VESTING_START") ?? new Set()).size).toBe(28);
     });
   });
 
