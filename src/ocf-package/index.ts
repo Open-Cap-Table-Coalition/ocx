@@ -10,6 +10,10 @@ interface OCFObject {
   readonly object_type: string; // this is actually an enum that comes from the schema but we'll stick with string for now
 }
 
+interface ReferencedFile {
+  readonly filepath: string;
+}
+
 // This user-defined type guard may seem redundant with the interface
 // definition above, but it is what allows us to "know" that
 // OCFPackage.*objects() generates only OCFObjects and never anything
@@ -67,58 +71,34 @@ class OCFPackage {
       console.warn("Encountered non-OCF object");
     }
 
-    if ("stakeholders_files" in parsedManifest) {
-      for (const eachFile of parsedManifest.stakeholders_files) {
-        if ("filepath" in eachFile) {
-          // find filepath in full file set and load
-          const file = this.allFiles.find((f) =>
-            f.isSameAs(eachFile["filepath"])
-          );
-          if (file) {
-            try {
-              const parsedFile = JSON.parse(file.readAsText());
-              if ("items" in parsedFile) {
-                for (const item of parsedFile["items"]) {
-                  if (isOCFObject(item)) {
-                    yield item;
-                  } else {
-                    console.warn("Encountered non-OCF object");
-                  }
-                }
-              }
-            } catch (e: unknown) {
-              // TODO: LOG and skip? Fail?
-            }
-          }
-        }
+    yield* this.itemsIn(parsedManifest?.stakeholders_files as ReferencedFile[]);
+    yield* this.itemsIn(
+      parsedManifest?.stock_classes_files as ReferencedFile[]
+    );
+  }
+
+  private *itemsIn(ocfFileReferences?: ReferencedFile[]): Generator<OCFObject> {
+    for (const eachFile of ocfFileReferences || []) {
+      // find filepath in full file set and load
+      const file = this.allFiles.find((f) => f.isSameAs(eachFile.filepath));
+      if (file) {
+        yield* this.items(file);
       }
     }
+  }
 
-    if ("stock_classes_files" in parsedManifest) {
-      for (const eachFile of parsedManifest.stock_classes_files) {
-        if ("filepath" in eachFile) {
-          // find filepath in full file set and load
-          const file = this.allFiles.find((f) =>
-            f.isSameAs(eachFile["filepath"])
-          );
-          if (file) {
-            try {
-              const parsedFile = JSON.parse(file.readAsText());
-              if ("items" in parsedFile) {
-                for (const item of parsedFile["items"]) {
-                  if (isOCFObject(item)) {
-                    yield item;
-                  } else {
-                    console.warn("Encountered non-OCF object");
-                  }
-                }
-              }
-            } catch (e: unknown) {
-              // TODO: LOG and skip? Fail?
-            }
-          }
+  private *items(file: File): Generator<OCFObject> {
+    try {
+      const parsedFile = JSON.parse(file.readAsText());
+      for (const item of parsedFile?.items || []) {
+        if (isOCFObject(item)) {
+          yield item;
+        } else {
+          console.warn("Encountered non-OCF object");
         }
       }
+    } catch (e: unknown) {
+      // TODO: LOG and skip? Fail?
     }
   }
 
