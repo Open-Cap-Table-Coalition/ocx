@@ -21,4 +21,14 @@ describe(Calculations.OutstandingStockSharesCalculator, () => {
     subject.apply({ object_type: "TX_STOCK_CANCELLATION", quantity: "1" });
     expect(subject.value).toBe(9);
   });
+
+  test("conversion", () => {
+    const subject = new Calculations.OutstandingStockSharesCalculator();
+    subject.apply({ object_type: "TX_STOCK_ISSUANCE", quantity: "10" });
+    subject.apply({
+      object_type: "TX_STOCK_CONVERSION",
+      quantity_converted: "1",
+    });
+    expect(subject.value).toBe(9);
+  });
 });
