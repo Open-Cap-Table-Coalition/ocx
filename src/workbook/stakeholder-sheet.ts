@@ -38,6 +38,12 @@ class StakeholderSheet {
       .addCell("Stakeholder")
       .addCell("Stakeholder Group");
 
+    for (const stockClass of model.stockClasses || []) {
+      if (!stockClass.is_preferred) {
+        writer.addCell(stockClass.display_name);
+      }
+    }
+
     for (const stakeholder of model.stakeholders || []) {
       writer.nextRow();
       writer.addCell(stakeholder.display_name, Styles.text);
