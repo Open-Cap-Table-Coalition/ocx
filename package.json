@@ -11,7 +11,7 @@
     "prepack": "npm run build",
     "prepare": "husky install",
     "test": "jest --passWithNoTests",
-    "cli": "npm run build && ts-node dist/src/cli/index.js",
+    "cli": "npm run build && node dist/src/cli/index.js",
     "build": "tsc",
     "prettier": "prettier --ignore-unknown --write",
     "lint": "eslint --max-warnings=0 --ext .js,.ts .",
