@@ -41,6 +41,7 @@ class ExcelJSLinePrinter {
 
   public addCell(value: Date | string | number | null, style?: Partial<Style>) {
     this.col += 1;
+    this.worksheet.getColumn(this.col).width = 16;
     this.worksheet.getCell(this.row, this.col).value = value;
     this.worksheet.getCell(this.row, this.col).style = {
       ...this.currentStyle,

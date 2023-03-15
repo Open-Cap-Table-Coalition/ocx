@@ -6,7 +6,7 @@ class Styles {
       fill: { type: "pattern", pattern: "none" },
       font: { name: "Calibri", bold: false, color: { argb: "000000" } },
       border: {},
-      alignment: {},
+      alignment: { shrinkToFit: true },
     };
   }
 
