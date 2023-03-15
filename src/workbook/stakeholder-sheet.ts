@@ -44,6 +44,18 @@ class StakeholderSheet {
       }
     }
 
+    for (const stockClass of model.stockClasses || []) {
+      if (stockClass.is_preferred) {
+        const ratio = stockClass.conversion_ratio?.toFixed(4);
+        writer.addCell(
+          stockClass.display_name + " (outstanding) " + "(" + ratio + ")"
+        );
+        if (ratio && parseFloat(ratio) !== 1.0) {
+          writer.addCell(stockClass.display_name + " (as converted)");
+        }
+      }
+    }
+
     for (const stakeholder of model.stakeholders || []) {
       writer.nextRow();
       writer
@@ -58,6 +70,20 @@ class StakeholderSheet {
             stockClass
           );
           writer.addCell(holdings);
+        }
+      }
+
+      for (const stockClass of model.stockClasses || []) {
+        if (stockClass.is_preferred && model.getStakeholderStockHoldings) {
+          const holdings = model.getStakeholderStockHoldings(
+            stakeholder,
+            stockClass
+          );
+          writer.addCell(holdings);
+          const ratio = stockClass.conversion_ratio?.toFixed(4);
+          if (ratio && parseFloat(ratio) !== 1.0) {
+            writer.addCell(holdings * parseFloat(ratio));
+          }
         }
       }
     }

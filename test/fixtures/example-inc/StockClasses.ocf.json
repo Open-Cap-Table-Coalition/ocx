@@ -32,7 +32,18 @@
       "current_shares_authorized": "2500000",
       "board_approval_date": "2019-07-01",
       "seniority": "2",
-      "votes_per_share": { "omitted": true, "comment": "Data not available" }
+      "votes_per_share": { "omitted": true, "comment": "Data not available" },
+      "conversion_rights": [
+        {
+          "conversion_mechanism": {
+            "type": "RATIO_CONVERSION",
+            "ratio": {
+              "numerator": 10,
+              "denominator": 5
+            }
+          }
+        }
+      ]
     }
   ]
 }
