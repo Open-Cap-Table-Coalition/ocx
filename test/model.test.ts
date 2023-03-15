@@ -30,9 +30,11 @@ describe(OCX.Model, () => {
       expect(model.stakeholders).toHaveLength(2);
 
       expect(model.stakeholders).toContainEqual({
+        id: "001",
         display_name: "Whodat 001",
       });
       expect(model.stakeholders).toContainEqual({
+        id: "002",
         display_name: "Whodat 002",
       });
     });
@@ -161,11 +163,37 @@ describe(OCX.Model, () => {
 
   function fakeStakeholder(id: string): object {
     return {
-      id: id,
+      id,
       object_type: "STAKEHOLDER",
       name: {
         legal_name: `Whodat ${id}`,
       },
+    };
+  }
+
+  describe("getStakeholderStockHoldings", () => {
+    test("simple case", () => {
+      const model = subject();
+      model.consume(fakeCommonStockClass("Fake"));
+      model.consume(fakeStakeholder("joe"));
+      model.consume(fakeStockIssuanceForStakeholder("joe", "Fake"));
+
+      expect(
+        model.getStakeholderStockHoldings(
+          model.stakeholders[0],
+          model.stockClasses[0]
+        )
+      ).toBe(100);
+    });
+  });
+
+  function fakeStockIssuanceForStakeholder(id: string, stock_class_id: string) {
+    return {
+      security_id: "yup",
+      stakeholder_id: id,
+      stock_class_id,
+      quantity: "100",
+      object_type: "TX_STOCK_ISSUANCE",
     };
   }
 });

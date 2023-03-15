@@ -6,6 +6,12 @@ import {
 
 import Calculations from "./calculations";
 
+// When I tried to use "Calculations.OutstandingStockSharesCalculator"
+// in a Map generic, I got a "cannot find namespace 'Calculations'"
+// error. Until I have time to understand this, I'm importing the
+// calculator separately.
+import { OutstandingStockSharesCalculator } from "./calculations";
+
 interface StockClassModel extends WorkbookStockClassModel {
   board_approval_date: Date | null;
 }
@@ -15,6 +21,13 @@ class Model implements WorkbookModel {
   private stakeholders_: StakeholderModel[] = [];
   private stockClasses_: StockClassModel[] = [];
   private sortedStockClasses_: StockClassModel[] = [];
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  private transactionsBySecurityId_ = new Map<string, Set<any>>();
+  private issuedSecuritiesByStakeholderAndStockClassIds_ = new Map<
+    string,
+    Set<string>
+  >();
 
   constructor(
     public readonly asOfDate: Date,
@@ -38,6 +51,10 @@ class Model implements WorkbookModel {
     if (value?.object_type === "STOCK_CLASS") {
       this.STOCK_CLASS(value);
     }
+
+    if ((value?.object_type ?? "").startsWith("TX_STOCK_")) {
+      this.TX_STOCK(value);
+    }
   }
 
   public get stakeholders() {
@@ -52,6 +69,26 @@ class Model implements WorkbookModel {
     }
 
     return this.sortedStockClasses_;
+  }
+
+  public getStakeholderStockHoldings(
+    stakeholder: StakeholderModel,
+    stockClass: WorkbookStockClassModel
+  ) {
+    const calculator = new OutstandingStockSharesCalculator();
+
+    const issuanceSecurityIds =
+      this.issuedSecuritiesByStakeholderAndStockClassIds_.get(
+        `${stakeholder.id}/${stockClass.id}`
+      ) || new Set();
+
+    for (const id of issuanceSecurityIds) {
+      for (const txn of this.transactionsBySecurityId_.get(id) || []) {
+        calculator.apply(txn);
+      }
+    }
+
+    return calculator.value;
   }
 
   private compareClassesForSort(
@@ -94,6 +131,7 @@ class Model implements WorkbookModel {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private STAKEHOLDER(value: any) {
     this.stakeholders_.push({
+      id: value?.id,
       display_name: value?.name?.legal_name || " - ",
     });
   }
@@ -116,6 +154,23 @@ class Model implements WorkbookModel {
       conversion_ratio,
       board_approval_date,
     });
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  private TX_STOCK(value: any) {
+    if (value.object_type === "TX_STOCK_ISSUANCE") {
+      const key = `${value.stakeholder_id}/${value.stock_class_id}`;
+      const ids =
+        this.issuedSecuritiesByStakeholderAndStockClassIds_.get(key) ||
+        new Set();
+      ids.add(value.security_id);
+      this.issuedSecuritiesByStakeholderAndStockClassIds_.set(key, ids);
+    }
+
+    const txns =
+      this.transactionsBySecurityId_.get(value.security_id) || new Set();
+    txns.add(value);
+    this.transactionsBySecurityId_.set(value.security_id, txns);
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
