@@ -55,14 +55,7 @@ describe(StakeholderSheet, () => {
     const sheet = new StakeholderSheet(worksheetWriter, {
       asOfDate: new Date(),
       issuerName: "Fred",
-      stakeholders: Array.of(
-        {
-          display_name: "Stockholder 1",
-        },
-        {
-          display_name: "Optionholder 42",
-        }
-      ),
+      stakeholders: Array.of(),
       stockClasses: Array.of(
         {
           display_name: "Class A Common Stock",
@@ -82,5 +75,55 @@ describe(StakeholderSheet, () => {
     expect(excel.worksheets[0].getCell("D2").value).toBe(
       "Class B Common Stock"
     );
+  });
+
+  test("per stakeholder holdings", () => {
+    const excel = new Excel.Workbook();
+    const workbookWriter = new ExcelJSWriter(excel);
+    const worksheetWriter = workbookWriter.addWorksheet("test");
+
+    const sheet = new StakeholderSheet(worksheetWriter, {
+      asOfDate: new Date(),
+      issuerName: "Fred",
+      stakeholders: Array.of(
+        {
+          display_name: "Stockholder 1",
+        },
+        {
+          display_name: "Optionholder 42",
+        }
+      ),
+      stockClasses: Array.of(
+        {
+          display_name: "Class A Common Stock",
+          is_preferred: false,
+        },
+        {
+          display_name: "Class B Common Stock",
+          is_preferred: false,
+        }
+      ),
+      getStakeholderStockHoldings: (stakeholder, stockClass) => {
+        if (stakeholder && stockClass) {
+          return 100;
+        }
+        return 0;
+      },
+    });
+
+    expect(sheet).not.toBeNull();
+    expect(excel.worksheets[0].getCell("A3").value).toBe("Stockholder 1");
+    expect(excel.worksheets[0].getCell("A4").value).toBe("Optionholder 42");
+    expect(excel.worksheets[0].getCell("A5").value).toBeNull();
+    expect(excel.worksheets[0].getCell("C2").value).toBe(
+      "Class A Common Stock"
+    );
+    expect(excel.worksheets[0].getCell("D2").value).toBe(
+      "Class B Common Stock"
+    );
+    expect(excel.worksheets[0].getCell("C3").value).toBe("100");
+    expect(excel.worksheets[0].getCell("C4").value).toBe("100");
+    expect(excel.worksheets[0].getCell("D3").value).toBe("100");
+    expect(excel.worksheets[0].getCell("D4").value).toBe("100");
   });
 });

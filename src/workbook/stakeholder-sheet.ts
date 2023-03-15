@@ -47,6 +47,18 @@ class StakeholderSheet {
     for (const stakeholder of model.stakeholders || []) {
       writer.nextRow();
       writer.addCell(stakeholder.display_name, Styles.text);
+      writer.addBlankCell();
+      for (const stockClass of model.stockClasses || []) {
+        if (!stockClass.is_preferred && model.getStakeholderStockHoldings) {
+          const holdings = model.getStakeholderStockHoldings(
+            stakeholder,
+            stockClass
+          );
+          writer.addCell(
+            holdings !== undefined ? `${holdings.toString()}` : ""
+          );
+        }
+      }
     }
 
     worksheet.nextRow();
