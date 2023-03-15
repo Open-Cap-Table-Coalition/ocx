@@ -10,6 +10,13 @@ class Styles {
     };
   }
 
+  public static get default(): Partial<Style> {
+    return {
+      ...Styles.text,
+      numFmt: '_(* #,##0_);_(* (#,##0);_(* "-"??_);_(@_)',
+    };
+  }
+
   public static get headerFill(): Fill {
     return {
       type: "pattern",

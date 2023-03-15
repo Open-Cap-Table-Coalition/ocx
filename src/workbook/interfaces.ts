@@ -33,7 +33,7 @@ export interface WorksheetLinePrinter {
   nextRow: (opts?: { height?: number }) => WorksheetLinePrinter;
   createRange: (name: string, style?: Partial<Style>) => WorksheetLinePrinter;
   addCell: (
-    value: Date | string,
+    value: Date | string | number,
     style?: Partial<Style>
   ) => WorksheetLinePrinter;
   addFormulaCell: (

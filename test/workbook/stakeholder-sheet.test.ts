@@ -121,9 +121,9 @@ describe(StakeholderSheet, () => {
     expect(excel.worksheets[0].getCell("D2").value).toBe(
       "Class B Common Stock"
     );
-    expect(excel.worksheets[0].getCell("C3").value).toBe("100");
-    expect(excel.worksheets[0].getCell("C4").value).toBe("100");
-    expect(excel.worksheets[0].getCell("D3").value).toBe("100");
-    expect(excel.worksheets[0].getCell("D4").value).toBe("100");
+    expect(excel.worksheets[0].getCell("C3").value).toBe(100);
+    expect(excel.worksheets[0].getCell("C4").value).toBe(100);
+    expect(excel.worksheets[0].getCell("D3").value).toBe(100);
+    expect(excel.worksheets[0].getCell("D4").value).toBe(100);
   });
 });

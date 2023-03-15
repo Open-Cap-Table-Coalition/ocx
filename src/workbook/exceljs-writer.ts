@@ -39,7 +39,7 @@ class ExcelJSLinePrinter {
     return this;
   }
 
-  public addCell(value: Date | string | null, style?: Partial<Style>) {
+  public addCell(value: Date | string | number | null, style?: Partial<Style>) {
     this.col += 1;
     this.worksheet.getCell(this.row, this.col).value = value;
     this.worksheet.getCell(this.row, this.col).style = {
