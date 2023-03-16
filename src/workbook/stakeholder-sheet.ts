@@ -7,6 +7,8 @@ class StakeholderSheet {
     private readonly model: Model
   ) {
     worksheet.nextRow({ height: 59.5 });
+    const columnValues: number[][] = [];
+    let row: number[] = [];
 
     worksheet
       .createRange("stakeholders.header", {
@@ -70,6 +72,7 @@ class StakeholderSheet {
             stockClass
           );
           writer.addCell(holdings);
+          row.push(holdings);
         }
       }
 
@@ -80,15 +83,42 @@ class StakeholderSheet {
             stockClass
           );
           writer.addCell(holdings);
+          row.push(holdings);
           const ratio = stockClass.conversion_ratio?.toFixed(4);
           if (ratio && parseFloat(ratio) !== 1.0) {
-            writer.addCell(holdings * parseFloat(ratio));
+            const convertedShares = holdings * parseFloat(ratio);
+            writer.addCell(convertedShares);
+            row.push(convertedShares);
           }
         }
       }
+
+      columnValues.push(row);
+      row = [];
     }
 
     worksheet.nextRow();
+
+    const total = worksheet
+      .createRange("stakeholders.totals")
+      .createRange("subheader", {
+        fill: Styles.subheaderFill,
+        font: Styles.subheaderFont,
+        border: Styles.headerBorder,
+        alignment: { vertical: "bottom", horizontal: "right" },
+        numFmt: '_(* #,##0_);_(* (#,##0);_(* "-"??_);_(@_)',
+      })
+      .addCell("Total")
+      .addBlankCell();
+    if (columnValues && columnValues.length > 0) {
+      for (let i = 0; i < columnValues[0].length; i++) {
+        let totalPerColumn = 0;
+        for (let j = 0; j < columnValues.length; j++) {
+          totalPerColumn += columnValues[j][i];
+        }
+        total.addCell(totalPerColumn);
+      }
+    }
   }
 }
 

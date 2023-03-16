@@ -19,7 +19,6 @@ describe(StakeholderSheet, () => {
 
     expect(sheet).not.toBeNull();
     expect(excel.worksheets[0].getCell("A2").value).toBe("Stakeholder");
-    expect(excel.worksheets[0].getCell("A3").value).toBeNull();
   });
 
   test("two stakeholders", () => {
@@ -44,7 +43,6 @@ describe(StakeholderSheet, () => {
     expect(excel.worksheets[0].getCell("A2").value).toBe("Stakeholder");
     expect(excel.worksheets[0].getCell("A3").value).toBe("Stockholder 1");
     expect(excel.worksheets[0].getCell("A4").value).toBe("Optionholder 42");
-    expect(excel.worksheets[0].getCell("A5").value).toBeNull();
   });
 
   test("header for not preferred stock classes", () => {
@@ -112,7 +110,6 @@ describe(StakeholderSheet, () => {
     expect(sheet).not.toBeNull();
     expect(excel.worksheets[0].getCell("A3").value).toBe("Stockholder 1");
     expect(excel.worksheets[0].getCell("A4").value).toBe("Optionholder 42");
-    expect(excel.worksheets[0].getCell("A5").value).toBeNull();
     expect(excel.worksheets[0].getCell("C2").value).toBe(
       "Class A Common Stock"
     );
@@ -125,7 +122,7 @@ describe(StakeholderSheet, () => {
     expect(excel.worksheets[0].getCell("D4").value).toBe(100);
   });
 
-  test("per stakeholder holdings for preferred stock", () => {
+  test("per stakeholder holdings for preferred stock and total", () => {
     const excel = new Excel.Workbook();
     const workbookWriter = new ExcelJSWriter(excel);
     const worksheetWriter = workbookWriter.addWorksheet("test");
@@ -166,7 +163,6 @@ describe(StakeholderSheet, () => {
     expect(sheet).not.toBeNull();
     expect(excel.worksheets[0].getCell("A3").value).toBe("Stockholder 1");
     expect(excel.worksheets[0].getCell("A4").value).toBe("Optionholder 42");
-    expect(excel.worksheets[0].getCell("A5").value).toBeNull();
     expect(excel.worksheets[0].getCell("C2").value).toBe(
       "Class A Common Stock"
     );
@@ -187,5 +183,10 @@ describe(StakeholderSheet, () => {
     expect(excel.worksheets[0].getCell("E4").value).toBe(50);
     expect(excel.worksheets[0].getCell("F3").value).toBe(100);
     expect(excel.worksheets[0].getCell("F4").value).toBe(100);
+
+    expect(excel.worksheets[0].getCell("C5").value).toBe(100);
+    expect(excel.worksheets[0].getCell("D5").value).toBe(100);
+    expect(excel.worksheets[0].getCell("E5").value).toBe(100);
+    expect(excel.worksheets[0].getCell("F5").value).toBe(200);
   });
 });
