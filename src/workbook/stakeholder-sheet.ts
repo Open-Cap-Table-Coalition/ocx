@@ -7,8 +7,6 @@ class StakeholderSheet {
     private readonly model: Model
   ) {
     worksheet.nextRow({ height: 59.5 });
-    const columnValues: number[][] = [];
-    let row: number[] = [];
 
     worksheet
       .createRange("stakeholders.header", {
@@ -29,6 +27,7 @@ class StakeholderSheet {
 
     worksheet.nextRow();
 
+    // write the headers
     const writer = worksheet
       .createRange("stakeholders.holdings")
       .createRange("subheader", {
@@ -58,48 +57,19 @@ class StakeholderSheet {
       }
     }
 
+    // write column for stakeholders
     for (const stakeholder of model.stakeholders || []) {
       writer.nextRow();
       writer
         .createRange(`stakeholder.holdings.${stakeholder}.id`, Styles.default)
         .addCell(stakeholder.display_name)
         .addBlankCell();
-
-      for (const stockClass of model.stockClasses || []) {
-        if (!stockClass.is_preferred && model.getStakeholderStockHoldings) {
-          const holdings = model.getStakeholderStockHoldings(
-            stakeholder,
-            stockClass
-          );
-          writer.addCell(holdings);
-          row.push(holdings);
-        }
-      }
-
-      for (const stockClass of model.stockClasses || []) {
-        if (stockClass.is_preferred && model.getStakeholderStockHoldings) {
-          const holdings = model.getStakeholderStockHoldings(
-            stakeholder,
-            stockClass
-          );
-          writer.addCell(holdings);
-          row.push(holdings);
-          const ratio = stockClass.conversion_ratio?.toFixed(4);
-          if (ratio && parseFloat(ratio) !== 1.0) {
-            const convertedShares = holdings * parseFloat(ratio);
-            writer.addCell(convertedShares);
-            row.push(convertedShares);
-          }
-        }
-      }
-
-      columnValues.push(row);
-      row = [];
     }
 
-    worksheet.nextRow();
+    // add total range
+    writer.nextRow().nextRow();
 
-    const total = worksheet
+    worksheet
       .createRange("stakeholders.totals")
       .createRange("subheader", {
         fill: Styles.subheaderFill,
@@ -110,13 +80,67 @@ class StakeholderSheet {
       })
       .addCell("Total")
       .addBlankCell();
-    if (columnValues && columnValues.length > 0) {
-      for (let i = 0; i < columnValues[0].length; i++) {
-        let totalPerColumn = 0;
-        for (let j = 0; j < columnValues.length; j++) {
-          totalPerColumn += columnValues[j][i];
+
+    writer.nextColumn();
+
+    // not preferred stock columns
+    for (const stockClass of model.stockClasses || []) {
+      if (!stockClass.is_preferred && model.getStakeholderStockHoldings) {
+        const startAddress = writer.currentAddress();
+        let endAddress = null;
+        for (const stakeholder of model.stakeholders || []) {
+          const holdings = model.getStakeholderStockHoldings(
+            stakeholder,
+            stockClass
+          );
+          writer.writeCell(holdings, Styles.default);
+          endAddress = writer.currentAddress();
+          writer.nextColumnCell();
         }
-        total.addCell(totalPerColumn);
+        writer.writeFormulaCell(
+          `=SUM(${startAddress}:${endAddress})`,
+          Styles.default
+        );
+        writer.nextColumn();
+      }
+    }
+
+    // This logic for preferred stocks (outstanding and converted) is a big mess
+    // I couldn'ty have time to think about this properly.
+    for (const stakeholder of model.stakeholders || []) {
+      for (const stockClass of model.stockClasses || []) {
+        if (stockClass.is_preferred && model.getStakeholderStockHoldings) {
+          const startFirstColumnAddress = writer.currentAddress();
+          let endFirstColumnAddress = null;
+          let startSecondColumnAddress = null;
+          let endSecondColumnAddress = null;
+          const holdings = model.getStakeholderStockHoldings(
+            stakeholder,
+            stockClass
+          );
+          writer.writeCell(holdings);
+          endFirstColumnAddress = writer.currentAddress();
+          const ratio = stockClass.conversion_ratio?.toFixed(4);
+          if (ratio && parseFloat(ratio) !== 1.0) {
+            const convertedShares = holdings * parseFloat(ratio);
+            writer.addCell(convertedShares);
+            startSecondColumnAddress = !startSecondColumnAddress
+              ? writer.currentAddress()
+              : startSecondColumnAddress;
+            endSecondColumnAddress = writer.currentAddress();
+            writer.previousRowCell();
+          }
+          writer.nextColumnCell();
+          writer.writeFormulaCell(
+            `=SUM(${startFirstColumnAddress}:${endFirstColumnAddress})`,
+            Styles.default
+          );
+          writer.addFormulaCell(
+            `=SUM(${startSecondColumnAddress}:${endSecondColumnAddress})`,
+            Styles.default
+          );
+          writer.nextColumn();
+        }
       }
     }
   }

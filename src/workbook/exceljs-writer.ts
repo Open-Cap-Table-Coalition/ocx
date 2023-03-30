@@ -34,6 +34,40 @@ class ExcelJSLinePrinter {
     return this;
   }
 
+  public nextColumnCell(opts?: { height?: number }) {
+    this.row += 1;
+
+    if (opts?.height) {
+      this.worksheet.getRow(this.row).height = opts.height;
+    }
+    return this;
+  }
+
+  public nextColumn(opts?: { width?: number }) {
+    this.row = 1;
+    this.col += 1;
+
+    if (opts?.width) {
+      this.worksheet.getColumn(this.col).width = opts.width;
+    }
+
+    // find first cell in current row that has no value
+    while (this.hasValue()) {
+      this.row += 1;
+    }
+
+    return this;
+  }
+
+  public previousRowCell(opts?: { height?: number }) {
+    this.col -= 1;
+
+    if (opts?.height) {
+      this.worksheet.getRow(this.row).height = opts.height;
+    }
+    return this;
+  }
+
   public createRange(name: string, style?: Partial<Style>) {
     this.currentStyle = style || {};
     return this;
@@ -49,6 +83,39 @@ class ExcelJSLinePrinter {
     return this;
   }
 
+  public writeCell(
+    value: Date | string | number | null,
+    style?: Partial<Style>
+  ) {
+    this.worksheet.getCell(this.row, this.col).value = value;
+    this.worksheet.getCell(this.row, this.col).style = {
+      ...this.currentStyle,
+      ...style,
+    };
+    return this;
+  }
+
+  public createColumnRange(name: string, style?: Partial<Style>) {
+    this.currentStyle = style || {};
+    this.row += 1;
+    this.col = 1;
+    return this;
+  }
+
+  public currentAddress() {
+    return this.worksheet.getCell(this.row, this.col).address;
+  }
+
+  public currentAddressVal() {
+    return this.worksheet.getCell(this.row, this.col).value;
+  }
+
+  private hasValue() {
+    const address = this.currentAddress();
+    const cell = this.worksheet.getCell(address);
+    return cell.value !== null && cell.value !== undefined;
+  }
+
   public addBlankCell() {
     return this.addCell(null);
   }
@@ -61,6 +128,18 @@ class ExcelJSLinePrinter {
 
   public addFormulaCell(formula: string, style?: Partial<Style>) {
     this.col += 1;
+    this.worksheet.getCell(this.row, this.col).value = {
+      formula,
+      date1904: false, // Unclear what this is for but it is required by the type system
+    };
+    this.worksheet.getCell(this.row, this.col).style = {
+      ...this.currentStyle,
+      ...style,
+    };
+    return this;
+  }
+
+  public writeFormulaCell(formula: string, style?: Partial<Style>) {
     this.worksheet.getCell(this.row, this.col).value = {
       formula,
       date1904: false, // Unclear what this is for but it is required by the type system

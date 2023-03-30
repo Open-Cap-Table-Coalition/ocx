@@ -184,7 +184,7 @@ describe(StakeholderSheet, () => {
     expect(excel.worksheets[0].getCell("F3").value).toBe(100);
     expect(excel.worksheets[0].getCell("F4").value).toBe(100);
 
-    expect(excel.worksheets[0].getCell("C5").value).toBe(100);
+    expect(excel.worksheets[0].getCell("C6").formula).toBe("=SUM(C3:C4)");
     expect(excel.worksheets[0].getCell("D5").value).toBe(100);
     expect(excel.worksheets[0].getCell("E5").value).toBe(100);
     expect(excel.worksheets[0].getCell("F5").value).toBe(200);

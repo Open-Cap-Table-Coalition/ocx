@@ -1,4 +1,4 @@
-import { Style } from "exceljs";
+import { CellValue, Style } from "exceljs";
 
 export interface StakeholderModel {
   id?: string;
@@ -31,12 +31,25 @@ export interface Model {
 
 export interface WorksheetLinePrinter {
   nextRow: (opts?: { height?: number }) => WorksheetLinePrinter;
+  nextColumnCell: (opts?: { height?: number }) => WorksheetLinePrinter;
+  previousRowCell: (opts?: { height?: number }) => WorksheetLinePrinter;
+  nextColumn: (opts?: { width?: number }) => WorksheetLinePrinter;
+  currentAddress: () => string;
+  currentAddressVal: () => CellValue;
   createRange: (name: string, style?: Partial<Style>) => WorksheetLinePrinter;
   addCell: (
     value: Date | string | number,
     style?: Partial<Style>
   ) => WorksheetLinePrinter;
+  writeCell: (
+    value: Date | string | number,
+    style?: Partial<Style>
+  ) => WorksheetLinePrinter;
   addFormulaCell: (
+    formula: string,
+    style?: Partial<Style>
+  ) => WorksheetLinePrinter;
+  writeFormulaCell: (
     formula: string,
     style?: Partial<Style>
   ) => WorksheetLinePrinter;
