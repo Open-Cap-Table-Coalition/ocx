@@ -42,6 +42,7 @@ class StakeholderSheet {
     for (const stockClass of model.stockClasses || []) {
       if (!stockClass.is_preferred) {
         writer.addCell(stockClass.display_name);
+        console.log(writer.currentAddress());
       }
     }
 
@@ -96,6 +97,7 @@ class StakeholderSheet {
           writer.writeCell(holdings, Styles.default);
           endAddress = writer.currentAddress();
           writer.nextColumnCell();
+          console.log(writer.currentAddress());
         }
         writer.writeFormulaCell(
           `=SUM(${startAddress}:${endAddress})`,

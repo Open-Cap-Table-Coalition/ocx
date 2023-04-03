@@ -44,7 +44,7 @@ class ExcelJSLinePrinter {
   }
 
   public nextColumn(opts?: { width?: number }) {
-    this.row = 1;
+    this.row = 2;
     this.col += 1;
 
     if (opts?.width) {
