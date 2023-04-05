@@ -49,6 +49,7 @@
   },
   "dependencies": {
     "commander": "^10.0.0",
-    "exceljs": "^4.3.0"
+    "exceljs": "^4.3.0",
+    "i18next": "^22.4.14"
   }
 }
