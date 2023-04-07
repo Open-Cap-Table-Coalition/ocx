@@ -77,6 +77,14 @@ class ExcelJSLinePrinter {
     // or could just keep track of in our own structure
     // we'll see
   }
+
+  public setCellAtCursor(
+    row: number,
+    col: number,
+    value: Date | string | number
+  ) {
+    this.worksheet.getCell(row, col).value = value;
+  }
 }
 
 export default ExcelJSWriter;

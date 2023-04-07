@@ -43,4 +43,9 @@ export interface WorksheetLinePrinter {
   addBlankCell: () => WorksheetLinePrinter;
   addBlankCells: (n: number) => WorksheetLinePrinter;
   rangeComplete: () => void;
+  setCellAtCursor: (
+    row: number,
+    col: number,
+    value: Date | string | number
+  ) => void;
 }
