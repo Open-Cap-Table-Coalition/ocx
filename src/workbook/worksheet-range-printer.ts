@@ -11,6 +11,8 @@ abstract class WorksheetRangePrinter {
   protected readonly startRow;
   protected readonly startCol;
 
+  private lastChild: WorksheetRangePrinter | null = null;
+
   public static create(
     printer: WorksheetLinePrinter,
     orientation: RangePrinterOrientation
@@ -44,11 +46,21 @@ abstract class WorksheetRangePrinter {
   public createNestedRange(
     orientation: RangePrinterOrientation
   ): WorksheetRangePrinter {
-    return WorksheetRangePrinter.createWithCursor(
+    if (this.lastChild?.orientation !== this.orientation) {
+      this.lastChild?.break();
+    } else if (this.orientation === "top-to-bottom") {
+      this.cursor.col = this.startCol;
+    } else {
+      this.cursor.row = this.startRow;
+    }
+
+    this.lastChild = WorksheetRangePrinter.createWithCursor(
       this.printer,
       orientation,
       this.cursor
     );
+
+    return this.lastChild;
   }
 
   public addCell(
