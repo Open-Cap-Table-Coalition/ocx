@@ -1,18 +1,31 @@
-import { describe, expect, test } from "@jest/globals";
+import { beforeEach, describe, expect, test } from "@jest/globals";
 
 import Excel from "exceljs";
 import ExcelJSWriter from "src/workbook/exceljs-writer";
+import { WorksheetLinePrinter } from "src/workbook/interfaces";
 import WorksheetRangePrinter from "src/workbook/worksheet-range-printer";
 
 describe(WorksheetRangePrinter, () => {
+  let fixture: {
+    worksheetWriter: WorksheetLinePrinter;
+    worksheet: Excel.Worksheet;
+  };
+
+  beforeEach(() => {
+    const excel = new Excel.Workbook();
+    const workbookWriter = new ExcelJSWriter(excel);
+    const worksheetWriter = workbookWriter.addWorksheet("test");
+
+    fixture = {
+      worksheetWriter,
+      worksheet: excel.worksheets[0],
+    };
+  });
+
   describe("left-to-right ranges", () => {
     test("single range", () => {
-      const excel = new Excel.Workbook();
-      const workbookWriter = new ExcelJSWriter(excel);
-      const worksheetWriter = workbookWriter.addWorksheet("test");
-
       const range = WorksheetRangePrinter.create(
-        worksheetWriter,
+        fixture.worksheetWriter,
         "left-to-right"
       );
 
@@ -25,21 +38,17 @@ describe(WorksheetRangePrinter, () => {
         .addCell("y")
         .addCell("z");
 
-      expect(excel.worksheets[0].getCell("A1").value).toBe(1);
-      expect(excel.worksheets[0].getCell("B1").value).toBe(2);
-      expect(excel.worksheets[0].getCell("C1").value).toBe(3);
-      expect(excel.worksheets[0].getCell("A2").value).toBe("x");
-      expect(excel.worksheets[0].getCell("B2").value).toBe("y");
-      expect(excel.worksheets[0].getCell("C2").value).toBe("z");
+      expect(cell("A1").value).toBe(1);
+      expect(cell("B1").value).toBe(2);
+      expect(cell("C1").value).toBe(3);
+      expect(cell("A2").value).toBe("x");
+      expect(cell("B2").value).toBe("y");
+      expect(cell("C2").value).toBe("z");
     });
 
     test("nested ranges", () => {
-      const excel = new Excel.Workbook();
-      const workbookWriter = new ExcelJSWriter(excel);
-      const worksheetWriter = workbookWriter.addWorksheet("test");
-
       const parent = WorksheetRangePrinter.create(
-        worksheetWriter,
+        fixture.worksheetWriter,
         "left-to-right"
       );
 
@@ -50,20 +59,16 @@ describe(WorksheetRangePrinter, () => {
 
       parent.addCell(3);
 
-      expect(excel.worksheets[0].getCell("A1").value).toBe(1);
-      expect(excel.worksheets[0].getCell("B1").value).toBe(2);
-      expect(excel.worksheets[0].getCell("C1").value).toBe(3);
+      expect(cell("A1").value).toBe(1);
+      expect(cell("B1").value).toBe(2);
+      expect(cell("C1").value).toBe(3);
     });
   });
 
   describe("top-to-bottom ranges", () => {
     test("single range", () => {
-      const excel = new Excel.Workbook();
-      const workbookWriter = new ExcelJSWriter(excel);
-      const worksheetWriter = workbookWriter.addWorksheet("test");
-
       const range = WorksheetRangePrinter.create(
-        worksheetWriter,
+        fixture.worksheetWriter,
         "top-to-bottom"
       );
 
@@ -76,21 +81,17 @@ describe(WorksheetRangePrinter, () => {
         .addCell("y")
         .addCell("z");
 
-      expect(excel.worksheets[0].getCell("A1").value).toBe(1);
-      expect(excel.worksheets[0].getCell("A2").value).toBe(2);
-      expect(excel.worksheets[0].getCell("A3").value).toBe(3);
-      expect(excel.worksheets[0].getCell("B1").value).toBe("x");
-      expect(excel.worksheets[0].getCell("B2").value).toBe("y");
-      expect(excel.worksheets[0].getCell("B3").value).toBe("z");
+      expect(cell("A1").value).toBe(1);
+      expect(cell("A2").value).toBe(2);
+      expect(cell("A3").value).toBe(3);
+      expect(cell("B1").value).toBe("x");
+      expect(cell("B2").value).toBe("y");
+      expect(cell("B3").value).toBe("z");
     });
 
     test("nested ranges", () => {
-      const excel = new Excel.Workbook();
-      const workbookWriter = new ExcelJSWriter(excel);
-      const worksheetWriter = workbookWriter.addWorksheet("test");
-
       const parent = WorksheetRangePrinter.create(
-        worksheetWriter,
+        fixture.worksheetWriter,
         "top-to-bottom"
       );
 
@@ -101,25 +102,21 @@ describe(WorksheetRangePrinter, () => {
 
       parent.addCell(3);
 
-      expect(excel.worksheets[0].getCell("A1").value).toBe(1);
-      expect(excel.worksheets[0].getCell("A2").value).toBe(2);
-      expect(excel.worksheets[0].getCell("A3").value).toBe(3);
+      expect(cell("A1").value).toBe(1);
+      expect(cell("A2").value).toBe(2);
+      expect(cell("A3").value).toBe(3);
     });
 
     test("sums", () => {
-      const excel = new Excel.Workbook();
-      const workbookWriter = new ExcelJSWriter(excel);
-      const worksheetWriter = workbookWriter.addWorksheet("test");
-
       const range = WorksheetRangePrinter.create(
-        worksheetWriter,
+        fixture.worksheetWriter,
         "top-to-bottom"
       );
 
       range.addCell(1).addCell(2).addCell(3);
       range.addSum();
 
-      expect(excel.worksheets[0].getCell("A4").formula).toEqual("=SUM(A1:A3)");
+      expect(cell("A4").formula).toEqual("=SUM(A1:A3)");
     });
   });
 
@@ -127,13 +124,9 @@ describe(WorksheetRangePrinter, () => {
   // writing headers left-to-right, then columns of data top-down
   // and left-to-right, then a footer
   test("mixed ranges", () => {
-    const excel = new Excel.Workbook();
-    const workbookWriter = new ExcelJSWriter(excel);
-    const worksheetWriter = workbookWriter.addWorksheet("test");
-
     // Primary orientation here is top-to-bottom
     const subtable = WorksheetRangePrinter.create(
-      worksheetWriter,
+      fixture.worksheetWriter,
       "top-to-bottom"
     );
 
@@ -154,29 +147,33 @@ describe(WorksheetRangePrinter, () => {
     const footer = subtable.createNestedRange("left-to-right");
     footer.addCell("A4").addCell("B4").addCell("C4");
 
-    expect(excel.worksheets[0].getRow(1).values).toEqual([
+    expect(fixture.worksheet.getRow(1).values).toEqual([
       undefined, // the undefined is because `getRow` from ExcelJS still uses index 0 arrays while using index 1 positions
       "A1",
       "B1",
       "C1",
     ]);
-    expect(excel.worksheets[0].getRow(2).values).toEqual([
+    expect(fixture.worksheet.getRow(2).values).toEqual([
       undefined,
       "A2",
       "B2",
       "C2",
     ]);
-    expect(excel.worksheets[0].getRow(3).values).toEqual([
+    expect(fixture.worksheet.getRow(3).values).toEqual([
       undefined,
       "A3",
       "B3",
       "C3",
     ]);
-    expect(excel.worksheets[0].getRow(4).values).toEqual([
+    expect(fixture.worksheet.getRow(4).values).toEqual([
       undefined,
       "A4",
       "B4",
       "C4",
     ]);
   });
+
+  function cell(address: string) {
+    return fixture.worksheet.getCell(address);
+  }
 });
