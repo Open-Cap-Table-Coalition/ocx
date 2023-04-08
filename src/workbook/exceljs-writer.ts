@@ -85,6 +85,17 @@ class ExcelJSLinePrinter {
   ) {
     this.worksheet.getCell(row, col).value = value;
   }
+
+  public setFormulaCellAtCursor(row: number, col: number, formula: string) {
+    this.worksheet.getCell(row, col).value = {
+      formula,
+      date1904: false, // Unclear what this is for but it is required by the type system
+    };
+  }
+
+  public getAddress(row: number, col: number) {
+    return this.worksheet.getCell(row, col).address;
+  }
 }
 
 export default ExcelJSWriter;

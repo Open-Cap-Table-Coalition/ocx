@@ -10,6 +10,7 @@ interface Cursor {
 abstract class WorksheetRangePrinter {
   protected readonly startRow;
   protected readonly startCol;
+  protected extents: Cursor;
 
   private lastChild: WorksheetRangePrinter | null = null;
 
@@ -41,6 +42,7 @@ abstract class WorksheetRangePrinter {
   ) {
     this.startRow = cursor.row;
     this.startCol = cursor.col;
+    this.extents = { ...cursor };
   }
 
   public createNestedRange(
@@ -68,6 +70,23 @@ abstract class WorksheetRangePrinter {
     //style?: Partial<Style>
   ): WorksheetRangePrinter {
     this.printer.setCellAtCursor(this.cursor.row, this.cursor.col, value);
+    this.checkExtents();
+    this.advanceCursor();
+    return this;
+  }
+
+  public addSum(): WorksheetRangePrinter {
+    const topLeftCell = this.printer.getAddress(this.startRow, this.startCol);
+    const bottomRightCell = this.printer.getAddress(
+      this.extents.row,
+      this.extents.col
+    );
+    this.printer.setFormulaCellAtCursor(
+      this.cursor.row,
+      this.cursor.col,
+      `=SUM(${topLeftCell}:${bottomRightCell})`
+    );
+    this.checkExtents();
     this.advanceCursor();
     return this;
   }
@@ -79,6 +98,15 @@ abstract class WorksheetRangePrinter {
   protected abstract rewind(): void;
 
   protected abstract advanceCursor(): void;
+
+  private checkExtents(): void {
+    if (this.cursor.row > this.extents.row) {
+      this.extents.row = this.cursor.row;
+    }
+    if (this.cursor.col > this.extents.col) {
+      this.extents.col = this.cursor.col;
+    }
+  }
 }
 
 class WorksheetLeftToRightRangePrinter extends WorksheetRangePrinter {

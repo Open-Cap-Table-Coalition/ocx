@@ -48,4 +48,6 @@ export interface WorksheetLinePrinter {
     col: number,
     value: Date | string | number
   ) => void;
+  setFormulaCellAtCursor: (row: number, col: number, formula: string) => void;
+  getAddress: (row: number, col: number) => string;
 }

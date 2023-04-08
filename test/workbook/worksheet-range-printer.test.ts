@@ -105,6 +105,22 @@ describe(WorksheetRangePrinter, () => {
       expect(excel.worksheets[0].getCell("A2").value).toBe(2);
       expect(excel.worksheets[0].getCell("A3").value).toBe(3);
     });
+
+    test("sums", () => {
+      const excel = new Excel.Workbook();
+      const workbookWriter = new ExcelJSWriter(excel);
+      const worksheetWriter = workbookWriter.addWorksheet("test");
+
+      const range = WorksheetRangePrinter.create(
+        worksheetWriter,
+        "top-to-bottom"
+      );
+
+      range.addCell(1).addCell(2).addCell(3);
+      range.addSum();
+
+      expect(excel.worksheets[0].getCell("A4").formula).toEqual("=SUM(A1:A3)");
+    });
   });
 
   // this test describes how one might create a table of data
