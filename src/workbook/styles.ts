@@ -23,6 +23,15 @@ class Styles {
     };
   }
 
+  public static get subheader(): Partial<Style> {
+    return {
+      fill: Styles.subheaderFill,
+      font: Styles.subheaderFont,
+      border: Styles.subheaderBorder,
+      alignment: { vertical: "bottom", horizontal: "center" },
+    };
+  }
+
   public static get text(): Partial<Style> {
     return {
       fill: { type: "pattern", pattern: "none" },

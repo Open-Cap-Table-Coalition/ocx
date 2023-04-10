@@ -17,59 +17,41 @@ class StakeholderSheet {
     header.setStyle(Styles.header);
 
     header
-      .addFormulaCell("Context!A1")
+      .addFormulaCell("Context!A1", Styles.header__date)
       .addBlankCell()
-      .addCell(`${this.model.issuerName} Capitalization by Holder`)
+      .addCell(
+        `${this.model.issuerName} Capitalization by Holder`,
+        Styles.header__title
+      )
       .addBlankCells(3);
 
-    // worksheet
-    //   .createRange("stakeholders.header", {
-    //     fill: Styles.headerFill,
-    //     font: Styles.headerFont,
-    //     border: Styles.headerBorder,
-    //   })
-    //   .addFormulaCell("Context!A1", {
-    //     alignment: { vertical: "bottom", horizontal: "right" },
-    //     numFmt: "yyyy.mm.dd;@",
-    //   })
-    //   .addBlankCell()
-    //   .addCell(`${this.model.issuerName} Capitalization by Holder`, {
-    //     alignment: { vertical: "middle", horizontal: "left" },
-    //   })
-    //   .addBlankCells(3)
-    //   .rangeComplete();
+    const holdingsTable = sheet.createNestedRange("left-to-right");
 
-    worksheet.nextRow();
-    worksheet.nextRow();
+    const holdingsHeadings = holdingsTable.createNestedRange("left-to-right");
+    holdingsHeadings.setStyle(Styles.subheader);
 
-    const writer = worksheet
-      .createRange("stakeholders.holdings")
-      .createRange("subheader", {
-        fill: Styles.subheaderFill,
-        font: Styles.subheaderFont,
-        border: Styles.subheaderBorder,
-        alignment: { vertical: "bottom", horizontal: "center" },
-      })
-      .addCell("Stakeholder")
-      .addCell("Stakeholder Group");
+    holdingsHeadings.addCell("Stakeholder").addCell("Stakeholder Group");
 
     for (const stockClass of model.stockClasses || []) {
       if (!stockClass.is_preferred) {
-        writer.addCell(stockClass.display_name);
+        holdingsHeadings.addCell(stockClass.display_name);
       }
     }
 
     for (const stockClass of model.stockClasses || []) {
       if (stockClass.is_preferred) {
         const ratio = stockClass.conversion_ratio?.toFixed(4);
-        writer.addCell(
+        holdingsHeadings.addCell(
           stockClass.display_name + " (outstanding) " + "(" + ratio + ")"
         );
         if (ratio && parseFloat(ratio) !== 1.0) {
-          writer.addCell(stockClass.display_name + " (as converted)");
+          holdingsHeadings.addCell(stockClass.display_name + " (as converted)");
         }
       }
     }
+
+    const writer = worksheet;
+    writer.nextRow().nextRow().nextRow();
 
     for (const stakeholder of model.stakeholders || []) {
       writer.nextRow();
