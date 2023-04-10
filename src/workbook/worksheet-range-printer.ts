@@ -8,16 +8,22 @@ interface Cursor {
 }
 
 abstract class WorksheetRangePrinter {
-  protected readonly startRow;
-  protected readonly startCol;
-  protected extents: Cursor;
+  // "extents" describes the bounding box of cells in this range
+  protected extents: {
+    topLeft: Cursor;
+    btmRight: Cursor;
+  };
 
-  private lastChild: WorksheetRangePrinter | null = null;
-
+  /**
+   * Factory method for creating the initial "WorksheetRangePrinter"
+   * for a particular worksheet. This will always create a range at
+   * the origin ("A1") of the worksheet, so calling this more than
+   * once on a single sheet will create overlapping range printers.
+   */
   public static create(
     printer: WorksheetLinePrinter,
     orientation: RangePrinterOrientation
-  ) {
+  ): WorksheetRangePrinter {
     return WorksheetRangePrinter.createWithCursor(printer, orientation, {
       row: 1,
       col: 1,
@@ -27,42 +33,59 @@ abstract class WorksheetRangePrinter {
   private static createWithCursor(
     printer: WorksheetLinePrinter,
     orientation: RangePrinterOrientation,
-    cursor: Cursor
-  ) {
+    cursor: Cursor,
+    parent?: WorksheetRangePrinter
+  ): WorksheetRangePrinter {
     if (orientation === "top-to-bottom") {
-      return new WorksheetTopToBottomRangePrinter(printer, cursor);
+      return new WorksheetTopToBottomRangePrinter(printer, cursor, parent);
     } else {
-      return new WorksheetLeftToRightRangePrinter(printer, cursor);
+      return new WorksheetLeftToRightRangePrinter(printer, cursor, parent);
     }
   }
 
   protected constructor(
     private readonly printer: WorksheetLinePrinter,
-    protected cursor: Cursor
+    protected cursor: Cursor,
+    protected parent: WorksheetRangePrinter | null = null
   ) {
-    this.startRow = cursor.row;
-    this.startCol = cursor.col;
-    this.extents = { ...cursor };
+    // The initial cursor position is copied into the extents structure
+    this.extents = { topLeft: { ...cursor }, btmRight: { ...cursor } };
   }
 
+  /**
+   * Factory method for creating printers for ranges nested within this
+   * one. Creating nested ranges allow us to refer to ranges and sub-ranges
+   * of the worksheet elsewhere in the code.
+   */
   public createNestedRange(
     orientation: RangePrinterOrientation
   ): WorksheetRangePrinter {
-    if (this.lastChild?.orientation !== this.orientation) {
-      this.lastChild?.break();
-    } else if (this.orientation === "top-to-bottom") {
-      this.cursor.col = this.startCol;
-    } else {
-      this.cursor.row = this.startRow;
+    // If no cells have been written yet, we don't want to adjust the
+    // cursor before creating the sub range; otherwise we end up with
+    // unnecessary blank rows / cols
+    if (
+      this.extents.topLeft.row !== this.extents.btmRight.row ||
+      this.extents.topLeft.col !== this.extents.btmRight.col
+    ) {
+      // otherwise, we perform a range "break" based on the current
+      // extents and orientiation of the block; this prevents
+      // the user from having to insert extra `.break()` statements
+      // that don't make the code any clearer or easier to write
+      if (this.orientation === "top-to-bottom") {
+        this.cursor.row = this.extents.btmRight.row + 1;
+        this.cursor.col = this.extents.topLeft.col;
+      } else {
+        this.cursor.row = this.extents.topLeft.row;
+        this.cursor.col = this.extents.btmRight.col + 1;
+      }
     }
 
-    this.lastChild = WorksheetRangePrinter.createWithCursor(
+    return WorksheetRangePrinter.createWithCursor(
       this.printer,
       orientation,
-      this.cursor
+      this.cursor,
+      this
     );
-
-    return this.lastChild;
   }
 
   public addCell(
@@ -76,10 +99,13 @@ abstract class WorksheetRangePrinter {
   }
 
   public addSum(): WorksheetRangePrinter {
-    const topLeftCell = this.printer.getAddress(this.startRow, this.startCol);
+    const topLeftCell = this.printer.getAddress(
+      this.extents.topLeft.row,
+      this.extents.topLeft.col
+    );
     const bottomRightCell = this.printer.getAddress(
-      this.extents.row,
-      this.extents.col
+      this.extents.btmRight.row,
+      this.extents.btmRight.col
     );
     this.printer.setFormulaCellAtCursor(
       this.cursor.row,
@@ -100,12 +126,14 @@ abstract class WorksheetRangePrinter {
   protected abstract advanceCursor(): void;
 
   private checkExtents(): void {
-    if (this.cursor.row > this.extents.row) {
-      this.extents.row = this.cursor.row;
+    if (this.cursor.row > this.extents.btmRight.row) {
+      this.extents.btmRight.row = this.cursor.row;
     }
-    if (this.cursor.col > this.extents.col) {
-      this.extents.col = this.cursor.col;
+    if (this.cursor.col > this.extents.btmRight.col) {
+      this.extents.btmRight.col = this.cursor.col;
     }
+
+    this.parent?.checkExtents();
   }
 }
 
@@ -121,7 +149,7 @@ class WorksheetLeftToRightRangePrinter extends WorksheetRangePrinter {
   }
 
   protected rewind(): void {
-    this.cursor.col = this.startCol;
+    this.cursor.col = this.extents.topLeft.col;
   }
 
   public get orientation(): RangePrinterOrientation {
@@ -141,7 +169,7 @@ class WorksheetTopToBottomRangePrinter extends WorksheetRangePrinter {
   }
 
   protected rewind(): void {
-    this.cursor.row = this.startRow;
+    this.cursor.row = this.extents.topLeft.row;
   }
 
   public get orientation(): RangePrinterOrientation {

@@ -131,49 +131,73 @@ describe(WorksheetRangePrinter, () => {
     );
 
     const header = subtable.createNestedRange("left-to-right");
-    header.addCell("A1").addCell("B1").addCell("C1");
+    header.addCell(">").addCell(">").addCell(">");
 
     const data = subtable.createNestedRange("top-to-bottom");
     data
-      .addCell("A2")
-      .addCell("A3")
+      .addCell("v")
+      .addCell("v")
       .break()
-      .addCell("B2")
-      .addCell("B3")
+      .addCell("v")
+      .addCell("v")
       .break()
-      .addCell("C2")
-      .addCell("C3");
+      .addCell("v")
+      .addCell("v");
 
     const footer = subtable.createNestedRange("left-to-right");
-    footer.addCell("A4").addCell("B4").addCell("C4");
+    footer.addCell(">").addCell(">").addCell(">");
 
-    expect(fixture.worksheet.getRow(1).values).toEqual([
-      undefined, // the undefined is because `getRow` from ExcelJS still uses index 0 arrays while using index 1 positions
-      "A1",
-      "B1",
-      "C1",
-    ]);
-    expect(fixture.worksheet.getRow(2).values).toEqual([
-      undefined,
-      "A2",
-      "B2",
-      "C2",
-    ]);
-    expect(fixture.worksheet.getRow(3).values).toEqual([
-      undefined,
-      "A3",
-      "B3",
-      "C3",
-    ]);
-    expect(fixture.worksheet.getRow(4).values).toEqual([
-      undefined,
-      "A4",
-      "B4",
-      "C4",
-    ]);
+    expect(row(1)).toEqual(">>>");
+    expect(row(2)).toEqual("vvv");
+    expect(row(3)).toEqual("vvv");
+    expect(row(4)).toEqual(">>>");
+  });
+
+  test("dimensionally-mismatched ranges", () => {
+    // This test will make a shape with an empty center
+    // just to prove that it doesn't have to "fill"
+    // v>>v
+    // v  v
+    // >>>>
+    //
+
+    const container = WorksheetRangePrinter.create(
+      fixture.worksheetWriter,
+      "top-to-bottom"
+    );
+
+    const leftTopAndRight = container.createNestedRange("left-to-right");
+
+    const left = leftTopAndRight.createNestedRange("top-to-bottom");
+    left.addCell("v").addCell("v");
+
+    const top = leftTopAndRight.createNestedRange("left-to-right");
+    top.addCell(">").addCell(">");
+
+    const right = leftTopAndRight.createNestedRange("top-to-bottom");
+    right.addCell("v").addCell("v");
+
+    const bottom = container.createNestedRange("left-to-right");
+    bottom.addCell(">").addCell(">").addCell(">").addCell(">");
+
+    expect(row(1)).toEqual("v>>v");
+    expect(row(2)).toEqual("v  v");
+    expect(row(3)).toEqual(">>>>");
   });
 
   function cell(address: string) {
     return fixture.worksheet.getCell(address);
+  }
+
+  function row(rowNum: number) {
+    let content = "";
+
+    fixture.worksheet
+      .getRow(rowNum)
+      .eachCell({ includeEmpty: true }, (cell) => {
+        content += cell.value ?? " ";
+      });
+
+    return content;
   }
 });
