@@ -46,8 +46,14 @@ export interface WorksheetLinePrinter {
   setCellAtCursor: (
     row: number,
     col: number,
-    value: Date | string | number
+    value: Date | string | number | null,
+    style?: Partial<Style>
   ) => void;
-  setFormulaCellAtCursor: (row: number, col: number, formula: string) => void;
+  setFormulaCellAtCursor: (
+    row: number,
+    col: number,
+    formula: string,
+    style?: Partial<Style>
+  ) => void;
   getAddress: (row: number, col: number) => string;
 }

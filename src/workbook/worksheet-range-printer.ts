@@ -1,5 +1,7 @@
 import { WorksheetLinePrinter } from "./interfaces";
 
+import { Style } from "exceljs";
+
 type RangePrinterOrientation = "top-to-bottom" | "left-to-right";
 
 interface Cursor {
@@ -13,6 +15,8 @@ abstract class WorksheetRangePrinter {
     topLeft: Cursor;
     btmRight: Cursor;
   };
+
+  private style: Partial<Style> = {};
 
   /**
    * Factory method for creating the initial "WorksheetRangePrinter"
@@ -88,13 +92,55 @@ abstract class WorksheetRangePrinter {
     );
   }
 
+  public setStyle(style: Partial<Style>): WorksheetRangePrinter {
+    this.style = style;
+    return this;
+  }
+
   public addCell(
-    value: Date | string | number
-    //style?: Partial<Style>
+    value: Date | string | number,
+    style?: Partial<Style>
   ): WorksheetRangePrinter {
-    this.printer.setCellAtCursor(this.cursor.row, this.cursor.col, value);
+    this.printer.setCellAtCursor(this.cursor.row, this.cursor.col, value, {
+      ...this.style,
+      ...style,
+    });
     this.checkExtents();
     this.advanceCursor();
+    return this;
+  }
+
+  public addFormulaCell(
+    formula: string,
+    style?: Partial<Style>
+  ): WorksheetRangePrinter {
+    this.printer.setFormulaCellAtCursor(
+      this.cursor.row,
+      this.cursor.col,
+      `=${formula}`,
+      { ...this.style, ...style }
+    );
+    this.checkExtents();
+    this.advanceCursor();
+    return this;
+  }
+
+  public addBlankCell(): WorksheetRangePrinter {
+    this.printer.setCellAtCursor(
+      this.cursor.row,
+      this.cursor.col,
+      null,
+      this.style
+    );
+    this.checkExtents();
+    this.advanceCursor();
+    return this;
+  }
+
+  public addBlankCells(n: number): WorksheetRangePrinter {
+    for (let idx = 0; idx < n; idx++) {
+      this.addBlankCell();
+    }
     return this;
   }
 

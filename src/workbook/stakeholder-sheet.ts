@@ -1,4 +1,5 @@
 import { Model, WorksheetLinePrinter } from "./interfaces";
+import WorksheetRangePrinter from "./worksheet-range-printer";
 import Styles from "./styles";
 
 class StakeholderSheet {
@@ -6,27 +7,39 @@ class StakeholderSheet {
     private readonly worksheet: WorksheetLinePrinter,
     private readonly model: Model
   ) {
-    worksheet.nextRow({ height: 59.5 });
     const columnValues: number[][] = [];
     let row: number[] = [];
 
-    worksheet
-      .createRange("stakeholders.header", {
-        fill: Styles.headerFill,
-        font: Styles.headerFont,
-        border: Styles.headerBorder,
-      })
-      .addFormulaCell("Context!A1", {
-        alignment: { vertical: "bottom", horizontal: "right" },
-        numFmt: "yyyy.mm.dd;@",
-      })
-      .addBlankCell()
-      .addCell(`${this.model.issuerName} Capitalization by Holder`, {
-        alignment: { vertical: "middle", horizontal: "left" },
-      })
-      .addBlankCells(3)
-      .rangeComplete();
+    const sheet = WorksheetRangePrinter.create(worksheet, "top-to-bottom");
 
+    const header = sheet.createNestedRange("left-to-right");
+
+    header.setStyle(Styles.header);
+
+    header
+      .addFormulaCell("Context!A1")
+      .addBlankCell()
+      .addCell(`${this.model.issuerName} Capitalization by Holder`)
+      .addBlankCells(3);
+
+    // worksheet
+    //   .createRange("stakeholders.header", {
+    //     fill: Styles.headerFill,
+    //     font: Styles.headerFont,
+    //     border: Styles.headerBorder,
+    //   })
+    //   .addFormulaCell("Context!A1", {
+    //     alignment: { vertical: "bottom", horizontal: "right" },
+    //     numFmt: "yyyy.mm.dd;@",
+    //   })
+    //   .addBlankCell()
+    //   .addCell(`${this.model.issuerName} Capitalization by Holder`, {
+    //     alignment: { vertical: "middle", horizontal: "left" },
+    //   })
+    //   .addBlankCells(3)
+    //   .rangeComplete();
+
+    worksheet.nextRow();
     worksheet.nextRow();
 
     const writer = worksheet
