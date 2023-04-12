@@ -55,5 +55,6 @@ export interface WorksheetLinePrinter {
     formula: string,
     style?: Partial<Style>
   ) => void;
+  copyFormulaCell: (from: string, row: number, col: number) => void;
   getAddress: (row: number, col: number) => string;
 }

@@ -7,15 +7,10 @@ class StakeholderSheet {
     private readonly worksheet: WorksheetLinePrinter,
     private readonly model: Model
   ) {
-    const columnValues: number[][] = [];
-    let row: number[] = [];
-
     const sheet = WorksheetRangePrinter.create(worksheet, "top-to-bottom");
 
     const header = sheet.createNestedRange("left-to-right");
-
     header.setStyle(Styles.header);
-
     header
       .addFormulaCell("Context!A1", Styles.header__date)
       .addBlankCell()
@@ -25,11 +20,10 @@ class StakeholderSheet {
       )
       .addBlankCells(3);
 
-    const holdingsTable = sheet.createNestedRange("left-to-right");
+    const holdingsTable = sheet.createNestedRange("top-to-bottom");
 
     const holdingsHeadings = holdingsTable.createNestedRange("left-to-right");
     holdingsHeadings.setStyle(Styles.subheader);
-
     holdingsHeadings.addCell("Stakeholder").addCell("Stakeholder Group");
 
     for (const stockClass of model.stockClasses || []) {
@@ -50,68 +44,45 @@ class StakeholderSheet {
       }
     }
 
-    const writer = worksheet;
-    writer.nextRow().nextRow().nextRow();
+    const holdingsData = holdingsTable.createNestedRange("left-to-right");
+
+    const stakeholders = holdingsData.createNestedRange("top-to-bottom");
+    stakeholders.setStyle(Styles.default);
 
     for (const stakeholder of model.stakeholders || []) {
-      writer.nextRow();
-      writer
-        .createRange(`stakeholder.holdings.${stakeholder}.id`, Styles.default)
-        .addCell(stakeholder.display_name)
-        .addBlankCell();
-
-      for (const stockClass of model.stockClasses || []) {
-        if (!stockClass.is_preferred && model.getStakeholderStockHoldings) {
-          const holdings = model.getStakeholderStockHoldings(
-            stakeholder,
-            stockClass
-          );
-          writer.addCell(holdings);
-          row.push(holdings);
-        }
-      }
-
-      for (const stockClass of model.stockClasses || []) {
-        if (stockClass.is_preferred && model.getStakeholderStockHoldings) {
-          const holdings = model.getStakeholderStockHoldings(
-            stakeholder,
-            stockClass
-          );
-          writer.addCell(holdings);
-          row.push(holdings);
-          const ratio = stockClass.conversion_ratio?.toFixed(4);
-          if (ratio && parseFloat(ratio) !== 1.0) {
-            const convertedShares = holdings * parseFloat(ratio);
-            writer.addCell(convertedShares);
-            row.push(convertedShares);
-          }
-        }
-      }
-
-      columnValues.push(row);
-      row = [];
+      stakeholders.addCell(stakeholder.display_name);
     }
 
-    worksheet.nextRow();
+    stakeholders.addCell("Total", Styles.subheader);
+    stakeholders.break().break();
 
-    const total = worksheet
-      .createRange("stakeholders.totals")
-      .createRange("subheader", {
-        fill: Styles.subheaderFill,
-        font: Styles.subheaderFont,
-        border: Styles.headerBorder,
-        alignment: { vertical: "bottom", horizontal: "right" },
-        numFmt: '_(* #,##0_);_(* (#,##0);_(* "-"??_);_(@_)',
-      })
-      .addCell("Total")
-      .addBlankCell();
-    if (columnValues && columnValues.length > 0) {
-      for (let i = 0; i < columnValues[0].length; i++) {
-        let totalPerColumn = 0;
-        for (let j = 0; j < columnValues.length; j++) {
-          totalPerColumn += columnValues[j][i];
+    for (const stockClass of model.stockClasses || []) {
+      const data = holdingsData.createNestedRange("top-to-bottom");
+
+      for (const stakeholder of model.stakeholders || []) {
+        if (model.getStakeholderStockHoldings) {
+          const holdings = model.getStakeholderStockHoldings(
+            stakeholder,
+            stockClass
+          );
+          data.addCell(holdings);
         }
-        total.addCell(totalPerColumn);
+      }
+
+      data.addSum();
+
+      if (stockClass.is_preferred && stockClass.conversion_ratio !== 1.0) {
+        const formulas = holdingsData.createNestedRange("top-to-bottom");
+        const tl = worksheet.getAddress(
+          data.getExtents().topLeft.row,
+          data.getExtents().topLeft.col
+        );
+        formulas.addRepeatedFormulaCell(
+          `ROUND(${tl} * ${stockClass.conversion_ratio}, 0)`,
+          model.stakeholders.length
+        );
+
+        formulas.addSum();
       }
     }
   }

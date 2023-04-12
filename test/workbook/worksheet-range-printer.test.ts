@@ -133,7 +133,9 @@ describe(WorksheetRangePrinter, () => {
     const header = subtable.createNestedRange("left-to-right");
     header.addCell(">").addCell(">").addCell(">");
 
-    const data = subtable.createNestedRange("top-to-bottom");
+    const data = subtable
+      .createNestedRange("left-to-right")
+      .createNestedRange("top-to-bottom");
     data
       .addCell("v")
       .addCell("v")
@@ -150,7 +152,7 @@ describe(WorksheetRangePrinter, () => {
     expect(row(1)).toEqual(">>>");
     expect(row(2)).toEqual("vvv");
     expect(row(3)).toEqual("vvv");
-    expect(row(4)).toEqual(">>>");
+    expect(row(5)).toEqual(">>>");
   });
 
   test("dimensionally-mismatched ranges", () => {

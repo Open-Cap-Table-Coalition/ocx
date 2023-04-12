@@ -18,6 +18,13 @@ abstract class WorksheetRangePrinter {
 
   private style: Partial<Style> = {};
 
+  public getExtents() {
+    return {
+      topLeft: { ...this.extents.topLeft },
+      btmRight: { ...this.extents.btmRight },
+    };
+  }
+
   /**
    * Factory method for creating the initial "WorksheetRangePrinter"
    * for a particular worksheet. This will always create a range at
@@ -125,6 +132,32 @@ abstract class WorksheetRangePrinter {
     return this;
   }
 
+  public addRepeatedFormulaCell(formula: string, repetitions: number) {
+    this.printer.setFormulaCellAtCursor(
+      this.cursor.row,
+      this.cursor.col,
+      `=${formula}`,
+      this.style
+    );
+
+    const referenceFormulaAddress = this.printer.getAddress(
+      this.cursor.row,
+      this.cursor.col
+    );
+
+    for (let idx = 1; idx < repetitions; idx++) {
+      this.advanceCursor();
+      this.printer.copyFormulaCell(
+        referenceFormulaAddress,
+        this.cursor.row,
+        this.cursor.col
+      );
+    }
+
+    this.checkExtents();
+    this.advanceCursor();
+  }
+
   public addBlankCell(): WorksheetRangePrinter {
     this.printer.setCellAtCursor(
       this.cursor.row,
@@ -171,7 +204,7 @@ abstract class WorksheetRangePrinter {
 
   protected abstract advanceCursor(): void;
 
-  private checkExtents(): void {
+  protected checkExtents(): void {
     if (this.cursor.row > this.extents.btmRight.row) {
       this.extents.btmRight.row = this.cursor.row;
     }
@@ -189,6 +222,7 @@ class WorksheetLeftToRightRangePrinter extends WorksheetRangePrinter {
   }
 
   public break(): WorksheetRangePrinter {
+    this.checkExtents();
     this.rewind();
     this.cursor.row += 1;
     return this;
@@ -209,6 +243,7 @@ class WorksheetTopToBottomRangePrinter extends WorksheetRangePrinter {
   }
 
   public break(): WorksheetRangePrinter {
+    this.checkExtents();
     this.rewind();
     this.cursor.col += 1;
     return this;

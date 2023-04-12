@@ -105,6 +105,13 @@ class ExcelJSLinePrinter {
     }
   }
 
+  public copyFormulaCell(from: string, row: number, col: number) {
+    this.worksheet.getCell(row, col).value = {
+      sharedFormula: from,
+      date1904: false,
+    };
+  }
+
   public getAddress(row: number, col: number) {
     return this.worksheet.getCell(row, col).address;
   }
