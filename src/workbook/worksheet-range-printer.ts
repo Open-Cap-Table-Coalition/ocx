@@ -213,7 +213,6 @@ class WorksheetLeftToRightRangePrinter extends WorksheetRangePrinter {
   }
 
   public break(): WorksheetRangePrinter {
-    this.checkExtents();
     this.rewind();
     this.cursor.row += 1;
     return this;
@@ -234,7 +233,6 @@ class WorksheetTopToBottomRangePrinter extends WorksheetRangePrinter {
   }
 
   public break(): WorksheetRangePrinter {
-    this.checkExtents();
     this.rewind();
     this.cursor.col += 1;
     return this;
