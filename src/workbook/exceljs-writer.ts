@@ -81,15 +81,34 @@ class ExcelJSLinePrinter {
   public setCellAtCursor(
     row: number,
     col: number,
-    value: Date | string | number
+    value: Date | string | number | null,
+    style?: Partial<Style>
   ) {
     this.worksheet.getCell(row, col).value = value;
+    if (style) {
+      this.worksheet.getCell(row, col).style = style;
+    }
   }
 
-  public setFormulaCellAtCursor(row: number, col: number, formula: string) {
+  public setFormulaCellAtCursor(
+    row: number,
+    col: number,
+    formula: string,
+    style?: Partial<Style>
+  ) {
     this.worksheet.getCell(row, col).value = {
       formula,
       date1904: false, // Unclear what this is for but it is required by the type system
+    };
+    if (style) {
+      this.worksheet.getCell(row, col).style = style;
+    }
+  }
+
+  public copyFormulaCell(from: string, row: number, col: number) {
+    this.worksheet.getCell(row, col).value = {
+      sharedFormula: from,
+      date1904: false,
     };
   }
 

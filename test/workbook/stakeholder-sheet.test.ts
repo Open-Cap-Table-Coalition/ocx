@@ -167,13 +167,13 @@ describe(StakeholderSheet, () => {
       "Class A Common Stock"
     );
     expect(excel.worksheets[0].getCell("D2").value).toBe(
-      "Class A Preferred Stock (outstanding) (1.0000)"
+      "Class A Preferred Stock\n(outstanding) (1.0000)"
     );
     expect(excel.worksheets[0].getCell("E2").value).toBe(
-      "Class B Preferred Stock (outstanding) (2.0000)"
+      "Class B Preferred Stock\n(outstanding) (2.0000)"
     );
     expect(excel.worksheets[0].getCell("F2").value).toBe(
-      "Class B Preferred Stock (as converted)"
+      "Class B Preferred Stock\n(as converted)"
     );
     expect(excel.worksheets[0].getCell("C3").value).toBe(50);
     expect(excel.worksheets[0].getCell("C4").value).toBe(50);
@@ -181,12 +181,12 @@ describe(StakeholderSheet, () => {
     expect(excel.worksheets[0].getCell("D4").value).toBe(50);
     expect(excel.worksheets[0].getCell("E3").value).toBe(50);
     expect(excel.worksheets[0].getCell("E4").value).toBe(50);
-    expect(excel.worksheets[0].getCell("F3").value).toBe(100);
-    expect(excel.worksheets[0].getCell("F4").value).toBe(100);
+    expect(excel.worksheets[0].getCell("F3").formula).toBe("=ROUND(E3 * 2, 0)");
+    expect(excel.worksheets[0].getCell("F4").formula).toBe("=ROUND(E4 * 2, 0)");
 
-    expect(excel.worksheets[0].getCell("C5").value).toBe(100);
-    expect(excel.worksheets[0].getCell("D5").value).toBe(100);
-    expect(excel.worksheets[0].getCell("E5").value).toBe(100);
-    expect(excel.worksheets[0].getCell("F5").value).toBe(200);
+    expect(excel.worksheets[0].getCell("C5").formula).toBe("=SUM(C3:C4)");
+    expect(excel.worksheets[0].getCell("D5").formula).toBe("=SUM(D3:D4)");
+    expect(excel.worksheets[0].getCell("E5").formula).toBe("=SUM(E3:E4)");
+    expect(excel.worksheets[0].getCell("F5").formula).toBe("=SUM(F3:F4)");
   });
 });

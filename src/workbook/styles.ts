@@ -1,10 +1,46 @@
 import { Borders, Fill, Font, Style } from "exceljs";
 
 class Styles {
+  public static get header(): Partial<Style> {
+    return {
+      fill: Styles.headerFill,
+      font: Styles.headerFont,
+      border: Styles.headerBorder,
+    };
+  }
+
+  public static get header__date(): Partial<Style> {
+    return {
+      ...Styles.header,
+      alignment: { vertical: "bottom", horizontal: "right" },
+    };
+  }
+
+  public static get header__title(): Partial<Style> {
+    return {
+      ...Styles.header,
+      alignment: { vertical: "middle", horizontal: "left" },
+    };
+  }
+
+  public static get subheader(): Partial<Style> {
+    return {
+      fill: Styles.subheaderFill,
+      font: Styles.subheaderFont,
+      border: Styles.subheaderBorder,
+      alignment: { vertical: "bottom", horizontal: "center" },
+    };
+  }
+
   public static get text(): Partial<Style> {
     return {
       fill: { type: "pattern", pattern: "none" },
-      font: { name: "Calibri", bold: false, color: { argb: "000000" } },
+      font: {
+        name: "Calibri",
+        bold: false,
+        color: { argb: "000000" },
+        size: 10,
+      },
       border: {},
       alignment: {},
     };

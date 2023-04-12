@@ -1,5 +1,7 @@
 import { WorksheetLinePrinter } from "./interfaces";
 
+import { Style } from "exceljs";
+
 type RangePrinterOrientation = "top-to-bottom" | "left-to-right";
 
 interface Cursor {
@@ -13,6 +15,15 @@ abstract class WorksheetRangePrinter {
     topLeft: Cursor;
     btmRight: Cursor;
   };
+
+  private style: Partial<Style> = {};
+
+  public getExtents() {
+    return {
+      topLeft: { ...this.extents.topLeft },
+      btmRight: { ...this.extents.btmRight },
+    };
+  }
 
   /**
    * Factory method for creating the initial "WorksheetRangePrinter"
@@ -88,17 +99,83 @@ abstract class WorksheetRangePrinter {
     );
   }
 
+  public setStyle(style: Partial<Style>): WorksheetRangePrinter {
+    this.style = style;
+    return this;
+  }
+
   public addCell(
-    value: Date | string | number
-    //style?: Partial<Style>
+    value: Date | string | number,
+    style?: Partial<Style>
   ): WorksheetRangePrinter {
-    this.printer.setCellAtCursor(this.cursor.row, this.cursor.col, value);
+    this.printer.setCellAtCursor(this.cursor.row, this.cursor.col, value, {
+      ...this.style,
+      ...style,
+    });
     this.checkExtents();
     this.advanceCursor();
     return this;
   }
 
-  public addSum(): WorksheetRangePrinter {
+  public addFormulaCell(
+    formula: string,
+    style?: Partial<Style>
+  ): WorksheetRangePrinter {
+    this.printer.setFormulaCellAtCursor(
+      this.cursor.row,
+      this.cursor.col,
+      `=${formula}`,
+      { ...this.style, ...style }
+    );
+    this.checkExtents();
+    this.advanceCursor();
+    return this;
+  }
+
+  public addRepeatedFormulaCell(formula: string, repetitions: number) {
+    this.printer.setFormulaCellAtCursor(
+      this.cursor.row,
+      this.cursor.col,
+      `=${formula}`,
+      this.style
+    );
+
+    const referenceFormulaAddress = this.printer.getAddress(
+      this.cursor.row,
+      this.cursor.col
+    );
+
+    for (let idx = 1; idx < repetitions; idx++) {
+      this.advanceCursor();
+      this.printer.copyFormulaCell(
+        referenceFormulaAddress,
+        this.cursor.row,
+        this.cursor.col
+      );
+    }
+
+    this.checkExtents();
+    this.advanceCursor();
+  }
+
+  public addBlankCell(style?: Partial<Style>): WorksheetRangePrinter {
+    this.printer.setCellAtCursor(this.cursor.row, this.cursor.col, null, {
+      ...this.style,
+      ...style,
+    });
+    this.checkExtents();
+    this.advanceCursor();
+    return this;
+  }
+
+  public addBlankCells(n: number): WorksheetRangePrinter {
+    for (let idx = 0; idx < n; idx++) {
+      this.addBlankCell();
+    }
+    return this;
+  }
+
+  public addSum(style?: Partial<Style>): WorksheetRangePrinter {
     const topLeftCell = this.printer.getAddress(
       this.extents.topLeft.row,
       this.extents.topLeft.col
@@ -107,14 +184,7 @@ abstract class WorksheetRangePrinter {
       this.extents.btmRight.row,
       this.extents.btmRight.col
     );
-    this.printer.setFormulaCellAtCursor(
-      this.cursor.row,
-      this.cursor.col,
-      `=SUM(${topLeftCell}:${bottomRightCell})`
-    );
-    this.checkExtents();
-    this.advanceCursor();
-    return this;
+    return this.addFormulaCell(`SUM(${topLeftCell}:${bottomRightCell})`, style);
   }
 
   public abstract get orientation(): RangePrinterOrientation;
@@ -125,7 +195,7 @@ abstract class WorksheetRangePrinter {
 
   protected abstract advanceCursor(): void;
 
-  private checkExtents(): void {
+  protected checkExtents(): void {
     if (this.cursor.row > this.extents.btmRight.row) {
       this.extents.btmRight.row = this.cursor.row;
     }
