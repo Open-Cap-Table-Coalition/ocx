@@ -35,7 +35,12 @@ class Styles {
   public static get text(): Partial<Style> {
     return {
       fill: { type: "pattern", pattern: "none" },
-      font: { name: "Calibri", bold: false, color: { argb: "000000" } },
+      font: {
+        name: "Calibri",
+        bold: false,
+        color: { argb: "000000" },
+        size: 10,
+      },
       border: {},
       alignment: {},
     };
