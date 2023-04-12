@@ -158,13 +158,11 @@ abstract class WorksheetRangePrinter {
     this.advanceCursor();
   }
 
-  public addBlankCell(): WorksheetRangePrinter {
-    this.printer.setCellAtCursor(
-      this.cursor.row,
-      this.cursor.col,
-      null,
-      this.style
-    );
+  public addBlankCell(style?: Partial<Style>): WorksheetRangePrinter {
+    this.printer.setCellAtCursor(this.cursor.row, this.cursor.col, null, {
+      ...this.style,
+      ...style,
+    });
     this.checkExtents();
     this.advanceCursor();
     return this;
@@ -177,7 +175,7 @@ abstract class WorksheetRangePrinter {
     return this;
   }
 
-  public addSum(): WorksheetRangePrinter {
+  public addSum(style?: Partial<Style>): WorksheetRangePrinter {
     const topLeftCell = this.printer.getAddress(
       this.extents.topLeft.row,
       this.extents.topLeft.col
@@ -186,14 +184,7 @@ abstract class WorksheetRangePrinter {
       this.extents.btmRight.row,
       this.extents.btmRight.col
     );
-    this.printer.setFormulaCellAtCursor(
-      this.cursor.row,
-      this.cursor.col,
-      `=SUM(${topLeftCell}:${bottomRightCell})`
-    );
-    this.checkExtents();
-    this.advanceCursor();
-    return this;
+    return this.addFormulaCell(`SUM(${topLeftCell}:${bottomRightCell})`, style);
   }
 
   public abstract get orientation(): RangePrinterOrientation;

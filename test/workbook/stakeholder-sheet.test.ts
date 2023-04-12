@@ -167,13 +167,13 @@ describe(StakeholderSheet, () => {
       "Class A Common Stock"
     );
     expect(excel.worksheets[0].getCell("D2").value).toBe(
-      "Class A Preferred Stock (outstanding) (1.0000)"
+      "Class A Preferred Stock\n(outstanding) (1.0000)"
     );
     expect(excel.worksheets[0].getCell("E2").value).toBe(
-      "Class B Preferred Stock (outstanding) (2.0000)"
+      "Class B Preferred Stock\n(outstanding) (2.0000)"
     );
     expect(excel.worksheets[0].getCell("F2").value).toBe(
-      "Class B Preferred Stock (as converted)"
+      "Class B Preferred Stock\n(as converted)"
     );
     expect(excel.worksheets[0].getCell("C3").value).toBe(50);
     expect(excel.worksheets[0].getCell("C4").value).toBe(50);
