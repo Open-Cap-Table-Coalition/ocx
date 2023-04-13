@@ -32,6 +32,14 @@ class Styles {
     };
   }
 
+  public static get footer(): Partial<Style> {
+    return {
+      fill: Styles.subheaderFill,
+      font: Styles.subheaderFont,
+      border: Styles.headerBorder,
+    };
+  }
+
   public static get text(): Partial<Style> {
     return {
       fill: { type: "pattern", pattern: "none" },

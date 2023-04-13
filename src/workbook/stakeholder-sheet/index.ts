@@ -42,13 +42,13 @@ class StakeholderSheet {
     for (const stakeholder of this.model.stakeholders || []) {
       stakeholders.addCell(stakeholder.display_name);
     }
-    stakeholders.addCell("Total", Styles.subheader);
+    stakeholders.addCell("Total", Styles.footer);
     stakeholders.break();
 
     // stakeholder groups
     // TODO: Data validation
     stakeholders.addBlankCells(this.model.stakeholders?.length || 0);
-    stakeholders.addBlankCell(Styles.subheader);
+    stakeholders.addBlankCell(Styles.footer);
     stakeholders.break();
 
     // holdings data / formulas
@@ -65,7 +65,7 @@ class StakeholderSheet {
         }
       }
 
-      data.addSum(Styles.subheader);
+      data.addSum(Styles.footer);
 
       if (stockClass.is_preferred && stockClass.conversion_ratio !== 1.0) {
         const formulas = holdingsData.createNestedRange("top-to-bottom");
@@ -78,7 +78,7 @@ class StakeholderSheet {
           this.model.stakeholders.length
         );
 
-        formulas.addSum(Styles.subheader);
+        formulas.addSum(Styles.footer);
       }
     }
   }
