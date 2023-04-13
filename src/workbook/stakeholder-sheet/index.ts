@@ -1,6 +1,6 @@
-import { Model, StockClassModel, WorksheetLinePrinter } from "./interfaces";
-import WorksheetRangePrinter from "./worksheet-range-printer";
-import Styles from "./styles";
+import { Model, StockClassModel, WorksheetLinePrinter } from "../interfaces";
+import WorksheetRangePrinter from "../worksheet-range-printer";
+import Styles from "../styles";
 
 class StakeholderSheet {
   private sheet: WorksheetRangePrinter;
