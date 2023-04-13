@@ -13,6 +13,7 @@ class Styles {
     return {
       ...Styles.header,
       alignment: { vertical: "bottom", horizontal: "right" },
+      numFmt: '"As of "yyyy.mm.dd',
     };
   }
 
