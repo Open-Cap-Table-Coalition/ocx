@@ -147,3 +147,37 @@ export class StockClassAsConvertedColumn {
     return `${stockClass.display_name}\n(as converted)`;
   }
 }
+
+export class TotalOutstanding {
+  public constructor(private readonly parent: WorksheetRangePrinter) {}
+
+  public write(outstandingRanges: Array<WorksheetRangePrinter>) {
+    const myColumn = this.parent.createNestedRange("top-to-bottom");
+
+    myColumn
+      .createNestedRange("top-to-bottom", {
+        style: Styles.withLeftHandBorder(Styles.subheader),
+      })
+      .addCell("Total Stock (outstanding)*");
+
+    const myData = myColumn.createNestedRange("top-to-bottom", {
+      style: Styles.withLeftHandBorder(Styles.default),
+    });
+
+    const cellsToSum = outstandingRanges
+      .map((o) => o.getExtents().topLeftAddress)
+      .join(",");
+    const height = Math.max(
+      ...outstandingRanges.map((o) => o.getExtents().height)
+    );
+    myData.addRepeatedFormulaCell(`SUM(${cellsToSum})`, height);
+
+    myColumn
+      .createNestedRange("top-to-bottom")
+      .addBlankCell(Styles.withLeftHandBorder(Styles.default))
+      .addSumFor(myData, Styles.withLeftHandBorder(Styles.footer));
+
+    myColumn.setWidth(15);
+    return myData;
+  }
+}

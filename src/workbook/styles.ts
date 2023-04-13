@@ -62,6 +62,14 @@ class Styles {
     };
   }
 
+  public static withLeftHandBorder(style: Partial<Style>) {
+    const result = style;
+    result.border ||= {};
+    result.border.left ||= {};
+    result.border.left.style = "thin";
+    return result;
+  }
+
   public static get headerFill(): Fill {
     return {
       type: "pattern",

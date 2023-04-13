@@ -159,12 +159,16 @@ abstract class WorksheetRangePrinter {
     return this;
   }
 
-  public addRepeatedFormulaCell(formula: string, repetitions: number) {
+  public addRepeatedFormulaCell(
+    formula: string,
+    repetitions: number,
+    style?: Partial<Style>
+  ) {
     this.printer.setFormulaCellAtCursor(
       this.cursor.row,
       this.cursor.col,
       `=${formula}`,
-      this.style
+      { ...this.style, ...style }
     );
 
     const referenceFormulaAddress = this.printer.getAddress(
@@ -177,7 +181,8 @@ abstract class WorksheetRangePrinter {
       this.printer.copyFormulaCell(
         referenceFormulaAddress,
         this.cursor.row,
-        this.cursor.col
+        this.cursor.col,
+        { ...this.style, ...style }
       );
     }
 
