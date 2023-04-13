@@ -22,6 +22,7 @@ abstract class WorksheetRangePrinter {
     return {
       topLeft: { ...this.extents.topLeft },
       btmRight: { ...this.extents.btmRight },
+      height: this.extents.btmRight.row - this.extents.topLeft.row + 1,
     };
   }
 
@@ -69,7 +70,7 @@ abstract class WorksheetRangePrinter {
    * of the worksheet elsewhere in the code.
    */
   public createNestedRange(
-    orientation: RangePrinterOrientation,
+    orientation: RangePrinterOrientation = this.orientation,
     options: {
       style?: Partial<Style>;
       height?: number;
@@ -114,6 +115,11 @@ abstract class WorksheetRangePrinter {
 
   public setStyle(style: Partial<Style>): WorksheetRangePrinter {
     this.style = style;
+    return this;
+  }
+
+  public setWidth(width: number): WorksheetRangePrinter {
+    this.printer.setColWidth(this.cursor.col, width);
     return this;
   }
 
@@ -181,9 +187,12 @@ abstract class WorksheetRangePrinter {
     return this;
   }
 
-  public addBlankCells(n: number): WorksheetRangePrinter {
+  public addBlankCells(
+    n: number,
+    style?: Partial<Style>
+  ): WorksheetRangePrinter {
     for (let idx = 0; idx < n; idx++) {
-      this.addBlankCell();
+      this.addBlankCell(style);
     }
     return this;
   }
@@ -196,6 +205,18 @@ abstract class WorksheetRangePrinter {
     const bottomRightCell = this.printer.getAddress(
       this.extents.btmRight.row,
       this.extents.btmRight.col
+    );
+    return this.addFormulaCell(`SUM(${topLeftCell}:${bottomRightCell})`, style);
+  }
+
+  public addSumFor(otherRange: WorksheetRangePrinter, style?: Partial<Style>) {
+    const topLeftCell = this.printer.getAddress(
+      otherRange.extents.topLeft.row,
+      otherRange.extents.topLeft.col
+    );
+    const bottomRightCell = this.printer.getAddress(
+      otherRange.extents.btmRight.row,
+      otherRange.extents.btmRight.col
     );
     return this.addFormulaCell(`SUM(${topLeftCell}:${bottomRightCell})`, style);
   }

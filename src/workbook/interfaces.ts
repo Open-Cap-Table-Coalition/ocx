@@ -61,4 +61,5 @@ export interface WorksheetLinePrinter {
   copyFormulaCell: (from: string, row: number, col: number) => void;
   getAddress: (row: number, col: number) => string;
   setRowHeight: (row: number, height: number) => void;
+  setColWidth: (col: number, width: number) => void;
 }

@@ -119,6 +119,10 @@ class ExcelJSLinePrinter {
   public setRowHeight(row: number, height: number) {
     this.worksheet.getRow(row).height = height;
   }
+
+  public setColWidth(col: number, width: number) {
+    this.worksheet.getColumn(col).width = width;
+  }
 }
 
 export default ExcelJSWriter;

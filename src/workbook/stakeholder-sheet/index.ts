@@ -1,8 +1,8 @@
 import { Model, StockClassModel, WorksheetLinePrinter } from "../interfaces";
 import WorksheetRangePrinter from "../worksheet-range-printer";
-import Styles from "../styles";
 
 import { CapitalizationByStakeholderHeader } from "./headers";
+import * as Holdings from "./holdings-columns";
 
 class StakeholderSheet {
   private sheet: WorksheetRangePrinter;
@@ -24,63 +24,32 @@ class StakeholderSheet {
       stockColumns.length
     );
 
-    // stock class subheader
-    const holdingsTable = this.sheet.createNestedRange("top-to-bottom");
-    const holdingsHeadings = holdingsTable.createNestedRange("left-to-right");
-    holdingsHeadings.setStyle(Styles.subheader);
-    holdingsHeadings.addCell("Stakeholder").addCell("Stakeholder Group");
+    const holdingsTable = this.sheet.createNestedRange("left-to-right");
+    new Holdings.StakeholderColumn(holdingsTable).write(
+      this.model.stakeholders
+    );
+    new Holdings.StakeholderGroupColumn(holdingsTable).write(
+      this.model.stakeholders
+    );
 
-    for (const stockColumn of stockColumns) {
-      holdingsHeadings.addCell(stockColumn.heading);
-    }
-
-    const holdingsData = holdingsTable.createNestedRange("left-to-right");
-    const stakeholders = holdingsData.createNestedRange("top-to-bottom");
-
-    // stakeholder names
-    stakeholders.setStyle(Styles.default);
-    for (const stakeholder of this.model.stakeholders || []) {
-      stakeholders.addCell(stakeholder.display_name);
-    }
-    stakeholders.addCell("Total", Styles.footer);
-    stakeholders.break();
-
-    // stakeholder groups
-    // TODO: Data validation
-    stakeholders.addBlankCells(this.model.stakeholders?.length || 0);
-    stakeholders.addBlankCell(Styles.footer);
-    stakeholders.break();
-
-    // holdings data / formulas
-    for (const stockClass of this.model.stockClasses || []) {
-      const data = holdingsData.createNestedRange("top-to-bottom");
-
-      for (const stakeholder of this.model.stakeholders || []) {
-        if (this.model.getStakeholderStockHoldings) {
-          const holdings = this.model.getStakeholderStockHoldings(
-            stakeholder,
-            stockClass
-          );
-          data.addCell(holdings);
-        }
-      }
-
-      data.addSum(Styles.footer);
+    for (let idx = 0; idx < this.stockClasses.length; ++idx) {
+      const stockClass = this.stockClasses[idx];
+      const outstandingRange = new Holdings.StockClassOutstandingColumn(
+        holdingsTable
+      ).write(stockClass, this.model);
 
       if (stockClass.is_preferred && stockClass.conversion_ratio !== 1.0) {
-        const formulas = holdingsData.createNestedRange("top-to-bottom");
-        const tl = this.worksheet.getAddress(
-          data.getExtents().topLeft.row,
-          data.getExtents().topLeft.col
+        new Holdings.StockClassAsConvertedColumn(holdingsTable).write(
+          stockClass,
+          outstandingRange,
+          this.worksheet
         );
-        formulas.addRepeatedFormulaCell(
-          `ROUND(${tl} * ${stockClass.conversion_ratio}, 0)`,
-          this.model.stakeholders.length
-        );
-
-        formulas.addSum(Styles.footer);
       }
     }
+  }
+
+  private get stockClasses() {
+    return this.model.stockClasses || [];
   }
 
   private stockColumns() {

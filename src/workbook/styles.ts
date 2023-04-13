@@ -29,7 +29,7 @@ class Styles {
       fill: Styles.subheaderFill,
       font: Styles.subheaderFont,
       border: Styles.subheaderBorder,
-      alignment: { vertical: "bottom", horizontal: "center" },
+      alignment: { vertical: "bottom", horizontal: "center", wrapText: true },
     };
   }
 
