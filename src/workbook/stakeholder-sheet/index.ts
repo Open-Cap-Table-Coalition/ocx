@@ -2,6 +2,8 @@ import { Model, StockClassModel, WorksheetLinePrinter } from "../interfaces";
 import WorksheetRangePrinter from "../worksheet-range-printer";
 import Styles from "../styles";
 
+import { CapitalizationByStakeholderHeader } from "./headers";
+
 class StakeholderSheet {
   private sheet: WorksheetRangePrinter;
 
@@ -16,16 +18,11 @@ class StakeholderSheet {
   private createCapitalizationByStakeholderTable() {
     // top header
     const stockColumns = this.stockColumns();
-    const header = this.sheet.createNestedRange("left-to-right");
-    header.setStyle(Styles.header);
-    header
-      .addFormulaCell("Context!A1", Styles.header__date)
-      .addBlankCell()
-      .addCell(
-        `${this.model.issuerName} Capitalization by Holder`,
-        Styles.header__title
-      )
-      .addBlankCells(stockColumns.length - 1);
+
+    new CapitalizationByStakeholderHeader(this.sheet).write(
+      this.model.issuerName,
+      stockColumns.length
+    );
 
     // stock class subheader
     const holdingsTable = this.sheet.createNestedRange("top-to-bottom");

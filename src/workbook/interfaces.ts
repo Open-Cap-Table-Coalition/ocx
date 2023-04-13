@@ -43,6 +43,9 @@ export interface WorksheetLinePrinter {
   addBlankCell: () => WorksheetLinePrinter;
   addBlankCells: (n: number) => WorksheetLinePrinter;
   rangeComplete: () => void;
+
+  // new methods for range printer; methods above will mostly if not
+  // all go away
   setCellAtCursor: (
     row: number,
     col: number,
@@ -57,4 +60,5 @@ export interface WorksheetLinePrinter {
   ) => void;
   copyFormulaCell: (from: string, row: number, col: number) => void;
   getAddress: (row: number, col: number) => string;
+  setRowHeight: (row: number, height: number) => void;
 }

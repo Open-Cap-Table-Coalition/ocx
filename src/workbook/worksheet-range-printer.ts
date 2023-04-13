@@ -69,7 +69,11 @@ abstract class WorksheetRangePrinter {
    * of the worksheet elsewhere in the code.
    */
   public createNestedRange(
-    orientation: RangePrinterOrientation
+    orientation: RangePrinterOrientation,
+    options: {
+      style?: Partial<Style>;
+      height?: number;
+    } = {}
   ): WorksheetRangePrinter {
     // If no cells have been written yet, we don't want to adjust the
     // cursor before creating the sub range; otherwise we end up with
@@ -91,12 +95,21 @@ abstract class WorksheetRangePrinter {
       }
     }
 
-    return WorksheetRangePrinter.createWithCursor(
+    const range = WorksheetRangePrinter.createWithCursor(
       this.printer,
       orientation,
       this.cursor,
       this
     );
+
+    if (options.style) {
+      range.setStyle(options.style);
+    }
+    if (options.height) {
+      range.printer.setRowHeight(this.cursor.row, options.height);
+    }
+
+    return range;
   }
 
   public setStyle(style: Partial<Style>): WorksheetRangePrinter {
