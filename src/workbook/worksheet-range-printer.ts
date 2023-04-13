@@ -21,7 +21,15 @@ abstract class WorksheetRangePrinter {
   public getExtents() {
     return {
       topLeft: { ...this.extents.topLeft },
+      topLeftAddress: this.printer.getAddress(
+        this.extents.topLeft.row,
+        this.extents.topLeft.col
+      ),
       btmRight: { ...this.extents.btmRight },
+      btmRightAddress: this.printer.getAddress(
+        this.extents.btmRight.row,
+        this.extents.btmRight.col
+      ),
       height: this.extents.btmRight.row - this.extents.topLeft.row + 1,
     };
   }

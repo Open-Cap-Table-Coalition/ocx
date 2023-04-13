@@ -41,8 +41,7 @@ class StakeholderSheet {
       if (stockClass.is_preferred && stockClass.conversion_ratio !== 1.0) {
         new Holdings.StockClassAsConvertedColumn(holdingsTable).write(
           stockClass,
-          outstandingRange,
-          this.worksheet
+          outstandingRange
         );
       }
     }

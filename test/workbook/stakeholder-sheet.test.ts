@@ -184,9 +184,9 @@ describe(StakeholderSheet, () => {
     expect(excel.worksheets[0].getCell("F3").formula).toBe("=ROUND(E3 * 2, 0)");
     expect(excel.worksheets[0].getCell("F4").formula).toBe("=ROUND(E4 * 2, 0)");
 
-    expect(excel.worksheets[0].getCell("C5").formula).toBe("=SUM(C3:C4)");
-    expect(excel.worksheets[0].getCell("D5").formula).toBe("=SUM(D3:D4)");
-    expect(excel.worksheets[0].getCell("E5").formula).toBe("=SUM(E3:E4)");
-    expect(excel.worksheets[0].getCell("F5").formula).toBe("=SUM(F3:F4)");
+    expect(excel.worksheets[0].getCell("C6").formula).toBe("=SUM(C3:C4)");
+    expect(excel.worksheets[0].getCell("D6").formula).toBe("=SUM(D3:D4)");
+    expect(excel.worksheets[0].getCell("E6").formula).toBe("=SUM(E3:E4)");
+    expect(excel.worksheets[0].getCell("F6").formula).toBe("=SUM(F3:F4)");
   });
 });

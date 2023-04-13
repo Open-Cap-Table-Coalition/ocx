@@ -1,10 +1,5 @@
 import WorksheetRangePrinter from "../worksheet-range-printer";
-import {
-  Model,
-  StockClassModel,
-  StakeholderModel,
-  WorksheetLinePrinter,
-} from "../interfaces";
+import { Model, StockClassModel, StakeholderModel } from "../interfaces";
 import Styles from "../styles";
 
 export class StakeholderColumn {
@@ -117,8 +112,7 @@ export class StockClassAsConvertedColumn {
 
   public write(
     stockClass: StockClassModel,
-    outstandingRange: WorksheetRangePrinter,
-    worksheet: WorksheetLinePrinter // this feels like an abstraction break, but for refactoring purposes OK for now
+    outstandingRange: WorksheetRangePrinter
   ) {
     const myColumn = this.parent.createNestedRange("top-to-bottom");
 
@@ -133,13 +127,10 @@ export class StockClassAsConvertedColumn {
       style: Styles.default,
     });
 
-    const tl = worksheet.getAddress(
-      outstandingRange.getExtents().topLeft.row,
-      outstandingRange.getExtents().topLeft.col
-    );
-
     myData.addRepeatedFormulaCell(
-      `ROUND(${tl} * ${stockClass.conversion_ratio}, 0)`,
+      `ROUND(${outstandingRange.getExtents().topLeftAddress} * ${
+        stockClass.conversion_ratio
+      }, 0)`,
       outstandingRange.getExtents().height
     );
 
