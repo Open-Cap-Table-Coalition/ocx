@@ -158,7 +158,7 @@ export class TotalOutstanding {
       .createNestedRange("top-to-bottom", {
         style: Styles.withLeftHandBorder(Styles.subheader),
       })
-      .addCell("Total Stock (outstanding)*");
+      .addCell("Total Stock\n(outstanding)*");
 
     const myData = myColumn.createNestedRange("top-to-bottom", {
       style: Styles.withLeftHandBorder(Styles.default),
@@ -176,6 +176,40 @@ export class TotalOutstanding {
       .createNestedRange("top-to-bottom")
       .addBlankCell(Styles.withLeftHandBorder(Styles.default))
       .addSumFor(myData, Styles.withLeftHandBorder(Styles.footer));
+
+    myColumn.setWidth(15);
+    return myData;
+  }
+}
+
+export class TotalAsConverted {
+  public constructor(private readonly parent: WorksheetRangePrinter) {}
+
+  public write(asConvertedRanges: Array<WorksheetRangePrinter>) {
+    const myColumn = this.parent.createNestedRange("top-to-bottom");
+
+    myColumn
+      .createNestedRange("top-to-bottom", {
+        style: Styles.subheader,
+      })
+      .addCell("Total Stock\n(as converted)");
+
+    const myData = myColumn.createNestedRange("top-to-bottom", {
+      style: Styles.default,
+    });
+
+    const cellsToSum = asConvertedRanges
+      .map((o) => o.getExtents().topLeftAddress)
+      .join(",");
+    const height = Math.max(
+      ...asConvertedRanges.map((o) => o.getExtents().height)
+    );
+    myData.addRepeatedFormulaCell(`SUM(${cellsToSum})`, height);
+
+    myColumn
+      .createNestedRange("top-to-bottom")
+      .addBlankCell(Styles.default)
+      .addSumFor(myData, Styles.footer);
 
     myColumn.setWidth(15);
     return myData;

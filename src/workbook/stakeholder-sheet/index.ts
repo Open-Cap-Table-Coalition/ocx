@@ -33,6 +33,7 @@ class StakeholderSheet {
     );
 
     const outstandingRanges = new Array<WorksheetRangePrinter>();
+    const asConvertedRanges = new Array<WorksheetRangePrinter>();
     for (let idx = 0; idx < this.stockClasses.length; ++idx) {
       const stockClass = this.stockClasses[idx];
       const outstandingRange = new Holdings.StockClassOutstandingColumn(
@@ -41,14 +42,19 @@ class StakeholderSheet {
       outstandingRanges.push(outstandingRange);
 
       if (stockClass.is_preferred && stockClass.conversion_ratio !== 1.0) {
-        new Holdings.StockClassAsConvertedColumn(holdingsTable).write(
-          stockClass,
-          outstandingRange
+        asConvertedRanges.push(
+          new Holdings.StockClassAsConvertedColumn(holdingsTable).write(
+            stockClass,
+            outstandingRange
+          )
         );
+      } else {
+        asConvertedRanges.push(outstandingRange);
       }
     }
 
     new Holdings.TotalOutstanding(holdingsTable).write(outstandingRanges);
+    new Holdings.TotalAsConverted(holdingsTable).write(asConvertedRanges);
   }
 
   private get stockClasses() {
