@@ -38,6 +38,7 @@ class Styles {
       fill: Styles.subheaderFill,
       font: Styles.subheaderFont,
       border: Styles.headerBorder,
+      numFmt: Styles.default.numFmt,
     };
   }
 
