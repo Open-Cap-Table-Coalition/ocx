@@ -206,12 +206,47 @@ export class TotalAsConverted {
     );
     myData.addRepeatedFormulaCell(`SUM(${cellsToSum})`, height);
 
-    myColumn
+    const myTotal = myColumn
       .createNestedRange("top-to-bottom")
       .addBlankCell(Styles.default)
       .addSumFor(myData, Styles.footer);
 
     myColumn.setWidth(15);
+    myColumn.break();
+    this.writePercentagesCalculatedFrom(
+      myData,
+      myTotal.getExtents().btmRightAddress
+    );
     return myData;
+  }
+
+  private writePercentagesCalculatedFrom(
+    data: WorksheetRangePrinter,
+    totalAddress: string
+  ) {
+    const myColumn = this.parent.createNestedRange("top-to-bottom");
+
+    myColumn
+      .createNestedRange("top-to-bottom", {
+        style: Styles.subheader,
+      })
+      .addCell("Total Stock %\n(as converted)");
+
+    const myData = myColumn.createNestedRange("top-to-bottom", {
+      style: Styles.default__percentage,
+    });
+
+    const totalAbsoluteAddress = totalAddress.replace(/(\D+)(\d+)/, "$$$1$$$2");
+    const formula = `${
+      data.getExtents().topLeftAddress
+    } / ${totalAbsoluteAddress}`;
+    myData.addRepeatedFormulaCell(formula, data.getExtents().height);
+
+    myColumn
+      .createNestedRange("top-to-bottom")
+      .addBlankCell(Styles.default)
+      .addSumFor(myData, Styles.footer__percentage);
+
+    myColumn.setWidth(15);
   }
 }

@@ -63,6 +63,20 @@ class Styles {
     };
   }
 
+  public static get default__percentage(): Partial<Style> {
+    return {
+      ...Styles.default,
+      numFmt: "0.00%",
+    };
+  }
+
+  public static get footer__percentage(): Partial<Style> {
+    return {
+      ...Styles.footer,
+      numFmt: "0.00%",
+    };
+  }
+
   public static withLeftHandBorder(style: Partial<Style>) {
     const result = style;
     result.border ||= {};
