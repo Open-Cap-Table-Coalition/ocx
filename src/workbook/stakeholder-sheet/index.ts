@@ -3,6 +3,7 @@ import WorksheetRangePrinter from "../worksheet-range-printer";
 
 import { CapitalizationByStakeholderHeader } from "./headers";
 import * as Holdings from "./holdings-columns";
+import { ExtentsCollection } from "../extents";
 
 class StakeholderSheet {
   private sheet: WorksheetRangePrinter;
@@ -24,7 +25,9 @@ class StakeholderSheet {
       stockColumns.length
     );
 
-    const holdingsTable = this.sheet.createNestedRange("left-to-right");
+    const holdingsTable = this.sheet.createNestedRange({
+      orientation: "left-to-right",
+    });
     new Holdings.StakeholderColumn(holdingsTable).write(
       this.model.stakeholders
     );
@@ -33,7 +36,7 @@ class StakeholderSheet {
     );
 
     const outstandingRanges = new Array<WorksheetRangePrinter>();
-    const asConvertedRanges = new Array<WorksheetRangePrinter>();
+    const asConvertedRanges = new ExtentsCollection();
     for (let idx = 0; idx < this.stockClasses.length; ++idx) {
       const stockClass = this.stockClasses[idx];
       const outstandingRange = new Holdings.StockClassOutstandingColumn(
@@ -43,13 +46,12 @@ class StakeholderSheet {
 
       if (stockClass.is_preferred && stockClass.conversion_ratio !== 1.0) {
         asConvertedRanges.push(
-          new Holdings.StockClassAsConvertedColumn(holdingsTable).write(
-            stockClass,
-            outstandingRange
-          )
+          new Holdings.StockClassAsConvertedColumn(holdingsTable)
+            .write(stockClass, outstandingRange)
+            .getExtents()
         );
       } else {
-        asConvertedRanges.push(outstandingRange);
+        asConvertedRanges.push(outstandingRange.getExtents());
       }
     }
 

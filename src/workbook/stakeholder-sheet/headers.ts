@@ -5,9 +5,10 @@ export class CapitalizationByStakeholderHeader {
   constructor(private readonly parent: WorksheetRangePrinter) {}
 
   public write(issuerName: string, numberOfHoldingTypes: number) {
-    const header = this.parent.createNestedRange("left-to-right", {
+    const header = this.parent.createNestedRange({
+      orientation: "left-to-right",
       style: Styles.header,
-      height: 59.5,
+      rowHeight: 59.5,
     });
     header
       .addFormulaCell("Context!A1", Styles.header__date)

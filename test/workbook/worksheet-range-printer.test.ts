@@ -54,7 +54,7 @@ describe(WorksheetRangePrinter, () => {
 
       parent.addCell(1);
 
-      const child = parent.createNestedRange("left-to-right");
+      const child = parent.createNestedRange({ orientation: "left-to-right" });
       child.addCell(2);
 
       parent.addCell(3);
@@ -97,7 +97,7 @@ describe(WorksheetRangePrinter, () => {
 
       parent.addCell(1);
 
-      const child = parent.createNestedRange("top-to-bottom");
+      const child = parent.createNestedRange({ orientation: "top-to-bottom" });
       child.addCell(2);
 
       parent.addCell(3);
@@ -130,10 +130,10 @@ describe(WorksheetRangePrinter, () => {
       "top-to-bottom"
     );
 
-    const header = subtable.createNestedRange("left-to-right");
+    const header = subtable.createNestedRange({ orientation: "left-to-right" });
     header.addCell(">").addCell(">").addCell(">");
 
-    const data = subtable.createNestedRange("top-to-bottom");
+    const data = subtable.createNestedRange({ orientation: "top-to-bottom" });
     data
       .addCell("v")
       .addCell("v")
@@ -144,7 +144,7 @@ describe(WorksheetRangePrinter, () => {
       .addCell("v")
       .addCell("v");
 
-    const footer = subtable.createNestedRange("left-to-right");
+    const footer = subtable.createNestedRange({ orientation: "left-to-right" });
     footer.addCell(">").addCell(">").addCell(">");
 
     expect(row(1)).toEqual(">>>");
@@ -166,18 +166,28 @@ describe(WorksheetRangePrinter, () => {
       "top-to-bottom"
     );
 
-    const leftTopAndRight = container.createNestedRange("left-to-right");
+    const leftTopAndRight = container.createNestedRange({
+      orientation: "left-to-right",
+    });
 
-    const left = leftTopAndRight.createNestedRange("top-to-bottom");
+    const left = leftTopAndRight.createNestedRange({
+      orientation: "top-to-bottom",
+    });
     left.addCell("v").addCell("v");
 
-    const top = leftTopAndRight.createNestedRange("left-to-right");
+    const top = leftTopAndRight.createNestedRange({
+      orientation: "left-to-right",
+    });
     top.addCell(">").addCell(">");
 
-    const right = leftTopAndRight.createNestedRange("top-to-bottom");
+    const right = leftTopAndRight.createNestedRange({
+      orientation: "top-to-bottom",
+    });
     right.addCell("v").addCell("v");
 
-    const bottom = container.createNestedRange("left-to-right");
+    const bottom = container.createNestedRange({
+      orientation: "left-to-right",
+    });
     bottom.addCell(">").addCell(">").addCell(">").addCell(">");
 
     expect(row(1)).toEqual("v>>v");

@@ -1,21 +1,24 @@
 import WorksheetRangePrinter from "../worksheet-range-printer";
 import { Model, StockClassModel, StakeholderModel } from "../interfaces";
 import Styles from "../styles";
+import { ExtentsCollection } from "../extents";
 
 export class StakeholderColumn {
   public constructor(private readonly parent: WorksheetRangePrinter) {}
 
   public write(stakeholders: Array<StakeholderModel>) {
-    const myColumn = this.parent.createNestedRange("top-to-bottom");
+    const myColumn = this.parent.createNestedRange({
+      orientation: "top-to-bottom",
+    });
 
     myColumn
-      .createNestedRange("top-to-bottom", {
+      .createNestedRange({
         style: Styles.subheader,
-        height: 40.0,
+        rowHeight: 40.0,
       })
       .addCell("Stakeholder");
 
-    const myData = myColumn.createNestedRange("top-to-bottom", {
+    const myData = myColumn.createNestedRange({
       style: Styles.default,
     });
 
@@ -28,7 +31,7 @@ export class StakeholderColumn {
     });
 
     myColumn
-      .createNestedRange("top-to-bottom")
+      .createNestedRange()
       .addBlankCell(Styles.default)
       .addCell("Total", Styles.footer);
 
@@ -41,7 +44,7 @@ export class StakeholderGroupColumn {
 
   public write(stakeholders: Array<StakeholderModel>) {
     this.parent
-      .createNestedRange("top-to-bottom")
+      .createNestedRange({ orientation: "top-to-bottom" })
       .addCell("Stakeholder Group", Styles.subheader)
       .addBlankCells(stakeholders.length, Styles.default)
       .addBlankCell(Styles.default)
@@ -57,16 +60,18 @@ export class StockClassOutstandingColumn {
     stockClass: StockClassModel,
     model: Model
   ): WorksheetRangePrinter {
-    const myColumn = this.parent.createNestedRange("top-to-bottom");
+    const myColumn = this.parent.createNestedRange({
+      orientation: "top-to-bottom",
+    });
 
     myColumn
-      .createNestedRange("top-to-bottom", {
+      .createNestedRange({
         style: Styles.subheader,
-        height: 50.0,
+        rowHeight: 50.0,
       })
       .addCell(this.outstandingStockClassHeadingFor(stockClass));
 
-    const myData = myColumn.createNestedRange("top-to-bottom", {
+    const myData = myColumn.createNestedRange({
       style: Styles.default,
     });
 
@@ -83,7 +88,7 @@ export class StockClassOutstandingColumn {
     });
 
     myColumn
-      .createNestedRange("top-to-bottom")
+      .createNestedRange()
       .addBlankCell(Styles.default)
       .addSumFor(myData, Styles.footer);
 
@@ -114,16 +119,18 @@ export class StockClassAsConvertedColumn {
     stockClass: StockClassModel,
     outstandingRange: WorksheetRangePrinter
   ) {
-    const myColumn = this.parent.createNestedRange("top-to-bottom");
+    const myColumn = this.parent.createNestedRange({
+      orientation: "top-to-bottom",
+    });
 
     myColumn
-      .createNestedRange("top-to-bottom", {
+      .createNestedRange({
         style: Styles.subheader,
-        height: 50.0,
+        rowHeight: 50.0,
       })
       .addCell(this.asConvertedStockClassHeadingFor(stockClass));
 
-    const myData = myColumn.createNestedRange("top-to-bottom", {
+    const myData = myColumn.createNestedRange({
       style: Styles.default,
     });
 
@@ -135,7 +142,7 @@ export class StockClassAsConvertedColumn {
     );
 
     myColumn
-      .createNestedRange("top-to-bottom")
+      .createNestedRange()
       .addBlankCell(Styles.default)
       .addSumFor(myData, Styles.footer);
 
@@ -152,15 +159,17 @@ export class TotalOutstanding {
   public constructor(private readonly parent: WorksheetRangePrinter) {}
 
   public write(outstandingRanges: Array<WorksheetRangePrinter>) {
-    const myColumn = this.parent.createNestedRange("top-to-bottom");
+    const myColumn = this.parent.createNestedRange({
+      orientation: "top-to-bottom",
+    });
 
     myColumn
-      .createNestedRange("top-to-bottom", {
+      .createNestedRange({
         style: Styles.withLeftHandBorder(Styles.subheader),
       })
       .addCell("Total Stock\n(outstanding)*");
 
-    const myData = myColumn.createNestedRange("top-to-bottom", {
+    const myData = myColumn.createNestedRange({
       style: Styles.withLeftHandBorder(Styles.default),
     });
 
@@ -173,7 +182,7 @@ export class TotalOutstanding {
     myData.addRepeatedFormulaCell(`SUM(${cellsToSum})`, height);
 
     myColumn
-      .createNestedRange("top-to-bottom")
+      .createNestedRange()
       .addBlankCell(Styles.withLeftHandBorder(Styles.default))
       .addSumFor(myData, Styles.withLeftHandBorder(Styles.footer));
 
@@ -185,29 +194,26 @@ export class TotalOutstanding {
 export class TotalAsConverted {
   public constructor(private readonly parent: WorksheetRangePrinter) {}
 
-  public write(asConvertedRanges: Array<WorksheetRangePrinter>) {
-    const myColumn = this.parent.createNestedRange("top-to-bottom");
+  public write(sourceRanges: ExtentsCollection) {
+    const myColumn = this.parent.createNestedRange({
+      orientation: "top-to-bottom",
+    });
 
     myColumn
-      .createNestedRange("top-to-bottom", {
+      .createNestedRange({
         style: Styles.subheader,
       })
       .addCell("Total Stock\n(as converted)");
 
-    const myData = myColumn.createNestedRange("top-to-bottom", {
+    const myData = myColumn.createNestedRange({
       style: Styles.default,
     });
 
-    const cellsToSum = asConvertedRanges
-      .map((o) => o.getExtents().topLeftAddress)
-      .join(",");
-    const height = Math.max(
-      ...asConvertedRanges.map((o) => o.getExtents().height)
-    );
-    myData.addRepeatedFormulaCell(`SUM(${cellsToSum})`, height);
+    const cellsToSum = sourceRanges.map((o) => o.topLeftAddress).join(",");
+    myData.addRepeatedFormulaCell(`SUM(${cellsToSum})`, sourceRanges.height);
 
     const myTotal = myColumn
-      .createNestedRange("top-to-bottom")
+      .createNestedRange()
       .addBlankCell(Styles.default)
       .addSumFor(myData, Styles.footer);
 
@@ -224,15 +230,17 @@ export class TotalAsConverted {
     data: WorksheetRangePrinter,
     totalAddress: string
   ) {
-    const myColumn = this.parent.createNestedRange("top-to-bottom");
+    const myColumn = this.parent.createNestedRange({
+      orientation: "top-to-bottom",
+    });
 
     myColumn
-      .createNestedRange("top-to-bottom", {
+      .createNestedRange({
         style: Styles.subheader,
       })
       .addCell("Total Stock %\n(as converted)");
 
-    const myData = myColumn.createNestedRange("top-to-bottom", {
+    const myData = myColumn.createNestedRange({
       style: Styles.default__percentage,
     });
 
@@ -243,10 +251,14 @@ export class TotalAsConverted {
     myData.addRepeatedFormulaCell(formula, data.getExtents().height);
 
     myColumn
-      .createNestedRange("top-to-bottom")
+      .createNestedRange()
       .addBlankCell(Styles.default)
       .addSumFor(myData, Styles.footer__percentage);
 
     myColumn.setWidth(15);
+  }
+
+  public static asChildOf(parent: WorksheetRangePrinter) {
+    return new TotalAsConverted(parent);
   }
 }

@@ -2,6 +2,8 @@ import { WorksheetLinePrinter } from "./interfaces";
 
 import { Style } from "exceljs";
 
+import * as Extents from "./extents";
+
 type RangePrinterOrientation = "top-to-bottom" | "left-to-right";
 
 interface Cursor {
@@ -69,7 +71,7 @@ abstract class WorksheetRangePrinter {
     protected parent: WorksheetRangePrinter | null = null
   ) {
     // The initial cursor position is copied into the extents structure
-    this.extents = { topLeft: { ...cursor }, btmRight: { ...cursor } };
+    this.extents = Extents.ExtentsFactory.createAt(cursor);
   }
 
   /**
@@ -78,12 +80,18 @@ abstract class WorksheetRangePrinter {
    * of the worksheet elsewhere in the code.
    */
   public createNestedRange(
-    orientation: RangePrinterOrientation = this.orientation,
-    options: {
+    opts: {
+      orientation?: RangePrinterOrientation;
       style?: Partial<Style>;
-      height?: number;
+      rowHeight?: number;
     } = {}
   ): WorksheetRangePrinter {
+    const resolvedOpts = {
+      orientation: opts.orientation ?? this.orientation,
+      style: { ...this.style, ...opts.style },
+      rowHeight: opts.rowHeight,
+    };
+
     // If no cells have been written yet, we don't want to adjust the
     // cursor before creating the sub range; otherwise we end up with
     // unnecessary blank rows / cols
@@ -106,16 +114,17 @@ abstract class WorksheetRangePrinter {
 
     const range = WorksheetRangePrinter.createWithCursor(
       this.printer,
-      orientation,
+      resolvedOpts.orientation,
       this.cursor,
       this
     );
 
-    if (options.style) {
-      range.setStyle(options.style);
+    if (resolvedOpts.style) {
+      range.setStyle(resolvedOpts.style);
     }
-    if (options.height) {
-      range.printer.setRowHeight(this.cursor.row, options.height);
+
+    if (resolvedOpts.rowHeight) {
+      range.printer.setRowHeight(this.cursor.row, resolvedOpts.rowHeight);
     }
 
     return range;
