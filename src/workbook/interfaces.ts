@@ -30,22 +30,6 @@ export interface Model {
 }
 
 export interface WorksheetLinePrinter {
-  nextRow: (opts?: { height?: number }) => WorksheetLinePrinter;
-  createRange: (name: string, style?: Partial<Style>) => WorksheetLinePrinter;
-  addCell: (
-    value: Date | string | number,
-    style?: Partial<Style>
-  ) => WorksheetLinePrinter;
-  addFormulaCell: (
-    formula: string,
-    style?: Partial<Style>
-  ) => WorksheetLinePrinter;
-  addBlankCell: () => WorksheetLinePrinter;
-  addBlankCells: (n: number) => WorksheetLinePrinter;
-  rangeComplete: () => void;
-
-  // new methods for range printer; methods above will mostly if not
-  // all go away
   setCellAtCursor: (
     row: number,
     col: number,
