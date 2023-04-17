@@ -13,7 +13,10 @@ export class CapitalizationByStakeholderHeader {
     header
       .addFormulaCell("Context!A1", Styles.header__date)
       .addBlankCell()
-      .addCell(`${issuerName} Capitalization by Holder`, Styles.header__title)
+      .addCell(
+        `${issuerName} Capitalization by Stakeholder`,
+        Styles.header__title
+      )
       .addBlankCells(numberOfHoldingTypes - 1 + 5);
   }
 }

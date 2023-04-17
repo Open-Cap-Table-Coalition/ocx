@@ -1,4 +1,6 @@
 import StakeholderSheet from "./stakeholder-sheet";
+import SummarySheet from "./summary-sheet";
+
 import { Model, WorksheetLinePrinter } from "./interfaces";
 import Styles from "./styles";
 
@@ -25,25 +27,7 @@ class Workbook {
 
   private addSummarySheet() {
     const summary = this.workbook.addWorksheet("Summary Snapshot");
-
-    summary.nextRow({ height: 59.5 });
-
-    summary
-      .createRange("summary.header", {
-        fill: Styles.headerFill,
-        font: Styles.headerFont,
-        border: Styles.headerBorder,
-      })
-      .addFormulaCell("Context!A1", {
-        alignment: { vertical: "bottom", horizontal: "right" },
-        numFmt: "yyyy.mm.dd;@",
-      })
-      .addBlankCell()
-      .addCell(`${this.model.issuerName} Summary Capitalization`, {
-        alignment: { vertical: "middle", horizontal: "left" },
-      })
-      .addBlankCells(3)
-      .rangeComplete();
+    new SummarySheet(summary, this.model);
   }
 
   private addVotingDetailsSheet() {

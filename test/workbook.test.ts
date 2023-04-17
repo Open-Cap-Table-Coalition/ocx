@@ -26,7 +26,7 @@ describe("workbook", () => {
     const excel = new Excel.Workbook();
     new OCX.Workbook(new ExcelJSWriter(excel), fakeModel);
 
-    expect(excel.worksheets[0].getCell("A1").formula).toEqual("Context!A1");
+    expect(excel.worksheets[0].getCell("A1").formula).toEqual("=Context!A1");
     expect(excel.worksheets[0].getCell("C1").value).toBe(
       `${fakeModel.issuerName} Summary Capitalization`
     );
