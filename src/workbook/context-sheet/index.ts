@@ -3,7 +3,7 @@ import WorksheetRangePrinter from "../worksheet-range-printer";
 
 import Styles from "../styles";
 
-class SummarySheet {
+class ContextSheet {
   private sheet: WorksheetRangePrinter;
 
   constructor(
@@ -19,14 +19,11 @@ class SummarySheet {
     });
 
     header
-      .addFormulaCell("Context!A1", Styles.header__date)
+      .addCell(this.model.asOfDate, Styles.header__date)
       .addBlankCell()
-      .addCell(
-        `${this.model.issuerName} Summary Capitalization`,
-        Styles.header__title
-      )
+      .addCell("Context", Styles.header__title)
       .addBlankCells(3);
   }
 }
 
-export default SummarySheet;
+export default ContextSheet;

@@ -1,15 +1,12 @@
-import { Model, WorksheetLinePrinter } from "../interfaces";
+import { WorksheetLinePrinter } from "../interfaces";
 import WorksheetRangePrinter from "../worksheet-range-printer";
 
 import Styles from "../styles";
 
-class SummarySheet {
+class VotingDetailsSheet {
   private sheet: WorksheetRangePrinter;
 
-  constructor(
-    private readonly worksheet: WorksheetLinePrinter,
-    private readonly model: Model
-  ) {
+  constructor(private readonly worksheet: WorksheetLinePrinter) {
     this.sheet = WorksheetRangePrinter.create(worksheet, "top-to-bottom");
 
     const header = this.sheet.createNestedRange({
@@ -21,12 +18,9 @@ class SummarySheet {
     header
       .addFormulaCell("Context!A1", Styles.header__date)
       .addBlankCell()
-      .addCell(
-        `${this.model.issuerName} Summary Capitalization`,
-        Styles.header__title
-      )
+      .addCell("Voting Power by Shareholder Group", Styles.header__title)
       .addBlankCells(3);
   }
 }
 
-export default SummarySheet;
+export default VotingDetailsSheet;
