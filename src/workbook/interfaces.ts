@@ -48,7 +48,6 @@ export interface WorksheetLinePrinter {
     col: number,
     style?: Partial<Style>
   ) => void;
-  getAddress: (row: number, col: number) => string;
   setRowHeight: (row: number, height: number) => void;
   setColWidth: (col: number, width: number) => void;
 }

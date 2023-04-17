@@ -20,17 +20,15 @@ abstract class WorksheetRangePrinter {
 
   private style: Partial<Style> = {};
 
+  // TODO: This was written before the Extents module was created
+  // and we have yet to eliminate it.
   public getExtents() {
     return {
       topLeft: { ...this.extents.topLeft },
-      topLeftAddress: this.printer.getAddress(
-        this.extents.topLeft.row,
-        this.extents.topLeft.col
-      ),
+      topLeftAddress: Extents.ExcelUtils.cursorToAddress(this.extents.topLeft),
       btmRight: { ...this.extents.btmRight },
-      btmRightAddress: this.printer.getAddress(
-        this.extents.btmRight.row,
-        this.extents.btmRight.col
+      btmRightAddress: Extents.ExcelUtils.cursorToAddress(
+        this.extents.btmRight
       ),
       height: this.extents.btmRight.row - this.extents.topLeft.row + 1,
     };
@@ -180,9 +178,8 @@ abstract class WorksheetRangePrinter {
       { ...this.style, ...style }
     );
 
-    const referenceFormulaAddress = this.printer.getAddress(
-      this.cursor.row,
-      this.cursor.col
+    const referenceFormulaAddress = Extents.ExcelUtils.cursorToAddress(
+      this.cursor
     );
 
     for (let idx = 1; idx < repetitions; idx++) {
@@ -220,25 +217,15 @@ abstract class WorksheetRangePrinter {
   }
 
   public addSum(style?: Partial<Style>): WorksheetRangePrinter {
-    const topLeftCell = this.printer.getAddress(
-      this.extents.topLeft.row,
-      this.extents.topLeft.col
-    );
-    const bottomRightCell = this.printer.getAddress(
-      this.extents.btmRight.row,
-      this.extents.btmRight.col
-    );
-    return this.addFormulaCell(`SUM(${topLeftCell}:${bottomRightCell})`, style);
+    return this.addSumFor(this, style);
   }
 
   public addSumFor(otherRange: WorksheetRangePrinter, style?: Partial<Style>) {
-    const topLeftCell = this.printer.getAddress(
-      otherRange.extents.topLeft.row,
-      otherRange.extents.topLeft.col
+    const topLeftCell = Extents.ExcelUtils.cursorToAddress(
+      otherRange.extents.topLeft
     );
-    const bottomRightCell = this.printer.getAddress(
-      otherRange.extents.btmRight.row,
-      otherRange.extents.btmRight.col
+    const bottomRightCell = Extents.ExcelUtils.cursorToAddress(
+      otherRange.extents.btmRight
     );
     return this.addFormulaCell(`SUM(${topLeftCell}:${bottomRightCell})`, style);
   }
