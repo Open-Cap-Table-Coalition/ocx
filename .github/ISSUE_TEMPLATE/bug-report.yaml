@@ -1,0 +1,53 @@
+name: "Bug Report"
+description: "Report a bug encountered with OCF-to-OCX"
+title: "[Bug]: "
+labels: ["bug", "needs-triage"]
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for taking the time to submit a bug report. We do ask that you
+        [search for an existing issue](https://github.com/captable/ocx/issues)
+        before submitting a new bug.
+
+  - type: textarea
+    attributes:
+      label: Steps to reproduce
+      description: |
+        Please provide as much detail as possible. Attached input
+        and output files are extremely helpful.
+      validations:
+        required: true
+
+  - type: textarea
+    attributes:
+      label: Expected behavior
+      placeholder: What did you think would happen?
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Actual behavior
+      placeholder: What are you experiencing?
+    validations:
+      required: true
+
+  - type: input
+    attributes:
+      label: What OS and version are you running on?
+    validations:
+      required: true
+
+  - type: input
+    attributes:
+      label: What Node version(s) are you using?
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Anything else we need to know?
+    validations:
+      required: false
