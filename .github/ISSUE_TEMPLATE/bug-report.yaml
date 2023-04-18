@@ -1,6 +1,5 @@
 name: "Bug Report"
 description: "Report a bug encountered with OCF-to-OCX"
-title: ""
 labels: ["bug", "needs-triage"]
 
 body:
