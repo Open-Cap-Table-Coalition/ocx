@@ -1,6 +1,6 @@
 {
   "name": "ocx",
-  "version": "0.3.0",
+  "version": "0.4.0-alpha+main",
   "description": "A collection of libraries and binaries for converting Open Cap Table Format (OCF) packages to Excel",
   "main": "dist/index.js",
   "bin": {
