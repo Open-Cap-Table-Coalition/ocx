@@ -76,6 +76,7 @@ class OCFPackage {
       parsedManifest?.stock_classes_files as ReferencedFile[]
     );
     yield* this.itemsIn(parsedManifest?.transactions_files as ReferencedFile[]);
+    yield* this.itemsIn(parsedManifest?.stock_plans_files as ReferencedFile[]);
   }
 
   private *itemsIn(ocfFileReferences?: ReferencedFile[]): Generator<OCFObject> {

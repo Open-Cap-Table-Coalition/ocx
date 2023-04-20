@@ -12,6 +12,11 @@ export interface StockClassModel {
   conversion_ratio?: number;
 }
 
+export interface StockPlanModel {
+  id?: string;
+  plan_name: string;
+}
+
 // This is a case of "the client defines the interface". The
 // OCX.Model class is the concrete implementation, but we don't
 // want OCX packages to depend directly on one another. So, we

@@ -2,6 +2,7 @@ import {
   Model as WorkbookModel,
   StakeholderModel,
   StockClassModel as WorkbookStockClassModel,
+  StockPlanModel as WorkbookStockPlanModel,
 } from "src/workbook/interfaces";
 
 import Calculations from "./calculations";
@@ -16,11 +17,17 @@ interface StockClassModel extends WorkbookStockClassModel {
   board_approval_date: Date | null;
 }
 
+interface StockPlanModel extends WorkbookStockPlanModel {
+  board_approval_date: Date | null;
+}
+
 class Model implements WorkbookModel {
   public issuerName = "";
   private stakeholders_: StakeholderModel[] = [];
   private stockClasses_: StockClassModel[] = [];
   private sortedStockClasses_: StockClassModel[] = [];
+  private stockPlans_: StockPlanModel[] = [];
+  private sortedStockPlans_: StockPlanModel[] = [];
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private transactionsBySecurityId_ = new Map<string, Set<any>>();
@@ -52,6 +59,10 @@ class Model implements WorkbookModel {
       this.STOCK_CLASS(value);
     }
 
+    if (value?.object_type === "STOCK_PLAN") {
+      this.STOCK_PLAN(value);
+    }
+
     if ((value?.object_type ?? "").startsWith("TX_STOCK_")) {
       this.TX_STOCK(value);
     }
@@ -69,6 +80,16 @@ class Model implements WorkbookModel {
     }
 
     return this.sortedStockClasses_;
+  }
+
+  public get stockPlans() {
+    if (this.sortedStockPlans_.length !== this.stockPlans_.length) {
+      this.sortedStockPlans_ = [...this.stockPlans_].sort(
+        this.comparePlansForSort
+      );
+    }
+
+    return this.sortedStockPlans_;
   }
 
   public getStakeholderStockHoldings(
@@ -114,6 +135,21 @@ class Model implements WorkbookModel {
     return classA.display_name.localeCompare(classB.display_name);
   }
 
+  private comparePlansForSort(classA: StockPlanModel, classB: StockPlanModel) {
+    // Sort criteria 1: Older before newer
+    const now = new Date();
+    const dateDiff: number =
+      (classA.board_approval_date ?? now).valueOf() -
+      (classB.board_approval_date ?? now).valueOf();
+
+    if (dateDiff !== 0) {
+      return dateDiff;
+    }
+
+    // Tie-breaker: Sort by name
+    return classA.plan_name.localeCompare(classB.plan_name);
+  }
+
   // This is required on the methods below because an object being
   // "consumed" from the ocf package is by definition "anything".
   // These `anys` may go away because we can define some
@@ -152,6 +188,20 @@ class Model implements WorkbookModel {
       display_name: value?.name,
       is_preferred: value?.class_type !== "COMMON",
       conversion_ratio,
+      board_approval_date,
+    });
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  private STOCK_PLAN(value: any) {
+    let board_approval_date = null;
+
+    if (value?.board_approval_date) {
+      board_approval_date = new Date(value.board_approval_date);
+    }
+    this.stockPlans_.push({
+      id: value?.id,
+      plan_name: value?.plan_name,
       board_approval_date,
     });
   }
