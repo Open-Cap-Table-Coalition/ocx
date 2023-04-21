@@ -115,6 +115,7 @@ describe("ocf-package", () => {
 
       expect((objectIds.get("STAKEHOLDER") ?? new Set()).size).toBe(22);
       expect((objectIds.get("STOCK_CLASS") ?? new Set()).size).toBe(3);
+      expect((objectIds.get("STOCK_PLAN") ?? new Set()).size).toBe(1);
 
       expect((objectIds.get("TX_STOCK_ISSUANCE") ?? new Set()).size).toBe(45);
       expect((objectIds.get("TX_STOCK_ACCEPTANCE") ?? new Set()).size).toBe(2);
