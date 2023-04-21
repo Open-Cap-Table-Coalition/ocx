@@ -125,6 +125,55 @@ describe(OCX.Model, () => {
     });
   });
 
+  describe("test stock plans", () => {
+    test("empty case", () => {
+      const model = subject();
+      expect(model.stockPlans).toHaveLength(0);
+    });
+
+    test("model stock plan", () => {
+      const model = subject();
+      const commonStockPlan = fakeStockPlan("Stock Plan");
+      model.consume(commonStockPlan);
+      expect(model.stockPlans).toHaveLength(1);
+      const stockPlan = model.stockPlans[0];
+
+      expect(stockPlan.id).toBe(commonStockPlan.id);
+      expect(stockPlan.plan_name).toBe(commonStockPlan.plan_name);
+    });
+
+    test("stock plan sort order", () => {
+      const model = subject();
+      const commonStockPlanA = fakeStockPlan("Stock Plan Z", {
+        boardApproved: "2011-01-01",
+      });
+      const commonStockPlanB = fakeStockPlan("Stock Plan B", {
+        boardApproved: new Date().toISOString(),
+      });
+      const commonStockPlanC = fakeStockPlan("Stock Plan C");
+      const commonStockPlanD = fakeStockPlan("Stock Plan D");
+
+      model.consume(commonStockPlanA);
+      model.consume(commonStockPlanB);
+      model.consume(commonStockPlanC);
+      model.consume(commonStockPlanD);
+
+      expect(model.stockPlans.map((plan) => plan.id).join(" ")).toEqual(
+        "Stock Plan Z Stock Plan B Stock Plan C Stock Plan D"
+      );
+    });
+  });
+
+  function fakeStockPlan(id: string, opts?: { boardApproved?: string }) {
+    return {
+      id: id,
+      object_type: "STOCK_PLAN",
+      plan_name: `${id}`,
+      board_approval_date: opts?.boardApproved,
+      current_shares_reserved: "1000000",
+    };
+  }
+
   function fakeCommonStockClass(id: string, opts?: { boardApproved?: string }) {
     return {
       id: id,
