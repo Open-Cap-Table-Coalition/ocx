@@ -55,12 +55,20 @@ class StakeholderSheet {
       }
     }
 
+    for (const plan of this.stockPlans) {
+      new Holdings.StockPlanColumn(holdingsTable).write(plan);
+    }
+
     new Holdings.TotalOutstanding(holdingsTable).write(outstandingRanges);
     new Holdings.TotalAsConverted(holdingsTable).write(asConvertedRanges);
   }
 
   private get stockClasses() {
     return this.model.stockClasses || [];
+  }
+
+  private get stockPlans() {
+    return this.model.stockPlans || [];
   }
 
   private stockColumns() {
