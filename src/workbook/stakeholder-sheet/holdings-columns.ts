@@ -173,7 +173,8 @@ export class StockPlanColumn {
         style: Styles.subheader,
         rowHeight: 50.0,
       })
-      .addCell(this.stockPlanHeadingFor(stockPlan));
+      .addCell(this.stockPlanHeadingFor(stockPlan))
+      .addBlankCell();
 
     const myData = myColumn.createNestedRange({
       style: Styles.default,
@@ -183,6 +184,10 @@ export class StockPlanColumn {
 
   private stockPlanHeadingFor(stockPlan: StockPlanModel) {
     return `${stockPlan.plan_name}`;
+  }
+
+  public static asChildOf(parent: WorksheetRangePrinter) {
+    return new StockPlanColumn(parent);
   }
 }
 

@@ -137,8 +137,9 @@ class Model implements WorkbookModel {
 
   private comparePlansForSort(classA: StockPlanModel, classB: StockPlanModel) {
     // Sort criteria 1: Older before newer
-    const dateA = classA.board_approval_date ?? new Date();
-    const dateB = classB.board_approval_date ?? new Date();
+    const nullDate = new Date();
+    const dateA = classA.board_approval_date ?? nullDate;
+    const dateB = classB.board_approval_date ?? nullDate;
     const dateDiff: number = dateA.valueOf() - dateB.valueOf();
     if (dateDiff !== 0) {
       return dateDiff;
