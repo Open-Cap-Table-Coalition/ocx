@@ -20,13 +20,16 @@ program
   .argument("<src>", "Directory or .zip archive containing OCF Manifest File")
   .action((src) => {
     try {
-      console.log(`* Searching ${src} for a manifest file`);
+      `* Searching ${src} for a manifest file`;
       const files = pipeline.extractFilesetFromPath(src);
       const ocfpkg = OCX.OCFPackage.createFromFileset(files);
-      console.log(`- Found OCF Manifest File ${ocfpkg.manifestFile.path}`);
+      OCX.Logger.info("- Found OCF Manifest File", ocfpkg.manifestFile.path);
 
       const model = new OCX.Model(ocfpkg.asOfDate, ocfpkg.generatedAtTimestamp);
-      console.log(`  Effective Date: ${model.asOfDate.toLocaleDateString()}`);
+      OCX.Logger.info(
+        "  Effective Date: ",
+        model.asOfDate.toLocaleDateString()
+      );
 
       for (const object of ocfpkg.objects()) {
         model.consume(object);
@@ -35,13 +38,13 @@ program
       const workbook = new Excel.Workbook();
       new OCX.Workbook(new ExcelJSWriter(workbook), model);
       workbook.xlsx.writeFile("ocf2ocx.xlsx").then(() => {
-        console.log("wrote to ocf2ocx.xlsx");
+        OCX.Logger.info("wrote to ocf2ocx.xlsx");
       });
     } catch (e: unknown) {
       if (e instanceof Error) {
-        console.error(e.message);
+        OCX.Logger.error(e.message);
       } else {
-        console.error("Unknown error occurred.");
+        OCX.Logger.error("Unknown error occurred.");
       }
       process.exit(1);
     }

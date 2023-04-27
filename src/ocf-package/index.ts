@@ -1,3 +1,5 @@
+import Logger from "../logging";
+
 interface File {
   readonly path: string;
   readonly isSameAs: (containerRelativePath: string) => boolean;
@@ -68,7 +70,7 @@ class OCFPackage {
     if (isOCFObject(parsedManifest.issuer)) {
       yield parsedManifest.issuer;
     } else {
-      console.warn("Encountered non-OCF object");
+      Logger.warn("Encountered non-OCF object");
     }
 
     yield* this.itemsIn(parsedManifest?.stakeholders_files as ReferencedFile[]);
@@ -96,7 +98,7 @@ class OCFPackage {
         if (isOCFObject(item)) {
           yield item;
         } else {
-          console.warn("Encountered non-OCF object");
+          Logger.warn("Encountered non-OCF object");
         }
       }
     } catch (e: unknown) {
