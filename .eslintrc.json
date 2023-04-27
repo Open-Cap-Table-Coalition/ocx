@@ -12,6 +12,8 @@
     "ecmaVersion": "latest"
   },
   "plugins": ["@typescript-eslint"],
-  "rules": {},
+  "rules": {
+    "no-console": ["error"]
+  },
   "ignorePatterns": ["dist/*"]
 }
