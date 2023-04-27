@@ -33,13 +33,13 @@ describe("OCX.Logger", () => {
       debug: jest.fn<typeof console.debug>(),
       info: jest.fn<typeof console.info>(),
       warn: jest.fn<typeof console.warn>(),
-      error: jest.fn<typeof console.debug>(),
+      error: jest.fn<typeof console.error>(),
     };
     const actualConsole = spyOnConsole("warn");
 
     OCX.Logger.logUsing(mockLogger);
     OCX.Logger.warn("^_^");
-    expect(mockLogger.warn).toHaveBeenCalledWith("[ WARN] ^_^");
+    expect(mockLogger.warn).toHaveBeenCalledWith("^_^");
     expect(actualConsole).not.toHaveBeenCalled();
   });
 

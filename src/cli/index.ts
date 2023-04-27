@@ -20,7 +20,7 @@ program
   .argument("<src>", "Directory or .zip archive containing OCF Manifest File")
   .action((src) => {
     try {
-      `* Searching ${src} for a manifest file`;
+      OCX.Logger.info(`* Searching ${src} for a manifest file`);
       const files = pipeline.extractFilesetFromPath(src);
       const ocfpkg = OCX.OCFPackage.createFromFileset(files);
       OCX.Logger.info("- Found OCF Manifest File", ocfpkg.manifestFile.path);
