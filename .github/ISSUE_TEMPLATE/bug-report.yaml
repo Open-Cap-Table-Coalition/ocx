@@ -5,14 +5,14 @@ labels: ["bug", "needs-triage"]
 body:
   - type: markdown
     attributes:
-      value: |-
+      value: >
         Thank you for taking the time to submit a bug report. We do ask that you
         [search for an existing issue](https://github.com/captable/ocx/issues) before submitting a new bug.
 
   - type: textarea
     attributes:
       label: Steps to reproduce
-      description: |-
+      description: >
         Please provide as much detail as possible. Attached input
         and output files are extremely helpful.
     validations:
