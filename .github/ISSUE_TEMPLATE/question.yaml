@@ -1,0 +1,21 @@
+name: "Ask a Question"
+description: "Don't be shy, ask for help!"
+labels: ["question", "needs-triage"]
+
+body:
+  - type: markdown
+    attributes:
+      value: |-
+        We love helping out; sometimes a good question can show us where
+        our documentation is lacking or spark new ideas for improvement.
+        We only ask that you please search other issues and the existing
+        documenation before submitting. Thanks!
+
+  - type: textarea
+    attributes:
+      label: What can we help you with?
+      description: |
+        Please provide as much detail as possible. Attached files or links
+        to code snippets can be extremely helpful.
+    validations:
+      required: true
