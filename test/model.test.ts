@@ -225,7 +225,7 @@ describe(OCX.Model, () => {
       const model = subject();
       model.consume(fakeCommonStockClass("Fake"));
       model.consume(fakeStakeholder("joe"));
-      model.consume(fakeStockIssuanceForStakeholder("joe", "Fake"));
+      model.consume(fakeStockIssuanceForStakeholder("joe", "Fake")[0]);
 
       expect(
         model.getStakeholderStockHoldings(
@@ -236,13 +236,78 @@ describe(OCX.Model, () => {
     });
   });
 
-  function fakeStockIssuanceForStakeholder(id: string, stock_class_id: string) {
-    return {
-      security_id: "yup",
-      stakeholder_id: id,
-      stock_class_id,
-      quantity: "100",
-      object_type: "TX_STOCK_ISSUANCE",
-    };
+  describe("getStakeholderStockPlanHoldings", () => {
+    test("when we have issuances", () => {
+      const model = subject();
+      model.consume(fakeStockPlan("Fake"));
+      model.consume(fakeStakeholder("joe"));
+      model.consume(fakeStockIssuanceForStakeholder("joe", "Fake")[1]);
+      model.consume(fakeStockIssuanceForStakeholder("joe", "Fake")[2]);
+
+      expect(
+        model.getStakeholderStockPlanHoldings(
+          model.stakeholders[0],
+          model.stockPlans[0]
+        )
+      ).toBe(120);
+    });
+
+    test("when we have issuances and retractions", () => {
+      const model = subject();
+      model.consume(fakeStockPlan("Fake"));
+      model.consume(fakeStakeholder("joe"));
+
+      // if we consume retraction before issuance
+      model.consume(fakeStockIssuanceForStakeholder("joe", "Fake")[3]);
+      expect(
+        model.getStakeholderStockPlanHoldings(
+          model.stakeholders[0],
+          model.stockPlans[0]
+        )
+      ).toBe(0);
+
+      model.consume(fakeStockIssuanceForStakeholder("joe", "Fake")[1]);
+      model.consume(fakeStockIssuanceForStakeholder("joe", "Fake")[2]);
+      while (model.hasPendingTransactions()) {
+        model.consumePendingTransactions();
+      }
+      expect(
+        model.getStakeholderStockPlanHoldings(
+          model.stakeholders[0],
+          model.stockPlans[0]
+        )
+      ).toBe(20);
+    });
+  });
+
+  function fakeStockIssuanceForStakeholder(id: string, stock_id: string) {
+    return [
+      {
+        security_id: "yup",
+        stakeholder_id: id,
+        stock_class_id: stock_id,
+        quantity: "100",
+        object_type: "TX_STOCK_ISSUANCE",
+      },
+      {
+        security_id: "plan-issuance-1",
+        stakeholder_id: id,
+        stock_plan_id: stock_id,
+        quantity: "100",
+        object_type: "TX_PLAN_SECURITY_ISSUANCE",
+      },
+      {
+        security_id: "plan-issuance-2",
+        stakeholder_id: id,
+        stock_plan_id: stock_id,
+        quantity: "20",
+        object_type: "TX_PLAN_SECURITY_ISSUANCE",
+      },
+      {
+        id: "retraction-1",
+        security_id: "plan-issuance-1",
+        object_type: "TX_PLAN_SECURITY_RETRACTION",
+      },
+    ];
   }
 });
