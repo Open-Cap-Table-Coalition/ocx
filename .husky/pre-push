@@ -6,8 +6,8 @@ _STASH_NAME="husky.pre-push.$(date +%s)"
 echo "* Stashing uncommited changes ($_STASH_NAME)"
 git stash push --include-untracked --message "$_STASH_NAME"
 
-echo "* Pulling main"
-git pull --rebase origin main
+echo "* Pulling main from upstream"
+git pull --rebase upstream main
 ./script/update
 
 echo "* Running tests"

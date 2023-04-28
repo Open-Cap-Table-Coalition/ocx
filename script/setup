@@ -8,6 +8,17 @@ set -eou pipefail
 # navigate to root of repo
 pushd $(git rev-parse --show-toplevel) > /dev/null
 
+# While we currently only use Husky for our CI, we want
+# to ensure developers are integrating against latest
+# `captable/ocx` main, not a forked main.
+#
+# .husky/pre-push depends on this `upstream` remote being
+# set.
+if ! git remote | grep upstream &> /dev/null; then
+  git remote add upstream git@github.com:captable/ocx
+  git remote set-url --push upstream push-disabled
+fi
+
 script/bootstrap
 
 # back to where we were
