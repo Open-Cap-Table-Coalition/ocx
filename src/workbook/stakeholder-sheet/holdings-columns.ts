@@ -1,5 +1,10 @@
 import WorksheetRangePrinter from "../worksheet-range-printer";
-import { Model, StockClassModel, StakeholderModel } from "../interfaces";
+import {
+  Model,
+  StockClassModel,
+  StockPlanModel,
+  StakeholderModel,
+} from "../interfaces";
 import Styles from "../styles";
 import { ExtentsCollection } from "../extents";
 
@@ -152,6 +157,37 @@ export class StockClassAsConvertedColumn {
 
   private asConvertedStockClassHeadingFor(stockClass: StockClassModel) {
     return `${stockClass.display_name}\n(as converted)`;
+  }
+}
+
+export class StockPlanColumn {
+  public constructor(private readonly parent: WorksheetRangePrinter) {}
+
+  public write(stockPlan: StockPlanModel): WorksheetRangePrinter {
+    const myColumn = this.parent.createNestedRange({
+      orientation: "top-to-bottom",
+    });
+
+    myColumn
+      .createNestedRange({
+        style: Styles.subheader,
+        rowHeight: 50.0,
+      })
+      .addCell(this.stockPlanHeadingFor(stockPlan))
+      .addBlankCell();
+
+    const myData = myColumn.createNestedRange({
+      style: Styles.default,
+    });
+    return myData;
+  }
+
+  private stockPlanHeadingFor(stockPlan: StockPlanModel) {
+    return `${stockPlan.plan_name}`;
+  }
+
+  public static asChildOf(parent: WorksheetRangePrinter) {
+    return new StockPlanColumn(parent);
   }
 }
 

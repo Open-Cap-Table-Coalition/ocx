@@ -27,4 +27,25 @@ describe("Holdings Columns", () => {
       expect(cell("B3").formula).toBe("=A3 / $A$5");
     });
   });
+
+  describe(Holdings.StockPlanColumn, () => {
+    test("header", () => {
+      const stockPlanModels = Array.of(
+        {
+          plan_name: "Stock Plan A",
+        },
+        {
+          plan_name: "Stock Plan B",
+        }
+      );
+
+      const { parentRange, cell } = prepareTestWorksheet();
+      const stockPlanPrinter = Holdings.StockPlanColumn.asChildOf(parentRange);
+      for (const plan of stockPlanModels) {
+        stockPlanPrinter.write(plan);
+      }
+      expect(cell("A1").value).toBe("Stock Plan A");
+      expect(cell("B1").value).toBe("Stock Plan B");
+    });
+  });
 });

@@ -28,6 +28,8 @@ export interface Model {
 
   stockClasses?: Array<StockClassModel>;
 
+  stockPlans?: Array<StockPlanModel>;
+
   getStakeholderStockHoldings?: (
     stakeholder: StakeholderModel,
     stockClass: StockClassModel

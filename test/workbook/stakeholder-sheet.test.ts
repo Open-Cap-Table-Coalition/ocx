@@ -189,4 +189,54 @@ describe(StakeholderSheet, () => {
     expect(excel.worksheets[0].getCell("E6").formula).toBe("=SUM(E3:E4)");
     expect(excel.worksheets[0].getCell("F6").formula).toBe("=SUM(F3:F4)");
   });
+
+  test("per shareholder holdings for stock plans and total", () => {
+    const excel = new Excel.Workbook();
+    const workbookWriter = new ExcelJSWriter(excel);
+    const worksheetWriter = workbookWriter.addWorksheet("test");
+
+    const sheet = new StakeholderSheet(worksheetWriter, {
+      asOfDate: new Date(),
+      issuerName: "Fred",
+      stakeholders: Array.of(
+        {
+          display_name: "Stockholder 1",
+        },
+        {
+          display_name: "Optionholder 42",
+        }
+      ),
+      stockClasses: Array.of(
+        {
+          display_name: "Class A Common Stock",
+          is_preferred: false,
+        },
+        {
+          display_name: "Class A Preferred Stock",
+          is_preferred: true,
+          conversion_ratio: 1,
+        }
+      ),
+      stockPlans: Array.of(
+        {
+          plan_name: "Stock Plan A",
+        },
+        {
+          plan_name: "Stock Plan B",
+        }
+      ),
+    });
+
+    expect(sheet).not.toBeNull();
+    expect(excel.worksheets[0].getCell("A3").value).toBe("Stockholder 1");
+    expect(excel.worksheets[0].getCell("A4").value).toBe("Optionholder 42");
+    expect(excel.worksheets[0].getCell("C2").value).toBe(
+      "Class A Common Stock"
+    );
+    expect(excel.worksheets[0].getCell("D2").value).toBe(
+      "Class A Preferred Stock\n(outstanding) (1.0000)"
+    );
+    expect(excel.worksheets[0].getCell("E2").value).toBe("Stock Plan A");
+    expect(excel.worksheets[0].getCell("F2").value).toBe("Stock Plan B");
+  });
 });
