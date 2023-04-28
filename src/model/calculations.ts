@@ -37,7 +37,10 @@ export class OutstandingStockSharesCalculator {
   }) {
     const operand = txn.quantity ?? txn.quantity_converted ?? "0";
 
-    if (txn.object_type === "TX_STOCK_ISSUANCE") {
+    if (
+      txn.object_type === "TX_STOCK_ISSUANCE" ||
+      txn.object_type === "TX_PLAN_SECURITY_ISSUANCE"
+    ) {
       this.value_ = this.value_.plus(operand);
       this.issuanceAmounts_.set(txn.security_id, operand);
     } else if (txn.object_type === "TX_STOCK_REISSUANCE") {
