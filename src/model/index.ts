@@ -11,7 +11,10 @@ import Calculations from "./calculations";
 // in a Map generic, I got a "cannot find namespace 'Calculations'"
 // error. Until I have time to understand this, I'm importing the
 // calculator separately.
-import { OutstandingStockSharesCalculator } from "./calculations";
+import {
+  OutstandingStockSharesCalculator,
+  OutstandingStockPlanCalculator,
+} from "./calculations";
 
 interface StockClassModel extends WorkbookStockClassModel {
   board_approval_date: Date | null;
@@ -73,8 +76,8 @@ class Model implements WorkbookModel {
       this.TX_STOCK(value);
     }
 
-    if ((value?.object_type ?? "").startsWith("TX_PLAN_")) {
-      this.TX_PLAN(value);
+    if ((value?.object_type ?? "").startsWith("TX_PLAN_SECURITY_")) {
+      this.TX_PLAN_SECURITY(value);
     }
   }
 
@@ -132,7 +135,7 @@ class Model implements WorkbookModel {
     stakeholder: StakeholderModel,
     stockPlan: WorkbookStockPlanModel
   ) {
-    const calculator = new OutstandingStockSharesCalculator();
+    const calculator = new OutstandingStockPlanCalculator();
 
     const issuanceSecurityIds =
       this.issuedSecuritiesByStakeholderAndStockPlanIds_.get(
@@ -241,7 +244,7 @@ class Model implements WorkbookModel {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  private async TX_STOCK(value: any) {
+  private TX_STOCK(value: any) {
     if (value.object_type === "TX_STOCK_ISSUANCE") {
       const key = `${value.stakeholder_id}/${value.stock_class_id}`;
       const ids =
@@ -257,7 +260,7 @@ class Model implements WorkbookModel {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  private async TX_PLAN(value: any) {
+  private TX_PLAN_SECURITY(value: any) {
     if (value.object_type === "TX_PLAN_SECURITY_ISSUANCE") {
       const key = `${value.stakeholder_id}/${value.stock_plan_id}`;
       const ids =
@@ -265,28 +268,6 @@ class Model implements WorkbookModel {
         new Set();
       ids.add(value.security_id);
       this.issuedSecuritiesByStakeholderAndStockPlanIds_.set(key, ids);
-    }
-
-    if (value.object_type === "TX_PLAN_SECURITY_RETRACTION") {
-      // find the issuance (value of type TX_PLAN_SECURITY_ISSUANCE in transactionsBySecurityId_) by value.security_id
-      // If we don’t have the issuance yet, then we have to hold on to the value.security_id until the issuance is loaded
-      const issuanceTxn = Array.from(
-        this.transactionsBySecurityId_.get(value.security_id) || []
-      ).find((txn) => txn.object_type === "TX_PLAN_SECURITY_ISSUANCE");
-      if (issuanceTxn) {
-        value.quantity = issuanceTxn.quantity;
-        value.stock_plan_id = issuanceTxn.stock_plan_id;
-        value.stakeholder_id = issuanceTxn.stakeholder_id;
-        const key = `${value.stakeholder_id}/${value.stock_plan_id}`;
-        const ids =
-          this.issuedSecuritiesByStakeholderAndStockPlanIds_.get(key) ||
-          new Set();
-        ids.add(value.security_id);
-        this.issuedSecuritiesByStakeholderAndStockPlanIds_.set(key, ids);
-        this.checkPendingTransactions(value);
-      } else {
-        this.pendingTransactionsBySecurityId_.push(value);
-      }
     }
     const txns =
       this.transactionsBySecurityId_.get(value.security_id) || new Set();

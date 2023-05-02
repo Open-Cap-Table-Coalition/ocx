@@ -35,10 +35,6 @@ program
         model.consume(object);
       }
 
-      while (model.hasPendingTransactions) {
-        model.consumePendingTransactions();
-      }
-
       const workbook = new Excel.Workbook();
       new OCX.Workbook(new ExcelJSWriter(workbook), model);
       workbook.xlsx.writeFile("ocf2ocx.xlsx").then(() => {
