@@ -169,6 +169,13 @@ describe(Calculations.OutstandingStockPlanCalculator, () => {
     expect(subject.value).toBe(9);
   });
 
+  test("plan transfer", () => {
+    const subject = new Calculations.OutstandingStockPlanCalculator();
+    subject.apply(fakePlanTxn("PLAN_SECURITY_ISSUANCE", { quantity: "10" }));
+    subject.apply(fakePlanTxn("PLAN_SECURITY_TRANSFER", { quantity: "1" }));
+    expect(subject.value).toBe(9);
+  });
+
   let securityIncrementer = 0;
 
   function fakePlanTxn(type: string, attrs: { [x: string]: string }) {
