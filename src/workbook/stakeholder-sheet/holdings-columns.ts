@@ -42,6 +42,10 @@ export class StakeholderColumn {
 
     myColumn.setWidth(longestStakeholderNameLen);
   }
+
+  public static asChildOf(parent: WorksheetRangePrinter) {
+    return new StakeholderColumn(parent);
+  }
 }
 
 export class StakeholderGroupColumn {
@@ -163,7 +167,7 @@ export class StockClassAsConvertedColumn {
 export class StockPlanColumn {
   public constructor(private readonly parent: WorksheetRangePrinter) {}
 
-  public write(stockPlan: StockPlanModel): WorksheetRangePrinter {
+  public write(stockPlan: StockPlanModel, model: Model): WorksheetRangePrinter {
     const myColumn = this.parent.createNestedRange({
       orientation: "top-to-bottom",
     });
@@ -173,12 +177,35 @@ export class StockPlanColumn {
         style: Styles.subheader,
         rowHeight: 50.0,
       })
-      .addCell(this.stockPlanHeadingFor(stockPlan))
-      .addBlankCell();
+      .addCell(this.stockPlanHeadingFor(stockPlan));
 
     const myData = myColumn.createNestedRange({
       style: Styles.default,
     });
+
+    let largestHolding = 0;
+
+    model.stakeholders.forEach((s) => {
+      const holding = model.getStakeholderStockPlanHoldings
+        ? model.getStakeholderStockPlanHoldings(s, stockPlan)
+        : 0;
+      myData.addCell(holding);
+      if (holding > largestHolding) {
+        largestHolding = holding;
+      }
+    });
+
+    myColumn
+      .createNestedRange()
+      .addBlankCell(Styles.default)
+      .addSumFor(myData, Styles.footer);
+
+    myColumn.setWidth(
+      Math.max(
+        14,
+        (largestHolding * model.stakeholders.length).toString().length
+      )
+    );
     return myData;
   }
 

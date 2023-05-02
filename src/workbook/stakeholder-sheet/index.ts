@@ -35,14 +35,14 @@ class StakeholderSheet {
       this.model.stakeholders
     );
 
-    const outstandingRanges = new Array<WorksheetRangePrinter>();
+    const outstandingStockSharesRanges = new Array<WorksheetRangePrinter>();
     const asConvertedRanges = new ExtentsCollection();
     for (let idx = 0; idx < this.stockClasses.length; ++idx) {
       const stockClass = this.stockClasses[idx];
       const outstandingRange = new Holdings.StockClassOutstandingColumn(
         holdingsTable
       ).write(stockClass, this.model);
-      outstandingRanges.push(outstandingRange);
+      outstandingStockSharesRanges.push(outstandingRange);
 
       if (stockClass.is_preferred && stockClass.conversion_ratio !== 1.0) {
         asConvertedRanges.push(
@@ -56,10 +56,12 @@ class StakeholderSheet {
     }
 
     for (const plan of this.stockPlans) {
-      new Holdings.StockPlanColumn(holdingsTable).write(plan);
+      new Holdings.StockPlanColumn(holdingsTable).write(plan, this.model);
     }
 
-    new Holdings.TotalOutstanding(holdingsTable).write(outstandingRanges);
+    new Holdings.TotalOutstanding(holdingsTable).write(
+      outstandingStockSharesRanges
+    );
     new Holdings.TotalAsConverted(holdingsTable).write(asConvertedRanges);
   }
 

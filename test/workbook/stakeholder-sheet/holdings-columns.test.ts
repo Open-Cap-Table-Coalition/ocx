@@ -29,7 +29,44 @@ describe("Holdings Columns", () => {
   });
 
   describe(Holdings.StockPlanColumn, () => {
+    const stockPlanModels = Array.of(
+      {
+        plan_name: "Stock Plan A",
+      },
+      {
+        plan_name: "Stock Plan B",
+      }
+    );
+    const model = {
+      asOfDate: new Date(),
+      issuerName: "Fred",
+      stakeholders: Array.of(
+        {
+          display_name: "Stockholder 1",
+        },
+        {
+          display_name: "Optionholder 42",
+        }
+      ),
+      // eslint-disable-next-line
+      /* eslint-disable @typescript-eslint/no-unused-vars */
+      /* eslint-disable @typescript-eslint/no-explicit-any */
+      getStakeholderStockPlanHoldings: (stakeholder: any, stockPlan: any) => {
+        return 50;
+      },
+    };
+
     test("header", () => {
+      const { parentRange, cell } = prepareTestWorksheet();
+      const stockPlanPrinter = Holdings.StockPlanColumn.asChildOf(parentRange);
+      for (const plan of stockPlanModels) {
+        stockPlanPrinter.write(plan, model);
+      }
+      expect(cell("A1").value).toBe("Stock Plan A");
+      expect(cell("B1").value).toBe("Stock Plan B");
+    });
+
+    test("holdings for stakeholder", () => {
       const stockPlanModels = Array.of(
         {
           plan_name: "Stock Plan A",
@@ -38,14 +75,28 @@ describe("Holdings Columns", () => {
           plan_name: "Stock Plan B",
         }
       );
-
       const { parentRange, cell } = prepareTestWorksheet();
+
+      const stakeholderPrinter =
+        Holdings.StakeholderColumn.asChildOf(parentRange);
+      stakeholderPrinter.write(model.stakeholders);
+
       const stockPlanPrinter = Holdings.StockPlanColumn.asChildOf(parentRange);
       for (const plan of stockPlanModels) {
-        stockPlanPrinter.write(plan);
+        stockPlanPrinter.write(plan, model);
       }
-      expect(cell("A1").value).toBe("Stock Plan A");
-      expect(cell("B1").value).toBe("Stock Plan B");
+      expect(cell("A1").value).toBe("Stakeholder");
+      expect(cell("A2").value).toBe("Stockholder 1");
+      expect(cell("A3").value).toBe("Optionholder 42");
+      expect(cell("B1").value).toBe("Stock Plan A");
+      expect(cell("B2").value).toBe(50);
+      expect(cell("B3").value).toBe(50);
+      expect(cell("C1").value).toBe("Stock Plan B");
+      expect(cell("C2").value).toBe(50);
+      expect(cell("C3").value).toBe(50);
+      expect(cell("A5").value).toBe("Total");
+      expect(cell("B5").formula).toBe("=SUM(B2:B3)");
+      expect(cell("C5").formula).toBe("=SUM(C2:C3)");
     });
   });
 });
