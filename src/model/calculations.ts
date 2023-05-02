@@ -8,19 +8,25 @@ function convertRatioToDecimalNumber(ratio: {
   return quotient;
 }
 
-// Reference: https://docs.google.com/document/d/19iVTJfJxIMr_gQHzMgSAHR6PhCBFEHg0TahjYc8uOac/edit#heading=h.fiexe0ua8jk7
-export class OutstandingStockSharesCalculator {
-  private value_: Big = Big("0");
-  private issuanceAmounts_: Map<string, string> = new Map();
-  private reissuedSecurityIds_: Set<string> = new Set();
+interface Transaction {
+  object_type: string;
+  security_id: string;
+  quantity?: string;
+  quantity_converted?: string;
+}
+
+abstract class OutstandingEquityCalculatorBase {
+  protected value_: Big = Big("0");
+  protected issuanceAmounts_: Map<string, string> = new Map();
+  protected pendingSecurityIds_: Set<string> = new Set();
 
   public get value() {
-    for (const reissuedSecurityId of this.reissuedSecurityIds_) {
-      const reissuedAmount = this.issuanceAmounts_.get(reissuedSecurityId);
-      if (reissuedAmount !== undefined) {
-        this.issuanceAmounts_.delete(reissuedSecurityId);
-        this.reissuedSecurityIds_.delete(reissuedSecurityId);
-        this.value_ = this.value_.minus(reissuedAmount);
+    for (const pendingSecurity of this.pendingSecurityIds_) {
+      const pendingAmount = this.issuanceAmounts_.get(pendingSecurity);
+      if (pendingAmount !== undefined) {
+        this.issuanceAmounts_.delete(pendingSecurity);
+        this.pendingSecurityIds_.delete(pendingSecurity);
+        this.value_ = this.value_.minus(pendingAmount);
       } else {
         // TODO: Interesting question here; log? raise error? save the reissuance for "later"?
       }
@@ -29,22 +35,31 @@ export class OutstandingStockSharesCalculator {
     return this.value_.toNumber();
   }
 
-  public apply(txn: {
-    object_type: string;
-    security_id: string;
-    quantity?: string;
-    quantity_converted?: string;
-  }) {
-    const operand = txn.quantity ?? txn.quantity_converted ?? "0";
+  abstract apply(txn: Transaction): void;
+}
 
-    if (
-      txn.object_type === "TX_STOCK_ISSUANCE" ||
-      txn.object_type === "TX_PLAN_SECURITY_ISSUANCE"
-    ) {
+export class OutstandingStockSharesCalculator extends OutstandingEquityCalculatorBase {
+  public apply(txn: Transaction): void {
+    const operand = txn.quantity ?? txn.quantity_converted ?? "0";
+    if (txn.object_type === "TX_STOCK_ISSUANCE") {
       this.value_ = this.value_.plus(operand);
       this.issuanceAmounts_.set(txn.security_id, operand);
     } else if (txn.object_type === "TX_STOCK_REISSUANCE") {
-      this.reissuedSecurityIds_.add(txn.security_id);
+      this.pendingSecurityIds_.add(txn.security_id);
+    } else {
+      this.value_ = this.value_.minus(operand);
+    }
+  }
+}
+
+export class OutstandingStockPlanCalculator extends OutstandingEquityCalculatorBase {
+  public apply(txn: Transaction): void {
+    const operand = txn.quantity ?? txn.quantity_converted ?? "0";
+    if (txn.object_type === "TX_PLAN_SECURITY_ISSUANCE") {
+      this.value_ = this.value_.plus(operand);
+      this.issuanceAmounts_.set(txn.security_id, operand);
+    } else if (txn.object_type === "TX_PLAN_SECURITY_RETRACTION") {
+      this.pendingSecurityIds_.add(txn.security_id);
     } else {
       this.value_ = this.value_.minus(operand);
     }
@@ -54,6 +69,7 @@ export class OutstandingStockSharesCalculator {
 const Calculations = {
   convertRatioToDecimalNumber,
   OutstandingStockSharesCalculator,
+  OutstandingStockPlanCalculator,
 };
 
 export default Calculations;
