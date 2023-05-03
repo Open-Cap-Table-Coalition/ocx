@@ -55,10 +55,16 @@ export class OutstandingStockSharesCalculator extends OutstandingEquityCalculato
 export class OutstandingStockPlanCalculator extends OutstandingEquityCalculatorBase {
   public apply(txn: Transaction): void {
     const operand = txn.quantity ?? txn.quantity_converted ?? "0";
-    if (txn.object_type === "TX_PLAN_SECURITY_ISSUANCE") {
+    if (
+      txn.object_type === "TX_PLAN_SECURITY_ISSUANCE" ||
+      txn.object_type === "TX_EQUITY_COMPENSATION_ISSUANCE"
+    ) {
       this.value_ = this.value_.plus(operand);
       this.issuanceAmounts_.set(txn.security_id, operand);
-    } else if (txn.object_type === "TX_PLAN_SECURITY_RETRACTION") {
+    } else if (
+      txn.object_type === "TX_PLAN_SECURITY_RETRACTION" ||
+      txn.object_type === "TX_EQUITY_COMPENSATION_RETRACTION"
+    ) {
       this.pendingSecurityIds_.add(txn.security_id);
     } else {
       this.value_ = this.value_.minus(operand);

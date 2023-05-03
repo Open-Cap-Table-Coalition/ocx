@@ -56,27 +56,31 @@ class Model implements WorkbookModel {
   // real type / interface here instead.
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   public consume(value: any) {
-    if (value?.object_type === "ISSUER") {
+    const type = value?.objectType;
+    if (type === "ISSUER") {
       this.ISSUER(value);
     }
 
-    if (value?.object_type === "STAKEHOLDER") {
+    if (type === "STAKEHOLDER") {
       this.STAKEHOLDER(value);
     }
 
-    if (value?.object_type === "STOCK_CLASS") {
+    if (type === "STOCK_CLASS") {
       this.STOCK_CLASS(value);
     }
 
-    if (value?.object_type === "STOCK_PLAN") {
+    if (type === "STOCK_PLAN") {
       this.STOCK_PLAN(value);
     }
 
-    if ((value?.object_type ?? "").startsWith("TX_STOCK_")) {
+    if ((type ?? "").startsWith("TX_STOCK_")) {
       this.TX_STOCK(value);
     }
 
-    if ((value?.object_type ?? "").startsWith("TX_PLAN_SECURITY_")) {
+    if (
+      (type ?? "").startsWith("TX_PLAN_SECURITY_") ||
+      (type ?? "").startsWith("TX_EQUITY_COMPENSATION_")
+    ) {
       this.TX_PLAN_SECURITY(value);
     }
   }
@@ -256,7 +260,10 @@ class Model implements WorkbookModel {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private TX_PLAN_SECURITY(value: any) {
-    if (value.object_type === "TX_PLAN_SECURITY_ISSUANCE") {
+    if (
+      value.object_type === "TX_PLAN_SECURITY_ISSUANCE" ||
+      value.object_type === "TX_EQUITY_COMPENSATION_ISSUANCE"
+    ) {
       const key = `${value.stakeholder_id}/${value.stock_plan_id}`;
       const ids =
         this.issuedSecuritiesByStakeholderAndStockPlanIds_.get(key) ||

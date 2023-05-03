@@ -151,29 +151,44 @@ describe(Calculations.OutstandingStockPlanCalculator, () => {
   test("plan cancellations", () => {
     const subject = new Calculations.OutstandingStockPlanCalculator();
     subject.apply(fakePlanTxn("PLAN_SECURITY_ISSUANCE", { quantity: "10" }));
+    subject.apply(
+      fakePlanTxn("EQUITY_COMPENSATION_ISSUANCE", { quantity: "10" })
+    );
     subject.apply(fakePlanTxn("PLAN_SECURITY_CANCELLATION", { quantity: "1" }));
-    expect(subject.value).toBe(9);
+    subject.apply(
+      fakePlanTxn("EQUITY_COMPENSATION_CANCELLATION", { quantity: "1" })
+    );
+    expect(subject.value).toBe(18);
   });
 
   test("plan releases", () => {
     const subject = new Calculations.OutstandingStockPlanCalculator();
     subject.apply(fakePlanTxn("PLAN_SECURITY_ISSUANCE", { quantity: "10" }));
     subject.apply(fakePlanTxn("PLAN_SECURITY_RELEASE", { quantity: "1" }));
-    expect(subject.value).toBe(9);
+    subject.apply(
+      fakePlanTxn("EQUITY_COMPENSATION_RELEASE", { quantity: "1" })
+    );
+    expect(subject.value).toBe(8);
   });
 
   test("plan exercises", () => {
     const subject = new Calculations.OutstandingStockPlanCalculator();
     subject.apply(fakePlanTxn("PLAN_SECURITY_ISSUANCE", { quantity: "10" }));
     subject.apply(fakePlanTxn("PLAN_SECURITY_EXERCISE", { quantity: "1" }));
-    expect(subject.value).toBe(9);
+    subject.apply(
+      fakePlanTxn("EQUITY_COMPENSATION_EXERCISE", { quantity: "1" })
+    );
+    expect(subject.value).toBe(8);
   });
 
   test("plan transfer", () => {
     const subject = new Calculations.OutstandingStockPlanCalculator();
     subject.apply(fakePlanTxn("PLAN_SECURITY_ISSUANCE", { quantity: "10" }));
     subject.apply(fakePlanTxn("PLAN_SECURITY_TRANSFER", { quantity: "1" }));
-    expect(subject.value).toBe(9);
+    subject.apply(
+      fakePlanTxn("EQUITY_COMPENSATION_TRANSFER", { quantity: "1" })
+    );
+    expect(subject.value).toBe(8);
   });
 
   let securityIncrementer = 0;
