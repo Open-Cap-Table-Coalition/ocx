@@ -34,6 +34,11 @@ export interface Model {
     stakeholder: StakeholderModel,
     stockClass: StockClassModel
   ) => number;
+
+  getStakeholderStockPlanHoldings?: (
+    stakeholder: StakeholderModel,
+    stockPlan: StockPlanModel
+  ) => number;
 }
 
 export interface WorksheetLinePrinter {

@@ -56,7 +56,7 @@ class StakeholderSheet {
     }
 
     for (const plan of this.stockPlans) {
-      new Holdings.StockPlanColumn(holdingsTable).write(plan);
+      new Holdings.StockPlanColumn(holdingsTable).write(plan, this.model);
     }
 
     new Holdings.TotalOutstanding(holdingsTable).write(outstandingRanges);
