@@ -81,12 +81,6 @@ class Model implements WorkbookModel {
     }
   }
 
-  public consumePendingTransactions() {
-    for (const object of this.pendingTransactionsBySecurityId_) {
-      this.consume(object);
-    }
-  }
-
   public get stakeholders() {
     return this.stakeholders_;
   }
@@ -273,22 +267,6 @@ class Model implements WorkbookModel {
       this.transactionsBySecurityId_.get(value.security_id) || new Set();
     txns.add(value);
     this.transactionsBySecurityId_.set(value.security_id, txns);
-  }
-
-  public hasPendingTransactions(): boolean {
-    return this.pendingTransactionsBySecurityId_.length > 0;
-  }
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  private checkPendingTransactions(value: any): void {
-    const txn = this.pendingTransactionsBySecurityId_.findIndex(
-      (item) =>
-        item.object_type === "TX_PLAN_SECURITY_RETRACTION" &&
-        item.id === value.id
-    );
-    if (txn !== -1) {
-      this.pendingTransactionsBySecurityId_.splice(txn, 1);
-    }
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

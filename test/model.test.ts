@@ -268,9 +268,7 @@ describe(OCX.Model, () => {
 
       model.consume(fakeStockIssuanceForStakeholder("joe", "Fake")[1]);
       model.consume(fakeStockIssuanceForStakeholder("joe", "Fake")[2]);
-      while (model.hasPendingTransactions()) {
-        model.consumePendingTransactions();
-      }
+
       expect(
         model.getStakeholderStockPlanHoldings(
           model.stakeholders[0],
