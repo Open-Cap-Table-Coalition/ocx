@@ -234,6 +234,7 @@ class Model implements WorkbookModel {
       id: value?.id,
       plan_name: value?.plan_name,
       board_approval_date,
+      initial_shares_reserved: value?.initial_shares_reserved,
     });
   }
 
