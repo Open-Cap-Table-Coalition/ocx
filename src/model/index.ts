@@ -11,7 +11,10 @@ import Calculations from "./calculations";
 // in a Map generic, I got a "cannot find namespace 'Calculations'"
 // error. Until I have time to understand this, I'm importing the
 // calculator separately.
-import { OutstandingStockSharesCalculator } from "./calculations";
+import {
+  OutstandingStockSharesCalculator,
+  OutstandingStockPlanCalculator,
+} from "./calculations";
 
 interface StockClassModel extends WorkbookStockClassModel {
   board_approval_date: Date | null;
@@ -35,6 +38,12 @@ class Model implements WorkbookModel {
     string,
     Set<string>
   >();
+  private issuedSecuritiesByStakeholderAndStockPlanIds_ = new Map<
+    string,
+    Set<string>
+  >();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  private pendingTransactionsBySecurityId_: any[] = [];
 
   constructor(
     public readonly asOfDate: Date,
@@ -65,6 +74,16 @@ class Model implements WorkbookModel {
 
     if ((value?.object_type ?? "").startsWith("TX_STOCK_")) {
       this.TX_STOCK(value);
+    }
+
+    if ((value?.object_type ?? "").startsWith("TX_PLAN_SECURITY_")) {
+      this.TX_PLAN_SECURITY(value);
+    }
+  }
+
+  public consumePendingTransactions() {
+    for (const object of this.pendingTransactionsBySecurityId_) {
+      this.consume(object);
     }
   }
 
@@ -103,6 +122,25 @@ class Model implements WorkbookModel {
         `${stakeholder.id}/${stockClass.id}`
       ) || new Set();
 
+    for (const id of issuanceSecurityIds) {
+      for (const txn of this.transactionsBySecurityId_.get(id) || []) {
+        calculator.apply(txn);
+      }
+    }
+
+    return calculator.value;
+  }
+
+  public getStakeholderStockPlanHoldings(
+    stakeholder: StakeholderModel,
+    stockPlan: WorkbookStockPlanModel
+  ) {
+    const calculator = new OutstandingStockPlanCalculator();
+
+    const issuanceSecurityIds =
+      this.issuedSecuritiesByStakeholderAndStockPlanIds_.get(
+        `${stakeholder.id}/${stockPlan.id}`
+      ) || new Set();
     for (const id of issuanceSecurityIds) {
       for (const txn of this.transactionsBySecurityId_.get(id) || []) {
         calculator.apply(txn);
@@ -215,11 +253,42 @@ class Model implements WorkbookModel {
       ids.add(value.security_id);
       this.issuedSecuritiesByStakeholderAndStockClassIds_.set(key, ids);
     }
-
     const txns =
       this.transactionsBySecurityId_.get(value.security_id) || new Set();
     txns.add(value);
     this.transactionsBySecurityId_.set(value.security_id, txns);
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  private TX_PLAN_SECURITY(value: any) {
+    if (value.object_type === "TX_PLAN_SECURITY_ISSUANCE") {
+      const key = `${value.stakeholder_id}/${value.stock_plan_id}`;
+      const ids =
+        this.issuedSecuritiesByStakeholderAndStockPlanIds_.get(key) ||
+        new Set();
+      ids.add(value.security_id);
+      this.issuedSecuritiesByStakeholderAndStockPlanIds_.set(key, ids);
+    }
+    const txns =
+      this.transactionsBySecurityId_.get(value.security_id) || new Set();
+    txns.add(value);
+    this.transactionsBySecurityId_.set(value.security_id, txns);
+  }
+
+  public hasPendingTransactions(): boolean {
+    return this.pendingTransactionsBySecurityId_.length > 0;
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  private checkPendingTransactions(value: any): void {
+    const txn = this.pendingTransactionsBySecurityId_.findIndex(
+      (item) =>
+        item.object_type === "TX_PLAN_SECURITY_RETRACTION" &&
+        item.id === value.id
+    );
+    if (txn !== -1) {
+      this.pendingTransactionsBySecurityId_.splice(txn, 1);
+    }
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
