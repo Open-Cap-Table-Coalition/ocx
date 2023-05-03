@@ -56,30 +56,29 @@ class Model implements WorkbookModel {
   // real type / interface here instead.
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   public consume(value: any) {
-    const type = value?.objectType;
-    if (type === "ISSUER") {
+    if (value?.object_type === "ISSUER") {
       this.ISSUER(value);
     }
 
-    if (type === "STAKEHOLDER") {
+    if (value?.object_type === "STAKEHOLDER") {
       this.STAKEHOLDER(value);
     }
 
-    if (type === "STOCK_CLASS") {
+    if (value?.object_type === "STOCK_CLASS") {
       this.STOCK_CLASS(value);
     }
 
-    if (type === "STOCK_PLAN") {
+    if (value?.object_type === "STOCK_PLAN") {
       this.STOCK_PLAN(value);
     }
 
-    if ((type ?? "").startsWith("TX_STOCK_")) {
+    if ((value?.object_type ?? "").startsWith("TX_STOCK_")) {
       this.TX_STOCK(value);
     }
 
     if (
-      (type ?? "").startsWith("TX_PLAN_SECURITY_") ||
-      (type ?? "").startsWith("TX_EQUITY_COMPENSATION_")
+      (value?.object_type ?? "").startsWith("TX_PLAN_SECURITY_") ||
+      (value?.object_type ?? "").startsWith("TX_EQUITY_COMPENSATION_")
     ) {
       this.TX_PLAN_SECURITY(value);
     }
