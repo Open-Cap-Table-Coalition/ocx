@@ -40,6 +40,8 @@ export interface Model {
     stakeholder: StakeholderModel,
     stockPlan: StockPlanModel
   ) => number;
+
+  getOptionsRemainingForIssuance?: (stockPlan: StockPlanModel) => number;
 }
 
 export interface WorksheetLinePrinter {

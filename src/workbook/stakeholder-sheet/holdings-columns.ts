@@ -7,7 +7,6 @@ import {
 } from "../interfaces";
 import Styles from "../styles";
 import { ExtentsCollection } from "../extents";
-import Big from "big.js";
 
 export class StakeholderColumn {
   public constructor(private readonly parent: WorksheetRangePrinter) {}
@@ -193,26 +192,19 @@ export class StockPlanColumn {
     });
 
     let largestHolding = 0;
-    let total_holdings = 0;
     model.stakeholders.forEach((s) => {
       const holding = model.getStakeholderStockPlanHoldings
         ? model.getStakeholderStockPlanHoldings(s, stockPlan)
         : 0;
-      total_holdings += holding;
       myData.addCell(holding);
       if (holding > largestHolding) {
         largestHolding = holding;
       }
     });
 
-    const initialSharesReserved =
-      stockPlan.initial_shares_reserved !== undefined
-        ? stockPlan.initial_shares_reserved
-        : 0;
-    const options_remaining =
-      initialSharesReserved !== 0
-        ? new Big(initialSharesReserved).toNumber() - total_holdings
-        : 0;
+    const options_remaining = model.getOptionsRemainingForIssuance
+      ? model.getOptionsRemainingForIssuance(stockPlan)
+      : 0;
 
     myColumn
       .createNestedRange()

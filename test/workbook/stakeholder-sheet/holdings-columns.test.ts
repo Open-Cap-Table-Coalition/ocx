@@ -56,6 +56,10 @@ describe("Holdings Columns", () => {
       getStakeholderStockPlanHoldings: (stakeholder: any, stockPlan: any) => {
         return 50;
       },
+
+      getOptionsRemainingForIssuance: (stockPlan: any) => {
+        return 100;
+      },
     };
 
     test("header", () => {

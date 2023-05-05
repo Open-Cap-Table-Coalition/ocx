@@ -203,3 +203,33 @@ describe(Calculations.OutstandingStockPlanCalculator, () => {
     };
   }
 });
+
+describe(Calculations.OptionsRemainingCalculator, () => {
+  type StockPlanPoolAdjustment = {
+    date: string;
+    shares_reserved: string;
+  };
+
+  const adjustments: Set<StockPlanPoolAdjustment> = new Set([
+    {
+      object_type: "STOCK_PLAN_POOL_ADJUSTMENT",
+      date: "2022-11-14",
+      shares_reserved: "400",
+    },
+    {
+      object_type: "STOCK_PLAN_POOL_ADJUSTMENT",
+      date: "2022-11-15",
+      shares_reserved: "200",
+    },
+  ]);
+
+  test("zero case", () => {
+    const subject = new Calculations.OptionsRemainingCalculator();
+    expect(subject.value).toBe(0);
+  });
+  test("value with two adjstments", () => {
+    const subject = new Calculations.OptionsRemainingCalculator();
+    subject.apply("500", 100, adjustments);
+    expect(subject.value).toBe(100);
+  });
+});

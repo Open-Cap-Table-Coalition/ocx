@@ -14,6 +14,7 @@ import Calculations from "./calculations";
 import {
   OutstandingStockSharesCalculator,
   OutstandingStockPlanCalculator,
+  OptionsRemainingCalculator,
 } from "./calculations";
 
 interface StockClassModel extends WorkbookStockClassModel {
@@ -43,7 +44,7 @@ class Model implements WorkbookModel {
     Set<string>
   >();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  private pendingTransactionsBySecurityId_: any[] = [];
+  private adjustmentsByStockPlanId_ = new Map<string, Set<any>>();
 
   constructor(
     public readonly asOfDate: Date,
@@ -81,6 +82,10 @@ class Model implements WorkbookModel {
       (value?.object_type ?? "").startsWith("TX_EQUITY_COMPENSATION_")
     ) {
       this.TX_PLAN_SECURITY(value);
+    }
+
+    if ((value?.object_type ?? "") === "TX_STOCK_PLAN_POOL_ADJUSTMENT") {
+      this.TX_STOCK_PLAN_POOL_ADJUSTMENT(value);
     }
   }
 
@@ -142,6 +147,24 @@ class Model implements WorkbookModel {
       for (const txn of this.transactionsBySecurityId_.get(id) || []) {
         calculator.apply(txn);
       }
+    }
+
+    return calculator.value;
+  }
+
+  public getOptionsRemainingForIssuance(stockPlan: WorkbookStockPlanModel) {
+    let total_holdings = 0;
+    this.stakeholders_.forEach((s) => {
+      total_holdings += this.getStakeholderStockPlanHoldings(s, stockPlan);
+    });
+
+    const shares_reserved = stockPlan.initial_shares_reserved;
+
+    const calculator = new OptionsRemainingCalculator();
+
+    if (stockPlan.id !== undefined && shares_reserved !== undefined) {
+      const adjustments = this.adjustmentsByStockPlanId_.get(stockPlan.id);
+      calculator.apply(shares_reserved, total_holdings, adjustments);
     }
 
     return calculator.value;
@@ -255,6 +278,14 @@ class Model implements WorkbookModel {
       this.transactionsBySecurityId_.get(value.security_id) || new Set();
     txns.add(value);
     this.transactionsBySecurityId_.set(value.security_id, txns);
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  private TX_STOCK_PLAN_POOL_ADJUSTMENT(value: any) {
+    const txns =
+      this.adjustmentsByStockPlanId_.get(value.stock_plan_id) || new Set();
+    txns.add(value);
+    this.adjustmentsByStockPlanId_.set(value.stock_plan_id, txns);
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

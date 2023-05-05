@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import Big from "big.js";
 
 function convertRatioToDecimalNumber(ratio: {
@@ -72,10 +73,38 @@ export class OutstandingStockPlanCalculator extends OutstandingEquityCalculatorB
   }
 }
 
+export class OptionsRemainingCalculator {
+  protected value_: Big = Big("0");
+
+  public get value() {
+    return this.value_.toNumber();
+  }
+
+  public apply(
+    initial_shares_reserved: string,
+    total_holdings: number,
+    adjustments?: Set<any>
+  ): void {
+    if (adjustments && adjustments.size > 0) {
+      const array_of_adjustments = Array.from(adjustments);
+      array_of_adjustments.sort(
+        (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+      );
+      const shares_reserved = array_of_adjustments[0].shares_reserved;
+      this.value_ = new Big(shares_reserved).minus(new Big(total_holdings));
+    } else {
+      this.value_ = new Big(initial_shares_reserved).minus(
+        new Big(total_holdings)
+      );
+    }
+  }
+}
+
 const Calculations = {
   convertRatioToDecimalNumber,
   OutstandingStockSharesCalculator,
   OutstandingStockPlanCalculator,
+  OptionsRemainingCalculator,
 };
 
 export default Calculations;
