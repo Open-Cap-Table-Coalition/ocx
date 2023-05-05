@@ -15,6 +15,7 @@ export interface StockClassModel {
 export interface StockPlanModel {
   id?: string;
   plan_name: string;
+  initial_shares_reserved?: string;
 }
 
 // This is a case of "the client defines the interface". The
@@ -39,6 +40,8 @@ export interface Model {
     stakeholder: StakeholderModel,
     stockPlan: StockPlanModel
   ) => number;
+
+  getOptionsRemainingForIssuance?: (stockPlan: StockPlanModel) => number;
 }
 
 export interface WorksheetLinePrinter {

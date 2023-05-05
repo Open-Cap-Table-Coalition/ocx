@@ -151,29 +151,44 @@ describe(Calculations.OutstandingStockPlanCalculator, () => {
   test("plan cancellations", () => {
     const subject = new Calculations.OutstandingStockPlanCalculator();
     subject.apply(fakePlanTxn("PLAN_SECURITY_ISSUANCE", { quantity: "10" }));
+    subject.apply(
+      fakePlanTxn("EQUITY_COMPENSATION_ISSUANCE", { quantity: "10" })
+    );
     subject.apply(fakePlanTxn("PLAN_SECURITY_CANCELLATION", { quantity: "1" }));
-    expect(subject.value).toBe(9);
+    subject.apply(
+      fakePlanTxn("EQUITY_COMPENSATION_CANCELLATION", { quantity: "1" })
+    );
+    expect(subject.value).toBe(18);
   });
 
   test("plan releases", () => {
     const subject = new Calculations.OutstandingStockPlanCalculator();
     subject.apply(fakePlanTxn("PLAN_SECURITY_ISSUANCE", { quantity: "10" }));
     subject.apply(fakePlanTxn("PLAN_SECURITY_RELEASE", { quantity: "1" }));
-    expect(subject.value).toBe(9);
+    subject.apply(
+      fakePlanTxn("EQUITY_COMPENSATION_RELEASE", { quantity: "1" })
+    );
+    expect(subject.value).toBe(8);
   });
 
   test("plan exercises", () => {
     const subject = new Calculations.OutstandingStockPlanCalculator();
     subject.apply(fakePlanTxn("PLAN_SECURITY_ISSUANCE", { quantity: "10" }));
     subject.apply(fakePlanTxn("PLAN_SECURITY_EXERCISE", { quantity: "1" }));
-    expect(subject.value).toBe(9);
+    subject.apply(
+      fakePlanTxn("EQUITY_COMPENSATION_EXERCISE", { quantity: "1" })
+    );
+    expect(subject.value).toBe(8);
   });
 
   test("plan transfer", () => {
     const subject = new Calculations.OutstandingStockPlanCalculator();
     subject.apply(fakePlanTxn("PLAN_SECURITY_ISSUANCE", { quantity: "10" }));
     subject.apply(fakePlanTxn("PLAN_SECURITY_TRANSFER", { quantity: "1" }));
-    expect(subject.value).toBe(9);
+    subject.apply(
+      fakePlanTxn("EQUITY_COMPENSATION_TRANSFER", { quantity: "1" })
+    );
+    expect(subject.value).toBe(8);
   });
 
   let securityIncrementer = 0;
@@ -187,4 +202,34 @@ describe(Calculations.OutstandingStockPlanCalculator, () => {
       ...attrs,
     };
   }
+});
+
+describe(Calculations.OptionsRemainingCalculator, () => {
+  type StockPlanPoolAdjustment = {
+    date: string;
+    shares_reserved: string;
+  };
+
+  const adjustments: Set<StockPlanPoolAdjustment> = new Set([
+    {
+      object_type: "STOCK_PLAN_POOL_ADJUSTMENT",
+      date: "2022-11-14",
+      shares_reserved: "400",
+    },
+    {
+      object_type: "STOCK_PLAN_POOL_ADJUSTMENT",
+      date: "2022-11-15",
+      shares_reserved: "200",
+    },
+  ]);
+
+  test("zero case", () => {
+    const subject = new Calculations.OptionsRemainingCalculator();
+    expect(subject.value).toBe(0);
+  });
+  test("value with two adjstments", () => {
+    const subject = new Calculations.OptionsRemainingCalculator();
+    subject.apply("500", 100, adjustments);
+    expect(subject.value).toBe(100);
+  });
 });

@@ -170,7 +170,7 @@ describe(OCX.Model, () => {
       object_type: "STOCK_PLAN",
       plan_name: `${id}`,
       board_approval_date: opts?.boardApproved,
-      current_shares_reserved: "1000000",
+      initial_shares_reserved: "1000000",
     };
   }
 

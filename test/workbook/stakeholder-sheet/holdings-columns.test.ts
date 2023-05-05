@@ -23,8 +23,8 @@ describe("Holdings Columns", () => {
 
       expect(cell("A2").formula).toBe("=SUM(X2,Y2)");
       expect(cell("A3").formula).toBe("=SUM(X3,Y3)");
-      expect(cell("B2").formula).toBe("=A2 / $A$5");
-      expect(cell("B3").formula).toBe("=A3 / $A$5");
+      expect(cell("B2").formula).toBe("=A2 / $A$7");
+      expect(cell("B3").formula).toBe("=A3 / $A$7");
     });
   });
 
@@ -32,9 +32,11 @@ describe("Holdings Columns", () => {
     const stockPlanModels = Array.of(
       {
         plan_name: "Stock Plan A",
+        initial_shares_reserved: "200",
       },
       {
         plan_name: "Stock Plan B",
+        initial_shares_reserved: "200",
       }
     );
     const model = {
@@ -54,6 +56,10 @@ describe("Holdings Columns", () => {
       getStakeholderStockPlanHoldings: (stakeholder: any, stockPlan: any) => {
         return 50;
       },
+
+      getOptionsRemainingForIssuance: (stockPlan: any) => {
+        return 100;
+      },
     };
 
     test("header", () => {
@@ -67,14 +73,6 @@ describe("Holdings Columns", () => {
     });
 
     test("holdings for stakeholder", () => {
-      const stockPlanModels = Array.of(
-        {
-          plan_name: "Stock Plan A",
-        },
-        {
-          plan_name: "Stock Plan B",
-        }
-      );
       const { parentRange, cell } = prepareTestWorksheet();
 
       const stakeholderPrinter =
@@ -94,9 +92,28 @@ describe("Holdings Columns", () => {
       expect(cell("C1").value).toBe("Stock Plan B");
       expect(cell("C2").value).toBe(50);
       expect(cell("C3").value).toBe(50);
-      expect(cell("A5").value).toBe("Total");
-      expect(cell("B5").formula).toBe("=SUM(B2:B3)");
-      expect(cell("C5").formula).toBe("=SUM(C2:C3)");
+      expect(cell("A7").value).toBe("Total");
+      expect(cell("B7").formula).toBe("=SUM(B2:B3)");
+      expect(cell("C7").formula).toBe("=SUM(C2:C3)");
+    });
+
+    test("options remaining for issuance", () => {
+      const { parentRange, cell } = prepareTestWorksheet();
+
+      const stakeholderPrinter =
+        Holdings.StakeholderColumn.asChildOf(parentRange);
+      stakeholderPrinter.write(model.stakeholders);
+
+      const stockPlanPrinter = Holdings.StockPlanColumn.asChildOf(parentRange);
+      for (const plan of stockPlanModels) {
+        stockPlanPrinter.write(plan, model);
+      }
+      expect(cell("A5").value).toBe("Options Remaining for Issuance");
+      expect(cell("A7").value).toBe("Total");
+      expect(cell("B5").value).toBe(100);
+      expect(cell("B7").formula).toBe("=SUM(B2:B3)");
+      expect(cell("C5").value).toBe(100);
+      expect(cell("C7").formula).toBe("=SUM(C2:C3)");
     });
   });
 });

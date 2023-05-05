@@ -38,6 +38,8 @@ export class StakeholderColumn {
     myColumn
       .createNestedRange()
       .addBlankCell(Styles.default)
+      .addCell("Options Remaining for Issuance")
+      .addBlankCell(Styles.default)
       .addCell("Total", Styles.footer);
 
     myColumn.setWidth(longestStakeholderNameLen);
@@ -56,6 +58,8 @@ export class StakeholderGroupColumn {
       .createNestedRange({ orientation: "top-to-bottom" })
       .addCell("Stakeholder Group", Styles.subheader)
       .addBlankCells(stakeholders.length, Styles.default)
+      .addBlankCell(Styles.default)
+      .addBlankCell(Styles.default)
       .addBlankCell(Styles.default)
       .addBlankCell(Styles.footer)
       .setWidth("Stakeholder Group".length);
@@ -98,6 +102,8 @@ export class StockClassOutstandingColumn {
 
     myColumn
       .createNestedRange()
+      .addBlankCell(Styles.default)
+      .addCell(0)
       .addBlankCell(Styles.default)
       .addSumFor(myData, Styles.footer);
 
@@ -153,6 +159,8 @@ export class StockClassAsConvertedColumn {
     myColumn
       .createNestedRange()
       .addBlankCell(Styles.default)
+      .addCell(0)
+      .addBlankCell(Styles.default)
       .addSumFor(myData, Styles.footer);
 
     myColumn.setWidth(15);
@@ -184,7 +192,6 @@ export class StockPlanColumn {
     });
 
     let largestHolding = 0;
-
     model.stakeholders.forEach((s) => {
       const holding = model.getStakeholderStockPlanHoldings
         ? model.getStakeholderStockPlanHoldings(s, stockPlan)
@@ -195,8 +202,14 @@ export class StockPlanColumn {
       }
     });
 
+    const options_remaining = model.getOptionsRemainingForIssuance
+      ? model.getOptionsRemainingForIssuance(stockPlan)
+      : 0;
+
     myColumn
       .createNestedRange()
+      .addBlankCell(Styles.default)
+      .addCell(options_remaining)
       .addBlankCell(Styles.default)
       .addSumFor(myData, Styles.footer);
 
@@ -247,6 +260,8 @@ export class TotalOutstanding {
 
     myColumn
       .createNestedRange()
+      .addBlankCell(Styles.default)
+      .addCell(0)
       .addBlankCell(Styles.withLeftHandBorder(Styles.default))
       .addSumFor(myData, Styles.withLeftHandBorder(Styles.footer));
 
@@ -278,6 +293,8 @@ export class TotalAsConverted {
 
     const myTotal = myColumn
       .createNestedRange()
+      .addBlankCell(Styles.default)
+      .addCell(0)
       .addBlankCell(Styles.default)
       .addSumFor(myData, Styles.footer);
 
@@ -316,6 +333,8 @@ export class TotalAsConverted {
 
     myColumn
       .createNestedRange()
+      .addBlankCell(Styles.default)
+      .addCell(0)
       .addBlankCell(Styles.default)
       .addSumFor(myData, Styles.footer__percentage);
 

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import Big from "big.js";
 
 function convertRatioToDecimalNumber(ratio: {
@@ -55,13 +56,46 @@ export class OutstandingStockSharesCalculator extends OutstandingEquityCalculato
 export class OutstandingStockPlanCalculator extends OutstandingEquityCalculatorBase {
   public apply(txn: Transaction): void {
     const operand = txn.quantity ?? txn.quantity_converted ?? "0";
-    if (txn.object_type === "TX_PLAN_SECURITY_ISSUANCE") {
+    if (
+      txn.object_type === "TX_PLAN_SECURITY_ISSUANCE" ||
+      txn.object_type === "TX_EQUITY_COMPENSATION_ISSUANCE"
+    ) {
       this.value_ = this.value_.plus(operand);
       this.issuanceAmounts_.set(txn.security_id, operand);
-    } else if (txn.object_type === "TX_PLAN_SECURITY_RETRACTION") {
+    } else if (
+      txn.object_type === "TX_PLAN_SECURITY_RETRACTION" ||
+      txn.object_type === "TX_EQUITY_COMPENSATION_RETRACTION"
+    ) {
       this.pendingSecurityIds_.add(txn.security_id);
     } else {
       this.value_ = this.value_.minus(operand);
+    }
+  }
+}
+
+export class OptionsRemainingCalculator {
+  protected value_: Big = Big("0");
+
+  public get value() {
+    return this.value_.toNumber();
+  }
+
+  public apply(
+    initial_shares_reserved: string,
+    total_holdings: number,
+    adjustments?: Set<any>
+  ): void {
+    if (adjustments && adjustments.size > 0) {
+      const array_of_adjustments = Array.from(adjustments);
+      array_of_adjustments.sort(
+        (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+      );
+      const shares_reserved = array_of_adjustments[0].shares_reserved;
+      this.value_ = new Big(shares_reserved).minus(new Big(total_holdings));
+    } else {
+      this.value_ = new Big(initial_shares_reserved).minus(
+        new Big(total_holdings)
+      );
     }
   }
 }
@@ -70,6 +104,7 @@ const Calculations = {
   convertRatioToDecimalNumber,
   OutstandingStockSharesCalculator,
   OutstandingStockPlanCalculator,
+  OptionsRemainingCalculator,
 };
 
 export default Calculations;
