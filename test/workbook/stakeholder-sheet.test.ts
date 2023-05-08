@@ -239,4 +239,79 @@ describe(StakeholderSheet, () => {
     expect(excel.worksheets[0].getCell("E2").value).toBe("Stock Plan A");
     expect(excel.worksheets[0].getCell("F2").value).toBe("Stock Plan B");
   });
+
+  test("fully diluted shares values", () => {
+    const excel = new Excel.Workbook();
+    const workbookWriter = new ExcelJSWriter(excel);
+    const worksheetWriter = workbookWriter.addWorksheet("test");
+
+    const stockPlanModels = Array.of(
+      {
+        plan_name: "Stock Plan A",
+        initial_shares_reserved: "200",
+      },
+      {
+        plan_name: "Stock Plan B",
+        initial_shares_reserved: "200",
+      }
+    );
+
+    const stockClasses = Array.of(
+      {
+        display_name: "Class A Common Stock",
+        is_preferred: false,
+      },
+      {
+        display_name: "Class A Preferred Stock",
+        is_preferred: true,
+        conversion_ratio: 1,
+      },
+      {
+        display_name: "Class A Preferred Stock Converted",
+        is_preferred: true,
+        conversion_ratio: 2,
+      }
+    );
+    const model = {
+      asOfDate: new Date(),
+      issuerName: "Fred",
+      stakeholders: Array.of(
+        {
+          display_name: "Stockholder 1",
+        },
+        {
+          display_name: "Optionholder 42",
+        }
+      ),
+      stockClasses,
+      stockPlans: stockPlanModels,
+      // eslint-disable-next-line
+      /* eslint-disable @typescript-eslint/no-unused-vars */
+      /* eslint-disable @typescript-eslint/no-explicit-any */
+      getStakeholderStockHoldings: (stakeholder: any, stockClass: any) => {
+        return 50;
+      },
+
+      getStakeholderStockPlanHoldings: (stakeholder: any, stockPlan: any) => {
+        return 50;
+      },
+
+      getOptionsRemainingForIssuance: (stockPlan: any) => {
+        return 100;
+      },
+    };
+
+    const sheet = new StakeholderSheet(worksheetWriter, model);
+
+    expect(sheet).not.toBeNull();
+
+    expect(excel.worksheets[0].getCell("L2").value).toBe(
+      "Fully Diluted Shares**"
+    );
+    expect(excel.worksheets[0].getCell("L3").formula).toBe(
+      "=SUM(C3,D3,F3,G3,H3)"
+    );
+    expect(excel.worksheets[0].getCell("M3").formula).toBe("=L3 / $L$8");
+    expect(excel.worksheets[0].getCell("M2").value).toBe("Fully Diluted %");
+  });
 });

@@ -345,3 +345,83 @@ export class TotalAsConverted {
     return new TotalAsConverted(parent);
   }
 }
+
+export class FullyDilutedShares {
+  public constructor(private readonly parent: WorksheetRangePrinter) {}
+  public write(fullyDilutedRanges: ExtentsCollection) {
+    const myColumn = this.parent.createNestedRange({
+      orientation: "top-to-bottom",
+    });
+
+    myColumn
+      .createNestedRange({
+        style: Styles.subheader,
+      })
+      .addCell("Fully Diluted Shares**");
+
+    const myData = myColumn.createNestedRange({
+      style: Styles.default,
+    });
+
+    const cellsToSum = fullyDilutedRanges
+      .map((o) => o.topLeftAddress)
+      .join(",");
+    myData.addRepeatedFormulaCell(
+      `SUM(${cellsToSum})`,
+      fullyDilutedRanges.height
+    );
+
+    const myTotal = myColumn
+      .createNestedRange()
+      .addBlankCell(Styles.default)
+      .addCell(0)
+      .addBlankCell(Styles.default)
+      .addSumFor(myData, Styles.footer);
+
+    myColumn.setWidth(15);
+    myColumn.break();
+    this.writePercentagesCalculatedFrom(
+      myData,
+      myTotal.getExtents().btmRightAddress
+    );
+    return myData;
+  }
+
+  private writePercentagesCalculatedFrom(
+    data: WorksheetRangePrinter,
+    totalAddress: string
+  ) {
+    const myColumn = this.parent.createNestedRange({
+      orientation: "top-to-bottom",
+    });
+
+    myColumn
+      .createNestedRange({
+        style: Styles.subheader,
+      })
+      .addCell("Fully Diluted %");
+
+    const myData = myColumn.createNestedRange({
+      style: Styles.default__percentage,
+    });
+
+    const totalAbsoluteAddress = totalAddress.replace(/(\D+)(\d+)/, "$$$1$$$2");
+    const formula = `${
+      data.getExtents().topLeftAddress
+    } / ${totalAbsoluteAddress}`;
+    myData.addRepeatedFormulaCell(formula, data.getExtents().height);
+
+    myColumn
+      .createNestedRange()
+      .addBlankCell(Styles.default)
+      .addCell(0)
+      .addBlankCell(Styles.default)
+      .addSumFor(myData, Styles.footer__percentage);
+
+    myColumn.setWidth(15);
+  }
+
+  public static asChildOf(parent: WorksheetRangePrinter) {
+    return new FullyDilutedShares(parent);
+  }
+}
