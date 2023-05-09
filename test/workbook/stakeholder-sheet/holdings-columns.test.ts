@@ -116,4 +116,84 @@ describe("Holdings Columns", () => {
       expect(cell("C7").formula).toBe("=SUM(C2:C3)");
     });
   });
+
+  describe(Holdings.FullyDilutedShares, () => {
+    const stockPlanModels = Array.of(
+      {
+        plan_name: "Stock Plan A",
+        initial_shares_reserved: "200",
+      },
+      {
+        plan_name: "Stock Plan B",
+        initial_shares_reserved: "200",
+      }
+    );
+
+    const stockClasses = Array.of(
+      {
+        display_name: "Class A Common Stock",
+        is_preferred: false,
+      },
+      {
+        display_name: "Class A Preferred Stock",
+        is_preferred: true,
+        conversion_ratio: 1,
+      },
+      {
+        display_name: "Class A Preferred Stock Converted",
+        is_preferred: true,
+        conversion_ratio: 2,
+      }
+    );
+    const model = {
+      asOfDate: new Date(),
+      issuerName: "Fred",
+      stakeholders: Array.of(
+        {
+          display_name: "Stockholder 1",
+        },
+        {
+          display_name: "Optionholder 42",
+        }
+      ),
+      // eslint-disable-next-line
+      /* eslint-disable @typescript-eslint/no-unused-vars */
+      /* eslint-disable @typescript-eslint/no-explicit-any */
+      getStakeholderStockHoldings: (stakeholder: any, stockClass: any) => {
+        return 50;
+      },
+
+      getStakeholderStockPlanHoldings: (stakeholder: any, stockPlan: any) => {
+        return 50;
+      },
+
+      getOptionsRemainingForIssuance: (stockPlan: any) => {
+        return 100;
+      },
+    };
+
+    test("header", () => {
+      const { parentRange, cell, makeExtents } = prepareTestWorksheet();
+
+      Holdings.FullyDilutedShares.asChildOf(parentRange).write(makeExtents());
+
+      expect(cell("A1").value).toBe("Fully Diluted Shares**");
+      expect(cell("B1").value).toBe("Fully Diluted %");
+    });
+
+    test("formulas", () => {
+      const { parentRange, cell, makeExtents } = prepareTestWorksheet();
+
+      const sourceDataRanges = makeExtents("X2:X3", "Y2:Y3");
+
+      Holdings.FullyDilutedShares.asChildOf(parentRange).write(
+        sourceDataRanges
+      );
+
+      expect(cell("A2").formula).toBe("=SUM(X2,Y2)");
+      expect(cell("A3").formula).toBe("=SUM(X3,Y3)");
+      expect(cell("B2").formula).toBe("=A2 / $A$7");
+      expect(cell("B3").formula).toBe("=A3 / $A$7");
+    });
+  });
 });

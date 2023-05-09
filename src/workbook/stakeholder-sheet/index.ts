@@ -37,6 +37,7 @@ class StakeholderSheet {
 
     const outstandingRanges = new Array<WorksheetRangePrinter>();
     const asConvertedRanges = new ExtentsCollection();
+    const fullyDilutedRanges = new ExtentsCollection();
     for (let idx = 0; idx < this.stockClasses.length; ++idx) {
       const stockClass = this.stockClasses[idx];
       const outstandingRange = new Holdings.StockClassOutstandingColumn(
@@ -44,23 +45,35 @@ class StakeholderSheet {
       ).write(stockClass, this.model);
       outstandingRanges.push(outstandingRange);
 
+      if (
+        !stockClass.is_preferred ||
+        (stockClass.is_preferred && stockClass.conversion_ratio === 1.0)
+      ) {
+        fullyDilutedRanges.push(outstandingRange.getExtents());
+      }
+
       if (stockClass.is_preferred && stockClass.conversion_ratio !== 1.0) {
-        asConvertedRanges.push(
-          new Holdings.StockClassAsConvertedColumn(holdingsTable)
-            .write(stockClass, outstandingRange)
-            .getExtents()
-        );
+        const convertedRange = new Holdings.StockClassAsConvertedColumn(
+          holdingsTable
+        ).write(stockClass, outstandingRange);
+        asConvertedRanges.push(convertedRange.getExtents());
+        fullyDilutedRanges.push(convertedRange.getExtents());
       } else {
         asConvertedRanges.push(outstandingRange.getExtents());
       }
     }
 
     for (const plan of this.stockPlans) {
-      new Holdings.StockPlanColumn(holdingsTable).write(plan, this.model);
+      const stockPlanRange = new Holdings.StockPlanColumn(holdingsTable).write(
+        plan,
+        this.model
+      );
+      fullyDilutedRanges.push(stockPlanRange.getExtents());
     }
 
     new Holdings.TotalOutstanding(holdingsTable).write(outstandingRanges);
     new Holdings.TotalAsConverted(holdingsTable).write(asConvertedRanges);
+    new Holdings.FullyDilutedShares(holdingsTable).write(fullyDilutedRanges);
   }
 
   private get stockClasses() {
