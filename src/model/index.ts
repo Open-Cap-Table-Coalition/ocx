@@ -318,7 +318,11 @@ class Model implements WorkbookModel {
     // interface between the model and the workbook. However, we should probably
     // look at putting the `Big` types directly on the interface to avoid
     // precision loss.
-    return Calculations.convertRatioToDecimalNumber(mechanism.ratio).toNumber();
+    const roundingType = mechanism?.rounding_type || "NORMAL";
+    return Calculations.convertRatioToDecimalNumber(
+      mechanism.ratio,
+      roundingType
+    );
   }
 }
 
