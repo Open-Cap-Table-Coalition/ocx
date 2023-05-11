@@ -10,6 +10,7 @@ export interface StockClassModel {
   display_name: string;
   is_preferred?: boolean;
   conversion_ratio?: number;
+  rounding_type?: string;
 }
 
 export interface StockPlanModel {

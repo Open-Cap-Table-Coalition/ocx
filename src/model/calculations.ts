@@ -1,29 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import Big from "big.js";
 
-enum RoundingType {
-  CEILING = "CEILING",
-  FLOOR = "FLOOR",
-  NORMAL = "NORMAL",
-}
-
-function convertRatioToDecimalNumber(
-  ratio: {
-    numerator: string;
-    denominator: string;
-  },
-  roundingType: RoundingType
-) {
+function convertRatioToDecimalNumber(ratio: {
+  numerator: string;
+  denominator: string;
+}) {
   const quotient = Big(ratio.numerator).div(ratio.denominator);
-  switch (roundingType) {
-    case RoundingType.CEILING:
-      return Math.ceil(quotient.toNumber());
-    case RoundingType.FLOOR:
-      return Math.floor(quotient.toNumber());
-    case RoundingType.NORMAL:
-    default:
-      return quotient.toNumber();
-  }
+  return quotient.toNumber();
 }
 
 interface Transaction {

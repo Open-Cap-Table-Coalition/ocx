@@ -235,6 +235,10 @@ class Model implements WorkbookModel {
       value?.conversion_rights
     );
 
+    const rounding_type = this.getStockClassRoundingType(
+      value?.conversion_rights
+    );
+
     let board_approval_date = null;
 
     if (value?.board_approval_date) {
@@ -246,6 +250,7 @@ class Model implements WorkbookModel {
       is_preferred: value?.class_type !== "COMMON",
       conversion_ratio,
       board_approval_date,
+      rounding_type,
     });
   }
 
@@ -318,11 +323,14 @@ class Model implements WorkbookModel {
     // interface between the model and the workbook. However, we should probably
     // look at putting the `Big` types directly on the interface to avoid
     // precision loss.
+    return Calculations.convertRatioToDecimalNumber(mechanism.ratio);
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  private getStockClassRoundingType(value: any): string {
+    const mechanism = Array.of(value).flat()[0]?.conversion_mechanism;
     const roundingType = mechanism?.rounding_type || "NORMAL";
-    return Calculations.convertRatioToDecimalNumber(
-      mechanism.ratio,
-      roundingType
-    );
+    return roundingType;
   }
 }
 

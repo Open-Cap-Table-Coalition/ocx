@@ -149,10 +149,32 @@ export class StockClassAsConvertedColumn {
       style: Styles.default,
     });
 
+    const conversion_value = `${
+      outstandingRange.getExtents().topLeftAddress
+    } * ${stockClass.conversion_ratio}`;
+
+    enum RoundingType {
+      CEILING = "CEILING",
+      FLOOR = "FLOOR",
+      NORMAL = "NORMAL",
+    }
+
+    let formula: string;
+    switch (stockClass.rounding_type) {
+      case RoundingType.CEILING:
+        formula = `CEILING(${conversion_value}, 1)`;
+        break;
+      case RoundingType.FLOOR:
+        formula = `FLOOR(${conversion_value}, 1)`;
+        break;
+      case RoundingType.NORMAL:
+      default:
+        formula = `ROUND(${conversion_value}, 0)`;
+        break;
+    }
+
     myData.addRepeatedFormulaCell(
-      `ROUND(${outstandingRange.getExtents().topLeftAddress} * ${
-        stockClass.conversion_ratio
-      }, 0)`,
+      formula,
       outstandingRange.getExtents().height
     );
 

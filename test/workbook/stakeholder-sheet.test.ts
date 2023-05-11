@@ -314,4 +314,76 @@ describe(StakeholderSheet, () => {
     expect(excel.worksheets[0].getCell("M3").formula).toBe("=L3 / $L$8");
     expect(excel.worksheets[0].getCell("M2").value).toBe("Fully Diluted %");
   });
+
+  test("rounding method", () => {
+    const excel = new Excel.Workbook();
+    const workbookWriter = new ExcelJSWriter(excel);
+    const worksheetWriter = workbookWriter.addWorksheet("test");
+
+    const stockClasses = Array.of(
+      {
+        display_name: "Class A Common Stock",
+        is_preferred: false,
+      },
+      {
+        display_name: "Class A Preferred Stock Normal",
+        is_preferred: true,
+        conversion_ratio: 1,
+        rounding_type: "NORMAL",
+      },
+      {
+        display_name: "Class A Preferred Stock Normal",
+        is_preferred: true,
+        conversion_ratio: 2,
+        rounding_type: "NORMAL",
+      },
+      {
+        display_name: "Class A Preferred Stock Floor",
+        is_preferred: true,
+        conversion_ratio: 1.3,
+        rounding_type: "FLOOR",
+      },
+      {
+        display_name: "Class A Preferred Stock Ceiling",
+        is_preferred: true,
+        conversion_ratio: 0.7,
+        rounding_type: "CEILING",
+      }
+    );
+    const model = {
+      asOfDate: new Date(),
+      issuerName: "Fred",
+      stakeholders: Array.of(
+        {
+          display_name: "Stockholder 1",
+        },
+        {
+          display_name: "Optionholder 42",
+        }
+      ),
+      stockClasses,
+      // eslint-disable-next-line
+      /* eslint-disable @typescript-eslint/no-unused-vars */
+      /* eslint-disable @typescript-eslint/no-explicit-any */
+      getStakeholderStockHoldings: (stakeholder: any, stockClass: any) => {
+        return 50;
+      },
+
+      getOptionsRemainingForIssuance: (stockPlan: any) => {
+        return 100;
+      },
+    };
+
+    const sheet = new StakeholderSheet(worksheetWriter, model);
+
+    expect(sheet).not.toBeNull();
+
+    expect(excel.worksheets[0].getCell("F3").formula).toBe("=ROUND(E3 * 2, 0)");
+    expect(excel.worksheets[0].getCell("H3").formula).toBe(
+      "=FLOOR(G3 * 1.3, 1)"
+    );
+    expect(excel.worksheets[0].getCell("J3").formula).toBe(
+      "=CEILING(I3 * 0.7, 1)"
+    );
+  });
 });
