@@ -186,7 +186,8 @@ describe(OCX.Model, () => {
 
   function fakePreferredStockClass(
     id: string,
-    opts?: { convertsFrom?: string; to?: string; boardApproved?: string }
+    opts?: { convertsFrom?: string; to?: string; boardApproved?: string },
+    rounding_type?: string
   ) {
     return {
       id: id,
@@ -203,6 +204,7 @@ describe(OCX.Model, () => {
                   numerator: opts.to,
                   denominator: opts.convertsFrom,
                 },
+                rounding_type: rounding_type,
               },
             },
           ]
@@ -275,6 +277,43 @@ describe(OCX.Model, () => {
           model.stockPlans[0]
         )
       ).toBe(20);
+    });
+  });
+
+  describe("rounding method", () => {
+    test("normal type", () => {
+      const model = subject();
+      model.consume(
+        fakePreferredStockClass(
+          "Fake",
+          { convertsFrom: "3", to: "2" },
+          "NORMAL"
+        )
+      );
+
+      expect(model.stockClasses[0].rounding_type).toBe("NORMAL");
+    });
+
+    test("floor type", () => {
+      const model = subject();
+      model.consume(
+        fakePreferredStockClass("Fake", { convertsFrom: "3", to: "2" }, "FLOOR")
+      );
+
+      expect(model.stockClasses[0].rounding_type).toBe("FLOOR");
+    });
+
+    test("ceiling type", () => {
+      const model = subject();
+      model.consume(
+        fakePreferredStockClass(
+          "Fake",
+          { convertsFrom: "3", to: "2" },
+          "CEILING"
+        )
+      );
+
+      expect(model.stockClasses[0].rounding_type).toBe("CEILING");
     });
   });
 

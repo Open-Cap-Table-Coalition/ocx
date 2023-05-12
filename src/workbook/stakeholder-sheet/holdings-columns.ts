@@ -125,6 +125,10 @@ export class StockClassOutstandingColumn {
 
     return `${stockClass.display_name}${suffix}`;
   }
+
+  public static asChildOf(parent: WorksheetRangePrinter) {
+    return new StockClassOutstandingColumn(parent);
+  }
 }
 
 export class StockClassAsConvertedColumn {
@@ -149,10 +153,14 @@ export class StockClassAsConvertedColumn {
       style: Styles.default,
     });
 
+    const conversion_value = `${
+      outstandingRange.getExtents().topLeftAddress
+    } * ${stockClass.conversion_ratio}`;
+
+    const formula = this.getRoundingFormula(stockClass, conversion_value);
+
     myData.addRepeatedFormulaCell(
-      `ROUND(${outstandingRange.getExtents().topLeftAddress} * ${
-        stockClass.conversion_ratio
-      }, 0)`,
+      formula,
       outstandingRange.getExtents().height
     );
 
@@ -169,6 +177,28 @@ export class StockClassAsConvertedColumn {
 
   private asConvertedStockClassHeadingFor(stockClass: StockClassModel) {
     return `${stockClass.display_name}\n(as converted)`;
+  }
+
+  private getRoundingFormula(
+    stockClass: StockClassModel,
+    conversion_value: string
+  ): string {
+    switch (stockClass.rounding_type) {
+      case "CEILING":
+        return `CEILING(${conversion_value}, 1)`;
+        break;
+      case "FLOOR":
+        return `FLOOR(${conversion_value}, 1)`;
+        break;
+      case "NORMAL":
+      default:
+        return `ROUND(${conversion_value}, 0)`;
+        break;
+    }
+  }
+
+  public static asChildOf(parent: WorksheetRangePrinter) {
+    return new StockClassAsConvertedColumn(parent);
   }
 }
 

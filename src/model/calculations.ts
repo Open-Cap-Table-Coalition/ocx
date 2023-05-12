@@ -6,7 +6,7 @@ function convertRatioToDecimalNumber(ratio: {
   denominator: string;
 }) {
   const quotient = Big(ratio.numerator).div(ratio.denominator);
-  return quotient;
+  return quotient.toNumber();
 }
 
 interface Transaction {
