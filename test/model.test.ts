@@ -280,6 +280,43 @@ describe(OCX.Model, () => {
     });
   });
 
+  describe("rounding method", () => {
+    test("normal type", () => {
+      const model = subject();
+      model.consume(
+        fakePreferredStockClass(
+          "Fake",
+          { convertsFrom: "3", to: "2" },
+          "NORMAL"
+        )
+      );
+
+      expect(model.stockClasses[0].rounding_type).toBe("NORMAL");
+    });
+
+    test("floor type", () => {
+      const model = subject();
+      model.consume(
+        fakePreferredStockClass("Fake", { convertsFrom: "3", to: "2" }, "FLOOR")
+      );
+
+      expect(model.stockClasses[0].rounding_type).toBe("FLOOR");
+    });
+
+    test("ceiling type", () => {
+      const model = subject();
+      model.consume(
+        fakePreferredStockClass(
+          "Fake",
+          { convertsFrom: "3", to: "2" },
+          "CEILING"
+        )
+      );
+
+      expect(model.stockClasses[0].rounding_type).toBe("CEILING");
+    });
+  });
+
   function fakeStockIssuanceForStakeholder(id: string, stock_id: string) {
     return [
       {

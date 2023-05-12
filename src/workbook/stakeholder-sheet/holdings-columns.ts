@@ -125,6 +125,10 @@ export class StockClassOutstandingColumn {
 
     return `${stockClass.display_name}${suffix}`;
   }
+
+  public static asChildOf(parent: WorksheetRangePrinter) {
+    return new StockClassOutstandingColumn(parent);
+  }
 }
 
 export class StockClassAsConvertedColumn {
@@ -153,25 +157,7 @@ export class StockClassAsConvertedColumn {
       outstandingRange.getExtents().topLeftAddress
     } * ${stockClass.conversion_ratio}`;
 
-    enum RoundingType {
-      CEILING = "CEILING",
-      FLOOR = "FLOOR",
-      NORMAL = "NORMAL",
-    }
-
-    let formula: string;
-    switch (stockClass.rounding_type) {
-      case RoundingType.CEILING:
-        formula = `CEILING(${conversion_value}, 1)`;
-        break;
-      case RoundingType.FLOOR:
-        formula = `FLOOR(${conversion_value}, 1)`;
-        break;
-      case RoundingType.NORMAL:
-      default:
-        formula = `ROUND(${conversion_value}, 0)`;
-        break;
-    }
+    const formula = this.getRoundingFormula(stockClass, conversion_value);
 
     myData.addRepeatedFormulaCell(
       formula,
@@ -191,6 +177,28 @@ export class StockClassAsConvertedColumn {
 
   private asConvertedStockClassHeadingFor(stockClass: StockClassModel) {
     return `${stockClass.display_name}\n(as converted)`;
+  }
+
+  private getRoundingFormula(
+    stockClass: StockClassModel,
+    conversion_value: string
+  ): string {
+    switch (stockClass.rounding_type) {
+      case "CEILING":
+        return `CEILING(${conversion_value}, 1)`;
+        break;
+      case "FLOOR":
+        return `FLOOR(${conversion_value}, 1)`;
+        break;
+      case "NORMAL":
+      default:
+        return `ROUND(${conversion_value}, 0)`;
+        break;
+    }
+  }
+
+  public static asChildOf(parent: WorksheetRangePrinter) {
+    return new StockClassAsConvertedColumn(parent);
   }
 }
 
