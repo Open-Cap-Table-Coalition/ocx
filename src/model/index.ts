@@ -5,8 +5,6 @@ import {
   StockPlanModel as WorkbookStockPlanModel,
 } from "src/workbook/interfaces";
 
-import Calculations from "./calculations";
-
 // When I tried to use "Calculations.OutstandingStockSharesCalculator"
 // in a Map generic, I got a "cannot find namespace 'Calculations'"
 // error. Until I have time to understand this, I'm importing the
@@ -15,6 +13,7 @@ import {
   OutstandingStockSharesCalculator,
   OutstandingStockPlanCalculator,
   OptionsRemainingCalculator,
+  ConversionRatioCalculator,
 } from "./calculations";
 
 interface StockClassModel extends WorkbookStockClassModel {
@@ -32,6 +31,7 @@ class Model implements WorkbookModel {
   private sortedStockClasses_: StockClassModel[] = [];
   private stockPlans_: StockPlanModel[] = [];
   private sortedStockPlans_: StockPlanModel[] = [];
+  private ratioCalculator = new ConversionRatioCalculator();
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private transactionsBySecurityId_ = new Map<string, Set<any>>();
@@ -231,9 +231,7 @@ class Model implements WorkbookModel {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private STOCK_CLASS(value: any) {
-    const conversion_ratio = this.getStockClassConversionRatio(
-      value?.conversion_rights
-    );
+    this.ratioCalculator.apply(value);
 
     const rounding_type = this.getStockClassRoundingType(
       value?.conversion_rights
@@ -248,7 +246,6 @@ class Model implements WorkbookModel {
       id: value?.id,
       display_name: value?.name,
       is_preferred: value?.class_type !== "COMMON",
-      conversion_ratio,
       board_approval_date,
       rounding_type,
     });
@@ -313,17 +310,8 @@ class Model implements WorkbookModel {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  private getStockClassConversionRatio(value: any): number {
-    const mechanism = Array.of(value).flat()[0]?.conversion_mechanism;
-    if (mechanism?.ratio === null || mechanism?.type !== "RATIO_CONVERSION") {
-      return 1;
-    }
-
-    // TODO: The toNumber call here is necessary because we have `number` on the
-    // interface between the model and the workbook. However, we should probably
-    // look at putting the `Big` types directly on the interface to avoid
-    // precision loss.
-    return Calculations.convertRatioToDecimalNumber(mechanism.ratio);
+  public getStockClassConversionRatio(value: any): number {
+    return this.ratioCalculator.findRatio(value.id).ratio;
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

@@ -136,7 +136,8 @@ export class StockClassAsConvertedColumn {
 
   public write(
     stockClass: StockClassModel,
-    outstandingRange: WorksheetRangePrinter
+    outstandingRange: WorksheetRangePrinter,
+    model: Model
   ) {
     const myColumn = this.parent.createNestedRange({
       orientation: "top-to-bottom",
@@ -153,9 +154,13 @@ export class StockClassAsConvertedColumn {
       style: Styles.default,
     });
 
+    const ratio = model.getStockClassConversionRatio
+      ? model.getStockClassConversionRatio(stockClass)
+      : 1;
+
     const conversion_value = `${
       outstandingRange.getExtents().topLeftAddress
-    } * ${stockClass.conversion_ratio}`;
+    } * ${ratio}`;
 
     const formula = this.getRoundingFormula(stockClass, conversion_value);
 

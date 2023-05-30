@@ -55,7 +55,7 @@ class StakeholderSheet {
       if (stockClass.is_preferred && stockClass.conversion_ratio !== 1.0) {
         const convertedRange = new Holdings.StockClassAsConvertedColumn(
           holdingsTable
-        ).write(stockClass, outstandingRange);
+        ).write(stockClass, outstandingRange, this.model);
         asConvertedRanges.push(convertedRange.getExtents());
         fullyDilutedRanges.push(convertedRange.getExtents());
       } else {
