@@ -106,9 +106,6 @@ interface StockClass {
   id: string;
   name: string;
   class_type: string;
-  default_id_prefix?: string;
-  current_shares_authorized?: string;
-  board_approval_date?: string;
   votes_per_share?: number;
   conversion_rights?: StockClassConversionRight[];
 }
@@ -128,19 +125,19 @@ interface StockClassConversionRight {
 export class ConversionRatioCalculator {
   private stockClasses: StockClass[] = [];
 
-  public findRatio(preferredStockClassId: string): {
+  public findRatio(preferredStockClass: StockClass): {
     ratio: number;
-    lowestVotesPerShare: number | undefined;
+    lowestVotesPerShare: number;
     path: StockClass[];
   } {
     const visited: Set<string> = new Set();
-    let lowestVotesPerShare: number | undefined;
+    let lowestVotesPerShare = Infinity;
     let path: StockClass[] = [];
 
     // Find the root Preferred Stock Class
     const rootPreferredStockClass = this.stockClasses.find(
       (cls) =>
-        cls.id === preferredStockClassId && cls.class_type === "PREFERRED"
+        cls.id === preferredStockClass.id && cls.class_type === "PREFERRED"
     );
     if (rootPreferredStockClass === undefined) {
       throw new Error("Preferred Stock Class not found.");
@@ -163,8 +160,7 @@ export class ConversionRatioCalculator {
             stockClass.class_type === "COMMON" &&
             stockClass?.votes_per_share &&
             stockClass.votes_per_share > 0 &&
-            (lowestVotesPerShare === undefined ||
-              stockClass.votes_per_share < lowestVotesPerShare)
+            stockClass.votes_per_share < lowestVotesPerShare
           ) {
             lowestVotesPerShare = stockClass.votes_per_share;
             // update path
@@ -200,7 +196,7 @@ export class ConversionRatioCalculator {
         }
       }
     } // end while
-    if (lowestVotesPerShare !== undefined) {
+    if (lowestVotesPerShare !== Infinity) {
       //path length will always be 2 or more
       const ratio = this.getFinalRatio(path);
       return { ratio, lowestVotesPerShare, path };
