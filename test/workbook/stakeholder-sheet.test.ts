@@ -4,6 +4,7 @@ import { describe, expect, test } from "@jest/globals";
 
 import Excel from "exceljs";
 import ExcelJSWriter from "src/workbook/exceljs-writer";
+import { ConversionRatioCalculator } from "../../src/model/calculations";
 
 describe(StakeholderSheet, () => {
   test("empty case", () => {
@@ -122,10 +123,69 @@ describe(StakeholderSheet, () => {
     expect(excel.worksheets[0].getCell("D4").value).toBe(100);
   });
 
+  function fakeCommonStockClass(id: string, opts?: { boardApproved?: string }) {
+    return {
+      id: id,
+      object_type: "STOCK_CLASS",
+      name: `${id} Common Stock`,
+      board_approval_date: opts?.boardApproved,
+      class_type: "COMMON",
+      votes_per_share: 1,
+    };
+  }
+
+  function fakePreferredStockClass(
+    id: string,
+    opts?: {
+      convertsFrom?: string;
+      to?: string;
+      boardApproved?: string;
+      converts_to_stock_class_id?: string;
+    },
+    rounding_type?: string
+  ) {
+    return {
+      id: id,
+      object_type: "STOCK_CLASS",
+      name: `${id} Preferred Stock`,
+      board_approval_date: opts?.boardApproved,
+      class_type: "PREFERRED",
+      votes_per_share: 1,
+      conversion_rights: opts?.convertsFrom
+        ? [
+            {
+              conversion_mechanism: {
+                type: "RATIO_CONVERSION",
+                ratio: {
+                  numerator: opts.to,
+                  denominator: opts.convertsFrom,
+                },
+                rounding_type: rounding_type,
+              },
+              converts_to_stock_class_id: opts.converts_to_stock_class_id,
+            },
+          ]
+        : [],
+    };
+  }
+
   test("per stakeholder holdings for preferred stock and total", () => {
     const excel = new Excel.Workbook();
     const workbookWriter = new ExcelJSWriter(excel);
     const worksheetWriter = workbookWriter.addWorksheet("test");
+    const stockClasses = Array.of(
+      fakeCommonStockClass("Class A"),
+      fakePreferredStockClass("Class A"),
+      fakePreferredStockClass("Class B", {
+        convertsFrom: "2",
+        to: "4",
+        converts_to_stock_class_id: "Class A",
+      })
+    );
+    const calculator = new ConversionRatioCalculator();
+    for (const stockClass of stockClasses) {
+      calculator.apply(stockClass);
+    }
 
     const sheet = new StakeholderSheet(worksheetWriter, {
       asOfDate: new Date(),
@@ -140,23 +200,28 @@ describe(StakeholderSheet, () => {
       ),
       stockClasses: Array.of(
         {
+          id: "Class A",
           display_name: "Class A Common Stock",
           is_preferred: false,
         },
         {
+          id: "Class A",
           display_name: "Class A Preferred Stock",
           is_preferred: true,
-          conversion_ratio: 1,
         },
         {
+          id: "Class B",
           display_name: "Class B Preferred Stock",
           is_preferred: true,
-          conversion_ratio: 2,
         }
       ),
       // eslint-disable-next-line
       getStakeholderStockHoldings: (stakeholder, stockClass) => {
         return 50;
+      },
+      /* eslint-disable @typescript-eslint/no-explicit-any */
+      getStockClassConversionRatio: (stockClass: any) => {
+        return calculator.findRatio(stockClass.id).ratio;
       },
     });
 
@@ -256,22 +321,38 @@ describe(StakeholderSheet, () => {
       }
     );
 
-    const stockClasses = Array.of(
+    const stockClassesModels = Array.of(
       {
+        id: "Class A",
         display_name: "Class A Common Stock",
         is_preferred: false,
       },
       {
+        id: "Class A",
         display_name: "Class A Preferred Stock",
         is_preferred: true,
-        conversion_ratio: 1,
       },
       {
-        display_name: "Class A Preferred Stock Converted",
+        id: "Class B",
+        display_name: "Class B Preferred Stock",
         is_preferred: true,
-        conversion_ratio: 2,
       }
     );
+
+    const stockClasses = Array.of(
+      fakeCommonStockClass("Class A"),
+      fakePreferredStockClass("Class A"),
+      fakePreferredStockClass("Class B", {
+        convertsFrom: "2",
+        to: "4",
+        converts_to_stock_class_id: "Class A",
+      })
+    );
+    const calculator = new ConversionRatioCalculator();
+    for (const stockClass of stockClasses) {
+      calculator.apply(stockClass);
+    }
+
     const model = {
       asOfDate: new Date(),
       issuerName: "Fred",
@@ -283,7 +364,7 @@ describe(StakeholderSheet, () => {
           display_name: "Optionholder 42",
         }
       ),
-      stockClasses,
+      stockClasses: stockClassesModels,
       stockPlans: stockPlanModels,
       // eslint-disable-next-line
       /* eslint-disable @typescript-eslint/no-unused-vars */
@@ -294,6 +375,10 @@ describe(StakeholderSheet, () => {
 
       getStakeholderStockPlanHoldings: (stakeholder: any, stockPlan: any) => {
         return 50;
+      },
+
+      getStockClassConversionRatio: (stockClass: any) => {
+        return calculator.findRatio(stockClass.id).ratio;
       },
 
       getOptionsRemainingForIssuance: (stockPlan: any) => {
@@ -320,36 +405,62 @@ describe(StakeholderSheet, () => {
     const workbookWriter = new ExcelJSWriter(excel);
     const worksheetWriter = workbookWriter.addWorksheet("test");
 
-    const stockClasses = Array.of(
+    const stockClassesModel = Array.of(
       {
+        id: "Class A",
         display_name: "Class A Common Stock",
         is_preferred: false,
       },
       {
+        id: "Class A",
         display_name: "Class A Preferred Stock Normal",
         is_preferred: true,
-        conversion_ratio: 1,
         rounding_type: "NORMAL",
       },
       {
-        display_name: "Class A Preferred Stock Normal",
+        id: "Class B",
+        display_name: "Class B Preferred Stock Normal",
         is_preferred: true,
-        conversion_ratio: 2,
         rounding_type: "NORMAL",
       },
       {
-        display_name: "Class A Preferred Stock Floor",
+        id: "Class C",
+        display_name: "Class C Preferred Stock Floor",
         is_preferred: true,
-        conversion_ratio: 1.3,
         rounding_type: "FLOOR",
       },
       {
-        display_name: "Class A Preferred Stock Ceiling",
+        id: "Class D",
+        display_name: "Class D Preferred Stock Ceiling",
         is_preferred: true,
-        conversion_ratio: 0.7,
         rounding_type: "CEILING",
       }
     );
+    const stockClasses = Array.of(
+      fakeCommonStockClass("Class A"),
+      fakeCommonStockClass("Class B"),
+      fakeCommonStockClass("Class C"),
+      fakePreferredStockClass("Class A"),
+      fakePreferredStockClass("Class B", {
+        convertsFrom: "2",
+        to: "4",
+        converts_to_stock_class_id: "Class A",
+      }),
+      fakePreferredStockClass("Class C", {
+        convertsFrom: "1",
+        to: "1.3",
+        converts_to_stock_class_id: "Class B",
+      }),
+      fakePreferredStockClass("Class D", {
+        convertsFrom: "1",
+        to: "0.7",
+        converts_to_stock_class_id: "Class C",
+      })
+    );
+    const calculator = new ConversionRatioCalculator();
+    for (const stockClass of stockClasses) {
+      calculator.apply(stockClass);
+    }
     const model = {
       asOfDate: new Date(),
       issuerName: "Fred",
@@ -361,12 +472,16 @@ describe(StakeholderSheet, () => {
           display_name: "Optionholder 42",
         }
       ),
-      stockClasses,
+      stockClasses: stockClassesModel,
       // eslint-disable-next-line
       /* eslint-disable @typescript-eslint/no-unused-vars */
       /* eslint-disable @typescript-eslint/no-explicit-any */
       getStakeholderStockHoldings: (stakeholder: any, stockClass: any) => {
         return 50;
+      },
+
+      getStockClassConversionRatio: (stockClass: any) => {
+        return calculator.findRatio(stockClass.id).ratio;
       },
 
       getOptionsRemainingForIssuance: (stockPlan: any) => {

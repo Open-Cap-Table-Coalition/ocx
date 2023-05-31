@@ -82,7 +82,7 @@ export class StockClassOutstandingColumn {
         style: Styles.subheader,
         rowHeight: 50.0,
       })
-      .addCell(this.outstandingStockClassHeadingFor(stockClass));
+      .addCell(this.outstandingStockClassHeadingFor(stockClass, model));
 
     const myData = myColumn.createNestedRange({
       style: Styles.default,
@@ -116,11 +116,16 @@ export class StockClassOutstandingColumn {
     return myData;
   }
 
-  private outstandingStockClassHeadingFor(stockClass: StockClassModel) {
+  private outstandingStockClassHeadingFor(
+    stockClass: StockClassModel,
+    model: Model
+  ) {
     let suffix = "";
     if (stockClass.is_preferred) {
-      const ratioToFourPlaces = stockClass.conversion_ratio?.toFixed(4);
-      suffix = `\n(outstanding) (${ratioToFourPlaces})`;
+      const ratioToFourPlaces = model.getStockClassConversionRatio
+        ? model.getStockClassConversionRatio(stockClass)
+        : 1;
+      suffix = `\n(outstanding) (${ratioToFourPlaces.toFixed(4)})`;
     }
 
     return `${stockClass.display_name}${suffix}`;

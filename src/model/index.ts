@@ -311,6 +311,9 @@ class Model implements WorkbookModel {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   public getStockClassConversionRatio(value: any): number {
+    if (value?.is_preferred === false) {
+      return 1;
+    }
     return this.ratioCalculator.findRatio(value.id).ratio;
   }
 

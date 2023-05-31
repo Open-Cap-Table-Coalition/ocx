@@ -56,7 +56,7 @@ describe(OCX.Model, () => {
       expect(modelClass.id).toBe(commonStockClass.id);
       expect(modelClass.display_name).toBe(commonStockClass.name);
       expect(modelClass.is_preferred).toBe(false);
-      expect(modelClass.conversion_ratio).toEqual(1);
+      expect(model.getStockClassConversionRatio(modelClass)).toEqual(1);
     });
 
     test("preferred stock w/ no conversion rights", () => {
@@ -69,23 +69,28 @@ describe(OCX.Model, () => {
       expect(modelClass.id).toBe(preferredStockClass.id);
       expect(modelClass.display_name).toBe(preferredStockClass.name);
       expect(modelClass.is_preferred).toBe(true);
-      expect(modelClass.conversion_ratio).toEqual(1);
+      expect(model.getStockClassConversionRatio(modelClass)).toEqual(1);
     });
 
     test("preferred stock w/ conversion rights", () => {
       const model = subject();
+      const commonStockClass = fakeCommonStockClass("Class A");
       const preferredStockClass = fakePreferredStockClass("Series A", {
         convertsFrom: "3",
         to: "4",
+        converts_to_stock_class_id: "Class A",
       });
+      model.consume(commonStockClass);
       model.consume(preferredStockClass);
-      expect(model.stockClasses).toHaveLength(1);
-      const modelClass = model.stockClasses[0];
+      expect(model.stockClasses).toHaveLength(2);
+      const modelClass = model.stockClasses[1];
 
       expect(modelClass.id).toBe(preferredStockClass.id);
       expect(modelClass.display_name).toBe(preferredStockClass.name);
       expect(modelClass.is_preferred).toBe(true);
-      expect(modelClass.conversion_ratio).toEqual(1.3333333333333333);
+      expect(model.getStockClassConversionRatio(modelClass)).toEqual(
+        1.3333333333333333
+      );
     });
 
     test("stock class sort order", () => {
@@ -181,12 +186,18 @@ describe(OCX.Model, () => {
       name: `${id} Common Stock`,
       board_approval_date: opts?.boardApproved,
       class_type: "COMMON",
+      votes_per_share: 1,
     };
   }
 
   function fakePreferredStockClass(
     id: string,
-    opts?: { convertsFrom?: string; to?: string; boardApproved?: string },
+    opts?: {
+      convertsFrom?: string;
+      to?: string;
+      boardApproved?: string;
+      converts_to_stock_class_id?: string;
+    },
     rounding_type?: string
   ) {
     return {
@@ -195,6 +206,7 @@ describe(OCX.Model, () => {
       name: `${id} Preferred Stock`,
       board_approval_date: opts?.boardApproved,
       class_type: "PREFERRED",
+      votes_per_share: 1,
       conversion_rights: opts?.convertsFrom
         ? [
             {
@@ -206,6 +218,7 @@ describe(OCX.Model, () => {
                 },
                 rounding_type: rounding_type,
               },
+              converts_to_stock_class_id: opts.converts_to_stock_class_id,
             },
           ]
         : [],
