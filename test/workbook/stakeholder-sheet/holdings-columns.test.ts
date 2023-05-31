@@ -215,13 +215,16 @@ describe("Holdings Columns", () => {
       getStakeholderStockHoldings: (stakeholder: any, stockClass: any) => {
         return 50;
       },
+
+      getStockClassConversionRatio: (stockClass: any) => {
+        return 0.7;
+      },
     };
 
     test("normal rounding type for as-converted values", () => {
       const stockClasses = Array.of({
         display_name: "Class A Preferred Stock Converted",
         is_preferred: true,
-        conversion_ratio: 0.7,
       });
       const { parentRange, cell, makeExtents } = prepareTestWorksheet();
 
@@ -230,7 +233,7 @@ describe("Holdings Columns", () => {
       const stockConvertedPrinter =
         Holdings.StockClassAsConvertedColumn.asChildOf(parentRange);
       const outstandingRange = stockClassPrinter.write(stockClasses[0], model);
-      stockConvertedPrinter.write(stockClasses[0], outstandingRange);
+      stockConvertedPrinter.write(stockClasses[0], outstandingRange, model);
 
       expect(cell("A2").value).toBe(50);
       expect(cell("B2").formula).toBe("=ROUND(A2 * 0.7, 0)");
@@ -240,7 +243,6 @@ describe("Holdings Columns", () => {
       const stockClasses = Array.of({
         display_name: "Class A Preferred Stock Converted",
         is_preferred: true,
-        conversion_ratio: 0.7,
         rounding_type: "FLOOR",
       });
       const { parentRange, cell, makeExtents } = prepareTestWorksheet();
@@ -250,7 +252,7 @@ describe("Holdings Columns", () => {
       const stockConvertedPrinter =
         Holdings.StockClassAsConvertedColumn.asChildOf(parentRange);
       const outstandingRange = stockClassPrinter.write(stockClasses[0], model);
-      stockConvertedPrinter.write(stockClasses[0], outstandingRange);
+      stockConvertedPrinter.write(stockClasses[0], outstandingRange, model);
 
       expect(cell("A2").value).toBe(50);
       expect(cell("B2").formula).toBe("=FLOOR(A2 * 0.7, 1)");
@@ -260,7 +262,6 @@ describe("Holdings Columns", () => {
       const stockClasses = Array.of({
         display_name: "Class A Preferred Stock Converted",
         is_preferred: true,
-        conversion_ratio: 0.7,
         rounding_type: "CEILING",
       });
       const { parentRange, cell, makeExtents } = prepareTestWorksheet();
@@ -270,7 +271,7 @@ describe("Holdings Columns", () => {
       const stockConvertedPrinter =
         Holdings.StockClassAsConvertedColumn.asChildOf(parentRange);
       const outstandingRange = stockClassPrinter.write(stockClasses[0], model);
-      stockConvertedPrinter.write(stockClasses[0], outstandingRange);
+      stockConvertedPrinter.write(stockClasses[0], outstandingRange, model);
 
       expect(cell("A2").value).toBe(50);
       expect(cell("B2").formula).toBe("=CEILING(A2 * 0.7, 1)");

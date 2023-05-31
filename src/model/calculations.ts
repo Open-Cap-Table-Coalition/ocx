@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import Big from "big.js";
+import logger from "src/logging";
 
 function convertRatioToDecimalNumber(ratio: {
   numerator: string;
@@ -100,11 +101,150 @@ export class OptionsRemainingCalculator {
   }
 }
 
+interface StockClass {
+  object_type: string;
+  id: string;
+  name: string;
+  class_type: string;
+  votes_per_share?: number;
+  conversion_rights?: StockClassConversionRight[];
+}
+
+interface StockClassConversionRight {
+  conversion_mechanism: {
+    type: string;
+    ratio: {
+      numerator: string;
+      denominator: string;
+    };
+  };
+  rounding_type?: string;
+  converts_to_stock_class_id?: string;
+}
+
+export class ConversionRatioCalculator {
+  private stockClasses: StockClass[] = [];
+
+  public findRatio(preferredStockClassId: string): {
+    ratio: number;
+    lowestVotesPerShare: number;
+    path: StockClass[];
+  } {
+    const visited: Set<string> = new Set();
+    let lowestVotesPerShare = Infinity;
+    let path: StockClass[] = [];
+
+    // Find the root Preferred Stock Class
+    const rootPreferredStockClass = this.stockClasses.find(
+      (cls) =>
+        cls.id === preferredStockClassId && cls.class_type === "PREFERRED"
+    );
+    if (rootPreferredStockClass === undefined) {
+      throw new Error("Preferred Stock Class not found.");
+    }
+
+    const queue: { stockClass: StockClass; currentPath: StockClass[] }[] = [
+      { stockClass: rootPreferredStockClass, currentPath: [] },
+    ];
+
+    // multiple conversion rights
+    while (queue.length > 0) {
+      const dequeuedClass = queue.shift();
+      if (dequeuedClass) {
+        const { stockClass, currentPath } = dequeuedClass;
+        if (!visited.has(stockClass.id)) {
+          visited.add(stockClass.id);
+          const updatedPath = [...currentPath, stockClass];
+          // if class is common
+          if (
+            stockClass.class_type === "COMMON" &&
+            stockClass?.votes_per_share &&
+            stockClass.votes_per_share > 0 &&
+            stockClass.votes_per_share < lowestVotesPerShare
+          ) {
+            lowestVotesPerShare = stockClass.votes_per_share;
+            // update path
+            path = updatedPath;
+          }
+          // If class is preferred and has "children"
+          if (
+            stockClass?.class_type === "PREFERRED" &&
+            stockClass?.conversion_rights &&
+            stockClass?.conversion_rights.length > 0
+          ) {
+            for (const conversionRight of stockClass.conversion_rights) {
+              if (
+                conversionRight.converts_to_stock_class_id &&
+                !visited.has(conversionRight.converts_to_stock_class_id)
+              ) {
+                const nextStockClass =
+                  conversionRight.converts_to_stock_class_id
+                    ? this.stockClasses.find(
+                        (cls) =>
+                          cls.id === conversionRight.converts_to_stock_class_id
+                      )
+                    : null;
+                if (nextStockClass) {
+                  queue.push({
+                    stockClass: nextStockClass,
+                    currentPath: updatedPath,
+                  });
+                }
+              }
+            }
+          }
+        }
+      }
+    } // end while
+    if (lowestVotesPerShare !== Infinity) {
+      //path length will always be 2 or more
+      const ratio = this.getFinalRatio(path);
+      return { ratio, lowestVotesPerShare, path };
+    } else {
+      logger.error("Error: no conversion class");
+      return { ratio: 1, lowestVotesPerShare, path };
+    }
+  }
+  public apply(stockClass: StockClass): void {
+    this.stockClasses.push(stockClass);
+  }
+
+  private getFinalRatio(path: StockClass[]): number {
+    const ratios = [];
+    let info = "Converted from";
+    for (const stockClass of path) {
+      info += ` ${stockClass.name} ${
+        path.indexOf(stockClass) < path.length - 1 ? ">" : ""
+      }`;
+      if (stockClass.class_type === "COMMON") {
+        const index = path.indexOf(stockClass);
+        const preferredClass = path[index - 1];
+        const conversionRight = preferredClass.conversion_rights?.find(
+          (cls) => cls.converts_to_stock_class_id === stockClass.id
+        );
+        const ratioObject = conversionRight?.conversion_mechanism?.ratio;
+        const ratio =
+          ratioObject !== undefined
+            ? Calculations.convertRatioToDecimalNumber(ratioObject)
+            : 1;
+        ratios.push(ratio);
+      }
+    }
+
+    const finalRatio: number = ratios.reduce(
+      (accumulator, currentValue) => accumulator * currentValue
+    );
+    logger.info(`${info} at ${finalRatio}`);
+    return finalRatio;
+  }
+}
+
 const Calculations = {
   convertRatioToDecimalNumber,
   OutstandingStockSharesCalculator,
   OutstandingStockPlanCalculator,
   OptionsRemainingCalculator,
+  ConversionRatioCalculator,
 };
 
 export default Calculations;

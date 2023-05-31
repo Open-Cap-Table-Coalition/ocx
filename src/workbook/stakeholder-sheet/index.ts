@@ -44,18 +44,20 @@ class StakeholderSheet {
         holdingsTable
       ).write(stockClass, this.model);
       outstandingRanges.push(outstandingRange);
-
+      const ratio = this.model.getStockClassConversionRatio
+        ? this.model.getStockClassConversionRatio(stockClass)
+        : 1.0;
       if (
         !stockClass.is_preferred ||
-        (stockClass.is_preferred && stockClass.conversion_ratio === 1.0)
+        (stockClass.is_preferred && ratio === 1.0)
       ) {
         fullyDilutedRanges.push(outstandingRange.getExtents());
       }
 
-      if (stockClass.is_preferred && stockClass.conversion_ratio !== 1.0) {
+      if (stockClass.is_preferred && ratio !== 1.0) {
         const convertedRange = new Holdings.StockClassAsConvertedColumn(
           holdingsTable
-        ).write(stockClass, outstandingRange);
+        ).write(stockClass, outstandingRange, this.model);
         asConvertedRanges.push(convertedRange.getExtents());
         fullyDilutedRanges.push(convertedRange.getExtents());
       } else {

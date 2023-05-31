@@ -233,3 +233,110 @@ describe(Calculations.OptionsRemainingCalculator, () => {
     expect(subject.value).toBe(100);
   });
 });
+
+describe(Calculations.ConversionRatioCalculator, () => {
+  const stockClasses = [
+    fakeCommonStockClass("Fake-1"),
+    fakePreferredStockClass("Fake-2", {
+      convertsFrom: "2",
+      to: "4",
+    }),
+  ];
+
+  test("converts_to_stock_class_id is null", () => {
+    const subject = new Calculations.ConversionRatioCalculator();
+    for (const stockClass of stockClasses) {
+      subject.apply(stockClass);
+    }
+    expect(subject.findRatio(stockClasses[1].id).ratio).toBe(1);
+  });
+
+  test("one StockClassConversionRight that converts to a common stock class", () => {
+    const subject = new Calculations.ConversionRatioCalculator();
+    stockClasses.push(
+      fakePreferredStockClass("Fake-3", {
+        convertsFrom: "2",
+        to: "10",
+        converts_to_stock_class_id: "Fake-1",
+      })
+    );
+    for (const stockClass of stockClasses) {
+      subject.apply(stockClass);
+    }
+    expect(subject.findRatio(stockClasses[2].id).ratio).toBe(5);
+  });
+
+  test("2 or more StockClassConversionRights that convert to different common stock classes", () => {
+    const subject = new Calculations.ConversionRatioCalculator();
+    const commonClass = fakeCommonStockClass("Fake-4");
+    commonClass.votes_per_share = 0.5;
+    stockClasses.push(commonClass);
+    const preferredClass = fakePreferredStockClass("Fake-5", {
+      convertsFrom: "2",
+      to: "10",
+      converts_to_stock_class_id: "Fake-1",
+    });
+    preferredClass.conversion_rights.push({
+      conversion_mechanism: {
+        type: "RATIO_CONVERSION",
+        ratio: {
+          numerator: "9",
+          denominator: "3",
+        },
+        rounding_type: undefined,
+      },
+      converts_to_stock_class_id: "Fake-4",
+    });
+    stockClasses.push(preferredClass);
+    for (const stockClass of stockClasses) {
+      subject.apply(stockClass);
+    }
+    expect(subject.findRatio(preferredClass.id).ratio).toBe(3);
+  });
+});
+
+function fakeCommonStockClass(id: string, opts?: { boardApproved?: string }) {
+  return {
+    id: id,
+    object_type: "STOCK_CLASS",
+    name: `${id} Common Stock`,
+    board_approval_date: opts?.boardApproved,
+    class_type: "COMMON",
+    votes_per_share: 1,
+  };
+}
+
+function fakePreferredStockClass(
+  id: string,
+  opts?: {
+    convertsFrom?: string;
+    to?: string;
+    boardApproved?: string;
+    converts_to_stock_class_id?: string;
+  },
+  rounding_type?: string
+) {
+  return {
+    id: id,
+    object_type: "STOCK_CLASS",
+    name: `${id} Preferred Stock`,
+    board_approval_date: opts?.boardApproved,
+    class_type: "PREFERRED",
+    votes_per_share: 1,
+    conversion_rights: opts?.convertsFrom
+      ? [
+          {
+            conversion_mechanism: {
+              type: "RATIO_CONVERSION",
+              ratio: {
+                numerator: opts.to,
+                denominator: opts.convertsFrom,
+              },
+              rounding_type: rounding_type,
+            },
+            converts_to_stock_class_id: opts.converts_to_stock_class_id,
+          },
+        ]
+      : [],
+  };
+}

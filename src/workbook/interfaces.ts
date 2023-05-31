@@ -43,6 +43,8 @@ export interface Model {
   ) => number;
 
   getOptionsRemainingForIssuance?: (stockPlan: StockPlanModel) => number;
+
+  getStockClassConversionRatio?: (stockClass: StockClassModel) => number;
 }
 
 export interface WorksheetLinePrinter {
