@@ -125,7 +125,7 @@ interface StockClassConversionRight {
 export class ConversionRatioCalculator {
   private stockClasses: StockClass[] = [];
 
-  public findRatio(preferredStockClass: StockClass): {
+  public findRatio(preferredStockClassId: string): {
     ratio: number;
     lowestVotesPerShare: number;
     path: StockClass[];
@@ -137,7 +137,7 @@ export class ConversionRatioCalculator {
     // Find the root Preferred Stock Class
     const rootPreferredStockClass = this.stockClasses.find(
       (cls) =>
-        cls.id === preferredStockClass.id && cls.class_type === "PREFERRED"
+        cls.id === preferredStockClassId && cls.class_type === "PREFERRED"
     );
     if (rootPreferredStockClass === undefined) {
       throw new Error("Preferred Stock Class not found.");
