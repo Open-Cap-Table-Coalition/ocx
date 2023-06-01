@@ -272,6 +272,65 @@ export class StockPlanColumn {
   }
 }
 
+export class WarrantColumn {
+  public constructor(private readonly parent: WorksheetRangePrinter) {}
+
+  public write(
+    stockClass: StockClassModel,
+    model: Model
+  ): WorksheetRangePrinter {
+    const myColumn = this.parent.createNestedRange({
+      orientation: "top-to-bottom",
+    });
+
+    myColumn
+      .createNestedRange({
+        style: Styles.subheader,
+        rowHeight: 50.0,
+      })
+      .addCell(this.warrantHeadingFor(stockClass));
+
+    const myData = myColumn.createNestedRange({
+      style: Styles.default,
+    });
+
+    let largestHolding = 0;
+    model.stakeholders.forEach((s) => {
+      const holding = model.getStakeholderWarrantHoldings
+        ? model.getStakeholderWarrantHoldings(s, stockClass)
+        : 0;
+      myData.addCell(holding);
+      if (holding > largestHolding) {
+        largestHolding = holding;
+      }
+    });
+
+    myColumn
+      .createNestedRange()
+      .addBlankCell(Styles.default)
+      .addCell(0)
+      .addBlankCell(Styles.default)
+      .addSumFor(myData, Styles.footer);
+
+    myColumn.setWidth(
+      Math.max(
+        14,
+        (largestHolding * model.stakeholders.length).toString().length
+      )
+    );
+
+    return myData;
+  }
+
+  private warrantHeadingFor(stockClass: StockClassModel) {
+    return `${stockClass.display_name} Warrants`;
+  }
+
+  public static asChildOf(parent: WorksheetRangePrinter) {
+    return new WarrantColumn(parent);
+  }
+}
+
 export class TotalOutstanding {
   public constructor(private readonly parent: WorksheetRangePrinter) {}
 

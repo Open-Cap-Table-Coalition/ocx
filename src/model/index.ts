@@ -14,6 +14,7 @@ import {
   OutstandingStockPlanCalculator,
   OptionsRemainingCalculator,
   ConversionRatioCalculator,
+  WarrantSharesCalculator,
 } from "./calculations";
 
 interface StockClassModel extends WorkbookStockClassModel {
@@ -32,7 +33,7 @@ class Model implements WorkbookModel {
   private stockPlans_: StockPlanModel[] = [];
   private sortedStockPlans_: StockPlanModel[] = [];
   private ratioCalculator = new ConversionRatioCalculator();
-  private warrantStockIds: Set<string> = new Set();
+  public warrantStockIds: Set<string> = new Set();
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private transactionsBySecurityId_ = new Map<string, Set<any>>();
@@ -152,6 +153,26 @@ class Model implements WorkbookModel {
       this.issuedSecuritiesByStakeholderAndStockPlanIds_.get(
         `${stakeholder.id}/${stockPlan.id}`
       ) || new Set();
+    for (const id of issuanceSecurityIds) {
+      for (const txn of this.transactionsBySecurityId_.get(id) || []) {
+        calculator.apply(txn);
+      }
+    }
+
+    return calculator.value;
+  }
+
+  public getStakeholderWarrantHoldings(
+    stakeholder: StakeholderModel,
+    stockClass: WorkbookStockClassModel
+  ) {
+    const calculator = new WarrantSharesCalculator();
+
+    const issuanceSecurityIds =
+      this.issuedSecuritiesByStakeholderAndWarrantStockIds_.get(
+        `${stakeholder.id}/${stockClass.id}`
+      ) || new Set();
+
     for (const id of issuanceSecurityIds) {
       for (const txn of this.transactionsBySecurityId_.get(id) || []) {
         calculator.apply(txn);
