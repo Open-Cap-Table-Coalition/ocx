@@ -32,6 +32,7 @@ class Model implements WorkbookModel {
   private stockPlans_: StockPlanModel[] = [];
   private sortedStockPlans_: StockPlanModel[] = [];
   private ratioCalculator = new ConversionRatioCalculator();
+  private warrantStockIds: Set<string> = new Set();
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private transactionsBySecurityId_ = new Map<string, Set<any>>();
@@ -40,6 +41,10 @@ class Model implements WorkbookModel {
     Set<string>
   >();
   private issuedSecuritiesByStakeholderAndStockPlanIds_ = new Map<
+    string,
+    Set<string>
+  >();
+  private issuedSecuritiesByStakeholderAndWarrantStockIds_ = new Map<
     string,
     Set<string>
   >();
@@ -86,6 +91,10 @@ class Model implements WorkbookModel {
 
     if ((value?.object_type ?? "") === "TX_STOCK_PLAN_POOL_ADJUSTMENT") {
       this.TX_STOCK_PLAN_POOL_ADJUSTMENT(value);
+    }
+
+    if ((value?.object_type ?? "").startsWith("TX_WARRANT_")) {
+      this.TX_WARRANT(value);
     }
   }
 
@@ -283,6 +292,26 @@ class Model implements WorkbookModel {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  private TX_WARRANT(value: any) {
+    if (value.object_type === "TX_WARRANT_ISSUANCE") {
+      const stock_class_id = this.getStockClassIdForWarrant(value);
+      if (stock_class_id !== undefined) {
+        const key = `${value.stakeholder_id}/${stock_class_id}`;
+        const ids =
+          this.issuedSecuritiesByStakeholderAndWarrantStockIds_.get(key) ||
+          new Set();
+        ids.add(value.security_id);
+        this.issuedSecuritiesByStakeholderAndWarrantStockIds_.set(key, ids);
+        this.warrantStockIds.add(stock_class_id);
+      }
+    }
+    const txns =
+      this.transactionsBySecurityId_.get(value.security_id) || new Set();
+    txns.add(value);
+    this.transactionsBySecurityId_.set(value.security_id, txns);
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private TX_STOCK_PLAN_POOL_ADJUSTMENT(value: any) {
     const txns =
       this.adjustmentsByStockPlanId_.get(value.stock_plan_id) || new Set();
@@ -322,6 +351,16 @@ class Model implements WorkbookModel {
     const mechanism = Array.of(value).flat()[0]?.conversion_mechanism;
     const roundingType = mechanism?.rounding_type || "NORMAL";
     return roundingType;
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  private getStockClassIdForWarrant(value: any): string | undefined {
+    for (const trigger of value.exercise_triggers) {
+      if (trigger?.converts_to_stock_class_id !== undefined) {
+        return trigger.converts_to_stock_class_id;
+      }
+    }
+    return undefined;
   }
 }
 

@@ -295,6 +295,102 @@ describe(Calculations.ConversionRatioCalculator, () => {
   });
 });
 
+describe(Calculations.WarrantSharesCalculator, () => {
+  test("zero case", () => {
+    const subject = new Calculations.WarrantSharesCalculator();
+    expect(subject.value).toBe(0);
+  });
+  test("warrant issuances", () => {
+    const subject = new Calculations.WarrantSharesCalculator();
+    subject.apply(fakeWarrantTxn("WARRANT_ISSUANCE", { quantity: "10" }));
+    subject.apply(fakeWarrantTxn("WARRANT_ISSUANCE", { quantity: "1" }));
+    subject.apply(
+      fakeWarrantTxn("WARRANT_ISSUANCE", {
+        exercise_triggers: [
+          {
+            conversion_right: {
+              conversion_mechanism: {
+                converts_to_quantity: "20.00",
+              },
+            },
+          },
+        ],
+      })
+    );
+    expect(subject.value).toBe(31);
+  });
+
+  test("warrant retractions", () => {
+    const subject = new Calculations.WarrantSharesCalculator();
+    subject.apply(
+      fakeWarrantTxn("WARRANT_ISSUANCE", {
+        quantity: "20",
+        security_id: "security-1",
+      })
+    );
+    subject.apply(
+      fakeWarrantTxn("WARRANT_ISSUANCE", {
+        quantity: "15",
+        security_id: "security-2",
+      })
+    );
+    subject.apply(
+      fakeWarrantTxn("WARRANT_RETRACTION", { security_id: "security-1" })
+    );
+
+    expect(subject.value).toBe(15);
+
+    subject.apply(
+      fakeWarrantTxn("WARRANT_RETRACTION", { security_id: "security-2" })
+    );
+    expect(subject.value).toBe(0);
+  });
+
+  test("warrant cancellations", () => {
+    const subject = new Calculations.WarrantSharesCalculator();
+    subject.apply(fakeWarrantTxn("WARRANT_ISSUANCE", { quantity: "10" }));
+    subject.apply(fakeWarrantTxn("WARRANT_CANCELLATION", { quantity: "1" }));
+    expect(subject.value).toBe(9);
+  });
+
+  test("warrant exercises", () => {
+    const subject = new Calculations.WarrantSharesCalculator();
+    subject.apply(
+      fakeWarrantTxn("WARRANT_ISSUANCE", {
+        quantity: "10",
+        security_id: "security-1",
+      })
+    );
+    subject.apply(
+      fakeWarrantTxn("WARRANT_EXERCISE", { security_id: "security-1" })
+    );
+    expect(subject.value).toBe(0);
+  });
+
+  test("warrant transfer", () => {
+    const subject = new Calculations.WarrantSharesCalculator();
+    subject.apply(fakeWarrantTxn("WARRANT_ISSUANCE", { quantity: "10" }));
+    subject.apply(fakeWarrantTxn("WARRANT_TRANSFER", { quantity: "1" }));
+    expect(subject.value).toBe(9);
+  });
+
+  let securityIncrementer = 0;
+
+  /* eslint-disable @typescript-eslint/no-explicit-any */
+  function fakeWarrantTxn(
+    type: string,
+    attrs: { [x: string]: string | Array<any> }
+  ) {
+    securityIncrementer += 1;
+
+    return {
+      object_type: `TX_${type}`,
+      security_id: `security-${securityIncrementer}`,
+      ...attrs,
+    };
+  }
+});
+
 function fakeCommonStockClass(id: string, opts?: { boardApproved?: string }) {
   return {
     id: id,

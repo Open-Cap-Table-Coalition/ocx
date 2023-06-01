@@ -15,6 +15,18 @@ interface Transaction {
   security_id: string;
   quantity?: string;
   quantity_converted?: string;
+  exercise_triggers?: ExerciseTrigger[];
+}
+
+interface ExerciseTrigger {
+  conversion_right?: {
+    type?: string;
+    conversion_mechanism?: {
+      type: string;
+      converts_to_quantity: string;
+    };
+    converts_to_stock_class_id?: string;
+  };
 }
 
 abstract class OutstandingEquityCalculatorBase {
@@ -71,6 +83,41 @@ export class OutstandingStockPlanCalculator extends OutstandingEquityCalculatorB
     } else {
       this.value_ = this.value_.minus(operand);
     }
+  }
+}
+
+export class WarrantSharesCalculator extends OutstandingEquityCalculatorBase {
+  public apply(txn: Transaction): void {
+    const operand = this.getQuantity(txn);
+    if (txn.object_type === "TX_WARRANT_ISSUANCE") {
+      this.value_ = this.value_.plus(operand);
+      this.issuanceAmounts_.set(txn.security_id, operand);
+    } else if (
+      txn.object_type === "TX_WARRANT_RETRACTION" ||
+      txn.object_type === "TX_WARRANT_EXERCISE"
+    ) {
+      this.pendingSecurityIds_.add(txn.security_id);
+    } else {
+      this.value_ = this.value_.minus(operand);
+    }
+  }
+
+  public getQuantity(txn: Transaction): string {
+    if (txn.quantity !== undefined) {
+      return txn.quantity;
+    }
+    if (txn.exercise_triggers !== undefined) {
+      for (const trigger of txn.exercise_triggers) {
+        if (
+          trigger?.conversion_right?.conversion_mechanism
+            ?.converts_to_quantity !== undefined
+        ) {
+          return trigger.conversion_right.conversion_mechanism
+            .converts_to_quantity;
+        }
+      }
+    }
+    return "0";
   }
 }
 
@@ -245,6 +292,7 @@ const Calculations = {
   OutstandingStockPlanCalculator,
   OptionsRemainingCalculator,
   ConversionRatioCalculator,
+  WarrantSharesCalculator,
 };
 
 export default Calculations;
