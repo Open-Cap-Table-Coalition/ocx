@@ -42,7 +42,7 @@ program
       });
     } catch (e: unknown) {
       if (e instanceof Error) {
-        OCX.Logger.error(e.message);
+        OCX.Logger.error(e.stack || e.message);
       } else {
         OCX.Logger.error("Unknown error occurred.");
       }

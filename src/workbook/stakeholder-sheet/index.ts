@@ -1,4 +1,9 @@
-import { Model, StockClassModel, WorksheetLinePrinter } from "../interfaces";
+import {
+  Model,
+  StockClassModel,
+  StockPlanModel,
+  WorksheetLinePrinter,
+} from "../interfaces";
 import WorksheetRangePrinter from "../worksheet-range-printer";
 
 import { CapitalizationByStakeholderHeader } from "./headers";
@@ -111,10 +116,31 @@ class StakeholderSheet {
         heading: this.outstandingStockClassHeadingFor(stockClass),
         stockClass,
       });
-
-      if (stockClass.is_preferred && stockClass.conversion_ratio !== 1.0) {
+      const ratio = this.model.getStockClassConversionRatio
+        ? this.model.getStockClassConversionRatio(stockClass)
+        : 1.0;
+      if (stockClass.is_preferred && ratio !== 1.0) {
         result.push({
           heading: this.asConvertedStockClassHeadingFor(stockClass),
+          stockClass,
+        });
+      }
+    }
+
+    for (const plan of this.stockPlans) {
+      result.push({
+        heading: this.stockPlanHeadingFor(plan),
+        stockClass: plan,
+      });
+    }
+
+    for (const id of this.warrantStockIds) {
+      const stockClass = this.stockClasses.find(
+        (stockClass) => stockClass.id === id
+      );
+      if (stockClass !== undefined) {
+        result.push({
+          heading: this.warrantHeadingFor(stockClass),
           stockClass,
         });
       }
@@ -135,6 +161,14 @@ class StakeholderSheet {
 
   private asConvertedStockClassHeadingFor(stockClass: StockClassModel) {
     return `${stockClass.display_name}\n(as converted)`;
+  }
+
+  private stockPlanHeadingFor(stockPlan: StockPlanModel) {
+    return `${stockPlan.plan_name}`;
+  }
+
+  private warrantHeadingFor(stockClass: StockClassModel) {
+    return `${stockClass.display_name} Warrants`;
   }
 }
 

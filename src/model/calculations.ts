@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import Big from "big.js";
-import logger from "src/logging";
+import Logger from "../logging";
 
 function convertRatioToDecimalNumber(ratio: {
   numerator: string;
@@ -248,7 +248,7 @@ export class ConversionRatioCalculator {
       const ratio = this.getFinalRatio(path);
       return { ratio, lowestVotesPerShare, path };
     } else {
-      logger.error("Error: no conversion class");
+      Logger.error("Error: no conversion class");
       return { ratio: 1, lowestVotesPerShare, path };
     }
   }
@@ -281,7 +281,7 @@ export class ConversionRatioCalculator {
     const finalRatio: number = ratios.reduce(
       (accumulator, currentValue) => accumulator * currentValue
     );
-    logger.info(`${info} at ${finalRatio}`);
+    Logger.info(`${info} at ${finalRatio}`);
     return finalRatio;
   }
 }
