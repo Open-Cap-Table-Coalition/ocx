@@ -177,6 +177,11 @@ class Model implements WorkbookModel {
     stockClass: WorkbookStockClassModel
   ) {
     const calculator = new WarrantSharesCalculator();
+    // get ratio if stock class is preferred
+    let ratio = 1;
+    if (stockClass?.is_preferred) {
+      ratio = this.getStockClassConversionRatio(stockClass);
+    }
 
     const issuanceSecurityIds =
       this.issuedSecuritiesByStakeholderAndWarrantStockIds_.get(
@@ -189,7 +194,7 @@ class Model implements WorkbookModel {
       }
     }
 
-    return calculator.value;
+    return calculator.value * ratio;
   }
 
   public getOptionsRemainingForIssuance(stockPlan: WorkbookStockPlanModel) {

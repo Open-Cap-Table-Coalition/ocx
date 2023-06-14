@@ -282,13 +282,22 @@ export class WarrantColumn {
     const myColumn = this.parent.createNestedRange({
       orientation: "top-to-bottom",
     });
+    let targetClass = stockClass;
+
+    // if class is preferred
+    // get target common class
+    if (stockClass.is_preferred) {
+      targetClass = model.getConversionCommonStockClass
+        ? model.getConversionCommonStockClass(stockClass)
+        : stockClass;
+    }
 
     myColumn
       .createNestedRange({
         style: Styles.subheader,
         rowHeight: 50.0,
       })
-      .addCell(this.warrantHeadingFor(stockClass));
+      .addCell(this.warrantHeadingFor(targetClass));
 
     const myData = myColumn.createNestedRange({
       style: Styles.default,
@@ -299,10 +308,7 @@ export class WarrantColumn {
       const holding = model.getStakeholderWarrantHoldings
         ? model.getStakeholderWarrantHoldings(s, stockClass)
         : 0;
-      const ratio = stockClass.conversion_ratio
-        ? stockClass.conversion_ratio
-        : 1;
-      myData.addCell(holding * ratio);
+      myData.addCell(holding);
       if (holding > largestHolding) {
         largestHolding = holding;
       }

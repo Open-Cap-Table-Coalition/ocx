@@ -121,7 +121,6 @@ describe("Holdings Columns", () => {
     const stockClassModels = Array.of(
       {
         display_name: "Common Stock A",
-        conversion_ratio: 2,
       },
       {
         display_name: "Common Stock B",
@@ -171,8 +170,8 @@ describe("Holdings Columns", () => {
       expect(cell("A2").value).toBe("Stockholder 1");
       expect(cell("A3").value).toBe("Optionholder 42");
       expect(cell("B1").value).toBe("Common Stock A Warrants");
-      expect(cell("B2").value).toBe(100);
-      expect(cell("B3").value).toBe(100);
+      expect(cell("B2").value).toBe(50);
+      expect(cell("B3").value).toBe(50);
       expect(cell("C1").value).toBe("Common Stock B Warrants");
       expect(cell("C2").value).toBe(50);
       expect(cell("C3").value).toBe(50);

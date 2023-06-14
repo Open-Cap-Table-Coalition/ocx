@@ -178,36 +178,23 @@ describe(OCX.Model, () => {
       );
     });
 
-    interface StakeholderModel {
-      id: string;
-      display_name: string;
-    }
-    interface StockPlanModel {
-      id: string;
-      plan_name: string;
-      stock_class_id: string;
-    }
     test("stock plan conversion", () => {
       const model = subject();
-      const holder: StakeholderModel = {
-        id: "Fake",
-        display_name: "Fake name",
-      };
-      const stockPlan: StockPlanModel = {
-        id: "Fake plan",
-        plan_name: "Fake name",
-        stock_class_id: "Fake",
-      };
+      const holder = fakeStakeholder("Fake Holder");
+      const fakeCommon = fakeCommonStockClass("Fake Common");
       const fakePreferred = fakePreferredStockClass(
         "Fake",
         {
           convertsFrom: "4",
           to: "2",
-          converts_to_stock_class_id: "Fake Common",
+          converts_to_stock_class_id: fakeCommon.id,
         },
         "NORMAL"
       );
-      const fakeCommon = fakeCommonStockClass("Fake Common");
+      const stockPlan = fakeStockPlan("Fake Plan", {
+        stock_class_id: fakePreferred.id,
+      });
+      model.consume(holder);
       model.consume(stockPlan);
       model.consume(fakePreferred);
       model.consume(fakeCommon);
@@ -215,10 +202,15 @@ describe(OCX.Model, () => {
         fakePlanTxn("PLAN_SECURITY_ISSUANCE", {
           quantity: "10",
           stock_plan_id: stockPlan.id,
-          stakeholder_id: holder.id,
+          stakeholder_id: "Fake Holder",
         })
       );
-      expect(model.getStakeholderStockPlanHoldings(holder, stockPlan)).toBe(5);
+      expect(
+        model.getStakeholderStockPlanHoldings(
+          model.stakeholders[0],
+          model.stockPlans[0]
+        )
+      ).toBe(5);
     });
 
     let securityIncrementer = 0;
@@ -392,19 +384,35 @@ describe(OCX.Model, () => {
   describe("warrants", () => {
     test("target class for warrant", () => {
       const model = subject();
+      const holder = fakeStakeholder("Fake Holder");
+      const fakeCommon = fakeCommonStockClass("Fake Common");
+      const fakeCommon2 = fakeCommonStockClass("Fake Common 2");
       const fakePreferred = fakePreferredStockClass(
-        "Fake",
+        "Fake Preferred 1",
         {
-          convertsFrom: "4",
-          to: "2",
-          converts_to_stock_class_id: "Fake Common",
+          convertsFrom: "2",
+          to: "4",
+          converts_to_stock_class_id: fakeCommon.id,
         },
         "NORMAL"
       );
-      const fakeCommon = fakeCommonStockClass("Fake Common");
+      const fakePreferred2 = fakePreferredStockClass(
+        "Fake Preferred 2",
+        {
+          convertsFrom: "4",
+          to: "2",
+          converts_to_stock_class_id: fakeCommon2.id,
+        },
+        "NORMAL"
+      );
+
       model.consume(fakePreferred);
+      model.consume(fakePreferred2);
 
       model.consume(fakeCommon);
+      model.consume(fakeCommon2);
+
+      model.consume(holder);
 
       model.consume(
         fakeWarrantTxn("WARRANT_ISSUANCE", {
@@ -416,20 +424,44 @@ describe(OCX.Model, () => {
                   type: "FIXED_AMOUNT_CONVERSION",
                   converts_to_quantity: "10000.00",
                 },
-                converts_to_stock_class_id: "Fake",
+                converts_to_stock_class_id: fakePreferred.id,
               },
             },
           ],
+          stakeholder_id: "Fake Holder",
         })
       );
 
-      expect(Array.from(model.warrantStockIds)[0]).toBe("Fake");
+      model.consume(
+        fakeWarrantTxn("WARRANT_ISSUANCE", {
+          quantity: "17",
+          exercise_triggers: [
+            {
+              conversion_right: {
+                conversion_mechanism: {
+                  type: "FIXED_AMOUNT_CONVERSION",
+                  converts_to_quantity: "10000.00",
+                },
+                converts_to_stock_class_id: fakePreferred2.id,
+              },
+            },
+          ],
+          stakeholder_id: "Fake Holder",
+        })
+      );
+      expect(Array.from(model.warrantStockIds)[0]).toBe("Fake Preferred 1");
       expect(model.getConversionCommonStockClass(fakePreferred)).toEqual({
         display_name: fakeCommon.name,
         is_preferred: false,
         board_approval_date: null,
       });
-      expect(model.getStockClassConversionRatio(fakePreferred)).toEqual(0.5);
+      expect(model.getStockClassConversionRatio(fakePreferred)).toEqual(2);
+      const security =
+        model.stockClasses.find((cls) => cls.id === "Fake Preferred 2") ||
+        model.stakeholders[1];
+      expect(
+        model.getStakeholderWarrantHoldings(model.stakeholders[0], security)
+      ).toEqual(8.5);
     });
   });
 
