@@ -130,6 +130,16 @@ describe(OCX.Model, () => {
     });
   });
 
+  function fakeStakeholder(id: string): object {
+    return {
+      id,
+      object_type: "STAKEHOLDER",
+      name: {
+        legal_name: `Whodat ${id}`,
+      },
+    };
+  }
+
   describe("test stock plans", () => {
     test("empty case", () => {
       const model = subject();
@@ -167,15 +177,74 @@ describe(OCX.Model, () => {
         "Stock Plan Z Stock Plan B Stock Plan C Stock Plan D"
       );
     });
+
+    interface StakeholderModel {
+      id: string;
+      display_name: string;
+    }
+    interface StockPlanModel {
+      id: string;
+      plan_name: string;
+      stock_class_id: string;
+    }
+    test("stock plan conversion", () => {
+      const model = subject();
+      const holder: StakeholderModel = {
+        id: "Fake",
+        display_name: "Fake name",
+      };
+      const stockPlan: StockPlanModel = {
+        id: "Fake plan",
+        plan_name: "Fake name",
+        stock_class_id: "Fake",
+      };
+      const fakePreferred = fakePreferredStockClass(
+        "Fake",
+        {
+          convertsFrom: "4",
+          to: "2",
+          converts_to_stock_class_id: "Fake Common",
+        },
+        "NORMAL"
+      );
+      const fakeCommon = fakeCommonStockClass("Fake Common");
+      model.consume(stockPlan);
+      model.consume(fakePreferred);
+      model.consume(fakeCommon);
+      model.consume(
+        fakePlanTxn("PLAN_SECURITY_ISSUANCE", {
+          quantity: "10",
+          stock_plan_id: stockPlan.id,
+          stakeholder_id: holder.id,
+        })
+      );
+      expect(model.getStakeholderStockPlanHoldings(holder, stockPlan)).toBe(5);
+    });
+
+    let securityIncrementer = 0;
+
+    function fakePlanTxn(type: string, attrs: { [x: string]: string }) {
+      securityIncrementer += 1;
+
+      return {
+        object_type: `TX_${type}`,
+        security_id: `security-${securityIncrementer}`,
+        ...attrs,
+      };
+    }
   });
 
-  function fakeStockPlan(id: string, opts?: { boardApproved?: string }) {
+  function fakeStockPlan(
+    id: string,
+    opts?: { boardApproved?: string; stock_class_id?: string }
+  ) {
     return {
       id: id,
       object_type: "STOCK_PLAN",
       plan_name: `${id}`,
       board_approval_date: opts?.boardApproved,
       initial_shares_reserved: "1000000",
+      stock_class_id: opts?.stock_class_id,
     };
   }
 
@@ -222,16 +291,6 @@ describe(OCX.Model, () => {
             },
           ]
         : [],
-    };
-  }
-
-  function fakeStakeholder(id: string): object {
-    return {
-      id,
-      object_type: "STAKEHOLDER",
-      name: {
-        legal_name: `Whodat ${id}`,
-      },
     };
   }
 

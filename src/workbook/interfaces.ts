@@ -17,6 +17,7 @@ export interface StockPlanModel {
   id?: string;
   plan_name: string;
   initial_shares_reserved?: string;
+  stock_class_id?: string;
 }
 
 // This is a case of "the client defines the interface". The

@@ -149,6 +149,16 @@ class Model implements WorkbookModel {
   ) {
     const calculator = new OutstandingStockPlanCalculator();
 
+    // get stock class for this plan
+    // get ratio if stock class is preferred
+    const stockClass = this.stockClasses_.find(
+      (cls) => cls.id === stockPlan.stock_class_id
+    );
+    let ratio = 1;
+    if (stockClass?.is_preferred) {
+      ratio = this.getStockClassConversionRatio(stockClass);
+    }
+
     const issuanceSecurityIds =
       this.issuedSecuritiesByStakeholderAndStockPlanIds_.get(
         `${stakeholder.id}/${stockPlan.id}`
@@ -159,7 +169,7 @@ class Model implements WorkbookModel {
       }
     }
 
-    return calculator.value;
+    return calculator.value * ratio;
   }
 
   public getStakeholderWarrantHoldings(
@@ -293,6 +303,7 @@ class Model implements WorkbookModel {
       plan_name: value?.plan_name,
       board_approval_date,
       initial_shares_reserved: value?.initial_shares_reserved,
+      stock_class_id: value?.stock_class_id,
     });
   }
 
