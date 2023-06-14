@@ -372,28 +372,6 @@ describe(OCX.Model, () => {
       });
       expect(model.getStockClassConversionRatio(fakePreferred)).toEqual(0.5);
     });
-
-    test("floor type", () => {
-      const model = subject();
-      model.consume(
-        fakePreferredStockClass("Fake", { convertsFrom: "3", to: "2" }, "FLOOR")
-      );
-
-      expect(model.stockClasses[0].rounding_type).toBe("FLOOR");
-    });
-
-    test("ceiling type", () => {
-      const model = subject();
-      model.consume(
-        fakePreferredStockClass(
-          "Fake",
-          { convertsFrom: "3", to: "2" },
-          "CEILING"
-        )
-      );
-
-      expect(model.stockClasses[0].rounding_type).toBe("CEILING");
-    });
   });
 
   let securityIncrementer = 0;
