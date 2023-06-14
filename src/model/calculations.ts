@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import Big from "big.js";
-import logger from "src/logging";
+import Logger from "../logging";
 
 function convertRatioToDecimalNumber(ratio: {
   numerator: string;
@@ -15,6 +15,18 @@ interface Transaction {
   security_id: string;
   quantity?: string;
   quantity_converted?: string;
+  exercise_triggers?: ExerciseTrigger[];
+}
+
+interface ExerciseTrigger {
+  conversion_right?: {
+    type?: string;
+    conversion_mechanism?: {
+      type: string;
+      converts_to_quantity: string;
+    };
+    converts_to_stock_class_id?: string;
+  };
 }
 
 abstract class OutstandingEquityCalculatorBase {
@@ -71,6 +83,41 @@ export class OutstandingStockPlanCalculator extends OutstandingEquityCalculatorB
     } else {
       this.value_ = this.value_.minus(operand);
     }
+  }
+}
+
+export class WarrantSharesCalculator extends OutstandingEquityCalculatorBase {
+  public apply(txn: Transaction): void {
+    const operand = this.getQuantity(txn);
+    if (txn.object_type === "TX_WARRANT_ISSUANCE") {
+      this.value_ = this.value_.plus(operand);
+      this.issuanceAmounts_.set(txn.security_id, operand);
+    } else if (
+      txn.object_type === "TX_WARRANT_RETRACTION" ||
+      txn.object_type === "TX_WARRANT_EXERCISE"
+    ) {
+      this.pendingSecurityIds_.add(txn.security_id);
+    } else {
+      this.value_ = this.value_.minus(operand);
+    }
+  }
+
+  public getQuantity(txn: Transaction): string {
+    if (txn.quantity !== undefined) {
+      return txn.quantity;
+    }
+    if (txn.exercise_triggers !== undefined) {
+      for (const trigger of txn.exercise_triggers) {
+        if (
+          trigger?.conversion_right?.conversion_mechanism
+            ?.converts_to_quantity !== undefined
+        ) {
+          return trigger.conversion_right.conversion_mechanism
+            .converts_to_quantity;
+        }
+      }
+    }
+    return "0";
   }
 }
 
@@ -201,7 +248,7 @@ export class ConversionRatioCalculator {
       const ratio = this.getFinalRatio(path);
       return { ratio, lowestVotesPerShare, path };
     } else {
-      logger.error("Error: no conversion class");
+      Logger.error("Error: no conversion class");
       return { ratio: 1, lowestVotesPerShare, path };
     }
   }
@@ -234,7 +281,7 @@ export class ConversionRatioCalculator {
     const finalRatio: number = ratios.reduce(
       (accumulator, currentValue) => accumulator * currentValue
     );
-    logger.info(`${info} at ${finalRatio}`);
+    Logger.info(`${info} at ${finalRatio}`);
     return finalRatio;
   }
 }
@@ -245,6 +292,7 @@ const Calculations = {
   OutstandingStockPlanCalculator,
   OptionsRemainingCalculator,
   ConversionRatioCalculator,
+  WarrantSharesCalculator,
 };
 
 export default Calculations;

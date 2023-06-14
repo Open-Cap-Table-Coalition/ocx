@@ -32,6 +32,8 @@ export interface Model {
 
   stockPlans?: Array<StockPlanModel>;
 
+  warrantStockIds?: Set<string>;
+
   getStakeholderStockHoldings?: (
     stakeholder: StakeholderModel,
     stockClass: StockClassModel
@@ -40,6 +42,11 @@ export interface Model {
   getStakeholderStockPlanHoldings?: (
     stakeholder: StakeholderModel,
     stockPlan: StockPlanModel
+  ) => number;
+
+  getStakeholderWarrantHoldings?: (
+    stakeholder: StakeholderModel,
+    stockClass: StockClassModel
   ) => number;
 
   getOptionsRemainingForIssuance?: (stockPlan: StockPlanModel) => number;
