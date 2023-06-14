@@ -16,6 +16,7 @@ import {
   ConversionRatioCalculator,
   WarrantSharesCalculator,
 } from "./calculations";
+import Logger from "../logging";
 
 interface StockClassModel extends WorkbookStockClassModel {
   board_approval_date: Date | null;
@@ -377,8 +378,9 @@ class Model implements WorkbookModel {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private getStockClassIdForWarrant(value: any): string | undefined {
     for (const trigger of value.exercise_triggers) {
-      if (trigger?.converts_to_stock_class_id !== undefined) {
-        return trigger.converts_to_stock_class_id;
+      if (trigger?.conversion_right?.converts_to_stock_class_id !== undefined) {
+        Logger.info(trigger.conversion_right.converts_to_stock_class_id);
+        return trigger.conversion_right.converts_to_stock_class_id;
       }
     }
     return undefined;
