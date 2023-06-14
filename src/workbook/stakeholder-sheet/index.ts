@@ -84,7 +84,24 @@ class StakeholderSheet {
         (stockClass) => stockClass.id === id
       );
       if (stockClass !== undefined) {
-        warrantStockClasses.push(stockClass);
+        // if class is preferred
+        // get target common class and ratio
+        // push new target common class
+        if (stockClass.is_preferred) {
+          const ratio = this.model.getStockClassConversionRatio
+            ? this.model.getStockClassConversionRatio(stockClass)
+            : 1;
+          const targetClass = this.model.getConversionCommonStockClass
+            ? this.model.getConversionCommonStockClass(stockClass)
+            : stockClass;
+          warrantStockClasses.push({
+            id: stockClass.id,
+            display_name: targetClass.display_name,
+            conversion_ratio: ratio,
+          });
+        } else {
+          warrantStockClasses.push(stockClass);
+        }
       }
     }
     for (const stockClass of warrantStockClasses) {

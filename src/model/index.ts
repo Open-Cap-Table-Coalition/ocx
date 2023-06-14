@@ -16,7 +16,6 @@ import {
   ConversionRatioCalculator,
   WarrantSharesCalculator,
 } from "./calculations";
-import Logger from "../logging";
 
 interface StockClassModel extends WorkbookStockClassModel {
   board_approval_date: Date | null;
@@ -369,6 +368,20 @@ class Model implements WorkbookModel {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  public getConversionCommonStockClass(value: any): any {
+    if (value?.is_preferred === false) {
+      return value;
+    }
+    const path = this.ratioCalculator.findRatio(value.id).path;
+    const stockClass = path[path.length - 1];
+    return {
+      display_name: stockClass.name,
+      is_preferred: false,
+      board_approval_date: null,
+    };
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private getStockClassRoundingType(value: any): string {
     const mechanism = Array.of(value).flat()[0]?.conversion_mechanism;
     const roundingType = mechanism?.rounding_type || "NORMAL";
@@ -379,7 +392,6 @@ class Model implements WorkbookModel {
   private getStockClassIdForWarrant(value: any): string | undefined {
     for (const trigger of value.exercise_triggers) {
       if (trigger?.conversion_right?.converts_to_stock_class_id !== undefined) {
-        Logger.info(trigger.conversion_right.converts_to_stock_class_id);
         return trigger.conversion_right.converts_to_stock_class_id;
       }
     }

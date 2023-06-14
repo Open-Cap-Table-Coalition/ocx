@@ -330,6 +330,87 @@ describe(OCX.Model, () => {
     });
   });
 
+  describe("warrants", () => {
+    test("target class for warrant", () => {
+      const model = subject();
+      const fakePreferred = fakePreferredStockClass(
+        "Fake",
+        {
+          convertsFrom: "4",
+          to: "2",
+          converts_to_stock_class_id: "Fake Common",
+        },
+        "NORMAL"
+      );
+      const fakeCommon = fakeCommonStockClass("Fake Common");
+      model.consume(fakePreferred);
+
+      model.consume(fakeCommon);
+
+      model.consume(
+        fakeWarrantTxn("WARRANT_ISSUANCE", {
+          quantity: "10",
+          exercise_triggers: [
+            {
+              conversion_right: {
+                conversion_mechanism: {
+                  type: "FIXED_AMOUNT_CONVERSION",
+                  converts_to_quantity: "10000.00",
+                },
+                converts_to_stock_class_id: "Fake",
+              },
+            },
+          ],
+        })
+      );
+
+      expect(Array.from(model.warrantStockIds)[0]).toBe("Fake");
+      expect(model.getConversionCommonStockClass(fakePreferred)).toEqual({
+        display_name: fakeCommon.name,
+        is_preferred: false,
+        board_approval_date: null,
+      });
+      expect(model.getStockClassConversionRatio(fakePreferred)).toEqual(0.5);
+    });
+
+    test("floor type", () => {
+      const model = subject();
+      model.consume(
+        fakePreferredStockClass("Fake", { convertsFrom: "3", to: "2" }, "FLOOR")
+      );
+
+      expect(model.stockClasses[0].rounding_type).toBe("FLOOR");
+    });
+
+    test("ceiling type", () => {
+      const model = subject();
+      model.consume(
+        fakePreferredStockClass(
+          "Fake",
+          { convertsFrom: "3", to: "2" },
+          "CEILING"
+        )
+      );
+
+      expect(model.stockClasses[0].rounding_type).toBe("CEILING");
+    });
+  });
+
+  let securityIncrementer = 0;
+  /* eslint-disable @typescript-eslint/no-explicit-any */
+  function fakeWarrantTxn(
+    type: string,
+    attrs: { [x: string]: string | Array<any> }
+  ) {
+    securityIncrementer += 1;
+
+    return {
+      object_type: `TX_${type}`,
+      security_id: `security-${securityIncrementer}`,
+      ...attrs,
+    };
+  }
+
   function fakeStockIssuanceForStakeholder(id: string, stock_id: string) {
     return [
       {

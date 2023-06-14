@@ -299,7 +299,10 @@ export class WarrantColumn {
       const holding = model.getStakeholderWarrantHoldings
         ? model.getStakeholderWarrantHoldings(s, stockClass)
         : 0;
-      myData.addCell(holding);
+      const ratio = stockClass.conversion_ratio
+        ? stockClass.conversion_ratio
+        : 1;
+      myData.addCell(holding * ratio);
       if (holding > largestHolding) {
         largestHolding = holding;
       }
