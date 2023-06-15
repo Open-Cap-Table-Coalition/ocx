@@ -88,7 +88,11 @@ class StakeholderSheet {
       }
     }
     for (const stockClass of warrantStockClasses) {
-      new Holdings.WarrantColumn(holdingsTable).write(stockClass, this.model);
+      const warrantRange = new Holdings.WarrantColumn(holdingsTable).write(
+        stockClass,
+        this.model
+      );
+      fullyDilutedRanges.push(warrantRange.getExtents());
     }
 
     const nonPlanStockClasses = [];
@@ -101,7 +105,11 @@ class StakeholderSheet {
       }
     }
     for (const stockClass of nonPlanStockClasses) {
-      new Holdings.NonPlanColumn(holdingsTable).write(stockClass, this.model);
+      const nonPlanRange = new Holdings.NonPlanColumn(holdingsTable).write(
+        stockClass,
+        this.model
+      );
+      fullyDilutedRanges.push(nonPlanRange.getExtents());
     }
 
     new Holdings.TotalOutstanding(holdingsTable).write(outstandingRanges);
