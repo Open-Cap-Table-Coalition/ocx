@@ -103,7 +103,7 @@ export class StockClassOutstandingColumn {
     myColumn
       .createNestedRange()
       .addBlankCell(Styles.default)
-      .addCell(0)
+      .addCell(0, Styles.default)
       .addBlankCell(Styles.default)
       .addSumFor(myData, Styles.footer);
 
@@ -177,7 +177,7 @@ export class StockClassAsConvertedColumn {
     myColumn
       .createNestedRange()
       .addBlankCell(Styles.default)
-      .addCell(0)
+      .addCell(0, Styles.default)
       .addBlankCell(Styles.default)
       .addSumFor(myData, Styles.footer);
 
@@ -317,7 +317,7 @@ export class WarrantColumn {
     myColumn
       .createNestedRange()
       .addBlankCell(Styles.default)
-      .addCell(0)
+      .addCell(0, Styles.default)
       .addBlankCell(Styles.default)
       .addSumFor(myData, Styles.footer);
 
@@ -385,7 +385,7 @@ export class NonPlanColumn {
     myColumn
       .createNestedRange()
       .addBlankCell(Styles.default)
-      .addCell(0)
+      .addCell(0, Styles.default)
       .addBlankCell(Styles.default)
       .addSumFor(myData, Styles.footer);
 
@@ -470,7 +470,7 @@ export class TotalAsConverted {
     const myTotal = myColumn
       .createNestedRange()
       .addBlankCell(Styles.default)
-      .addCell(0)
+      .addCell(0, Styles.default)
       .addBlankCell(Styles.default)
       .addSumFor(myData, Styles.footer);
 
@@ -510,7 +510,7 @@ export class TotalAsConverted {
     myColumn
       .createNestedRange()
       .addBlankCell(Styles.default)
-      .addCell(0)
+      .addCell(0, Styles.default)
       .addBlankCell(Styles.default)
       .addSumFor(myData, Styles.footer__percentage);
 
@@ -550,7 +550,7 @@ export class FullyDilutedShares {
     const myTotal = myColumn
       .createNestedRange()
       .addBlankCell(Styles.default)
-      .addCell(0)
+      .addCell(0, Styles.default)
       .addBlankCell(Styles.default)
       .addSumFor(myData, Styles.footer);
 
@@ -590,7 +590,7 @@ export class FullyDilutedShares {
     myColumn
       .createNestedRange()
       .addBlankCell(Styles.default)
-      .addCell(0)
+      .addCell(0, Styles.default)
       .addBlankCell(Styles.default)
       .addSumFor(myData, Styles.footer__percentage);
 
