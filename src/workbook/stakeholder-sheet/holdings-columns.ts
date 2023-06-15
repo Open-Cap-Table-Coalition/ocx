@@ -365,7 +365,7 @@ export class NonPlanColumn {
         style: Styles.subheader,
         rowHeight: 50.0,
       })
-      .addCell(this.warrantHeadingFor(targetClass));
+      .addCell(this.nonPlanHeadingFor(targetClass));
 
     const myData = myColumn.createNestedRange({
       style: Styles.default,
@@ -399,7 +399,7 @@ export class NonPlanColumn {
     return myData;
   }
 
-  private warrantHeadingFor(stockClass: StockClassModel) {
+  private nonPlanHeadingFor(stockClass: StockClassModel) {
     return `${stockClass.display_name} Non-Plan Awards`;
   }
 
@@ -436,8 +436,8 @@ export class TotalOutstanding {
 
     myColumn
       .createNestedRange()
-      .addBlankCell(Styles.default)
-      .addCell(0)
+      .addBlankCell(Styles.withLeftHandBorder(Styles.default))
+      .addCell(0, Styles.withLeftHandBorder(Styles.default))
       .addBlankCell(Styles.withLeftHandBorder(Styles.default))
       .addSumFor(myData, Styles.withLeftHandBorder(Styles.footer));
 
