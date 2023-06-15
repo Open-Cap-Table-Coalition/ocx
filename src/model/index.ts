@@ -34,6 +34,7 @@ class Model implements WorkbookModel {
   private sortedStockPlans_: StockPlanModel[] = [];
   private ratioCalculator = new ConversionRatioCalculator();
   public warrantStockIds: Set<string> = new Set();
+  public nonPlanStockIds: Set<string> = new Set();
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private transactionsBySecurityId_ = new Map<string, Set<any>>();
@@ -46,6 +47,11 @@ class Model implements WorkbookModel {
     Set<string>
   >();
   private issuedSecuritiesByStakeholderAndWarrantStockIds_ = new Map<
+    string,
+    Set<string>
+  >();
+
+  private issuedSecuritiesByStakeholderAndNonPlanStockIds_ = new Map<
     string,
     Set<string>
   >();
@@ -83,11 +89,12 @@ class Model implements WorkbookModel {
       this.TX_STOCK(value);
     }
 
-    if (
-      (value?.object_type ?? "").startsWith("TX_PLAN_SECURITY_") ||
-      (value?.object_type ?? "").startsWith("TX_EQUITY_COMPENSATION_")
-    ) {
+    if ((value?.object_type ?? "").startsWith("TX_PLAN_SECURITY_")) {
       this.TX_PLAN_SECURITY(value);
+    }
+
+    if ((value?.object_type ?? "").startsWith("TX_EQUITY_COMPENSATION_")) {
+      this.TX_EQUITY_COMPENSATION(value);
     }
 
     if ((value?.object_type ?? "") === "TX_STOCK_PLAN_POOL_ADJUSTMENT") {
@@ -185,6 +192,31 @@ class Model implements WorkbookModel {
 
     const issuanceSecurityIds =
       this.issuedSecuritiesByStakeholderAndWarrantStockIds_.get(
+        `${stakeholder.id}/${stockClass.id}`
+      ) || new Set();
+
+    for (const id of issuanceSecurityIds) {
+      for (const txn of this.transactionsBySecurityId_.get(id) || []) {
+        calculator.apply(txn);
+      }
+    }
+
+    return calculator.value * ratio;
+  }
+
+  public getStakeholderNonPlanHoldings(
+    stakeholder: StakeholderModel,
+    stockClass: WorkbookStockClassModel
+  ) {
+    const calculator = new OutstandingStockPlanCalculator();
+    // get ratio if stock class is preferred
+    let ratio = 1;
+    if (stockClass?.is_preferred) {
+      ratio = this.getStockClassConversionRatio(stockClass);
+    }
+
+    const issuanceSecurityIds =
+      this.issuedSecuritiesByStakeholderAndNonPlanStockIds_.get(
         `${stakeholder.id}/${stockClass.id}`
       ) || new Set();
 
@@ -358,16 +390,33 @@ class Model implements WorkbookModel {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private TX_PLAN_SECURITY(value: any) {
-    if (
-      value.object_type === "TX_PLAN_SECURITY_ISSUANCE" ||
-      value.object_type === "TX_EQUITY_COMPENSATION_ISSUANCE"
-    ) {
+    if (value.object_type === "TX_PLAN_SECURITY_ISSUANCE") {
       const key = `${value.stakeholder_id}/${value.stock_plan_id}`;
       const ids =
         this.issuedSecuritiesByStakeholderAndStockPlanIds_.get(key) ||
         new Set();
       ids.add(value.security_id);
       this.issuedSecuritiesByStakeholderAndStockPlanIds_.set(key, ids);
+    }
+    const txns =
+      this.transactionsBySecurityId_.get(value.security_id) || new Set();
+    txns.add(value);
+    this.transactionsBySecurityId_.set(value.security_id, txns);
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  private TX_EQUITY_COMPENSATION(value: any) {
+    if (
+      value.object_type === "TX_EQUITY_COMPENSATION_ISSUANCE" &&
+      value.stock_class_id !== undefined
+    ) {
+      const key = `${value.stakeholder_id}/${value.stock_class_id}`;
+      const ids =
+        this.issuedSecuritiesByStakeholderAndNonPlanStockIds_.get(key) ||
+        new Set();
+      ids.add(value.security_id);
+      this.issuedSecuritiesByStakeholderAndNonPlanStockIds_.set(key, ids);
+      this.nonPlanStockIds.add(value.stock_class_id);
     }
     const txns =
       this.transactionsBySecurityId_.get(value.security_id) || new Set();

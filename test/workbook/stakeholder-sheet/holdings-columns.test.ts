@@ -181,6 +181,70 @@ describe("Holdings Columns", () => {
     });
   });
 
+  describe(Holdings.NonPlanColumn, () => {
+    const stockClassModels = Array.of(
+      {
+        display_name: "Common Stock A",
+      },
+      {
+        display_name: "Common Stock B",
+      }
+    );
+    const model = {
+      asOfDate: new Date(),
+      issuerName: "Fred",
+      stakeholders: Array.of(
+        {
+          display_name: "Stockholder 1",
+        },
+        {
+          display_name: "Optionholder 42",
+        }
+      ),
+      // eslint-disable-next-line
+      /* eslint-disable @typescript-eslint/no-unused-vars */
+      /* eslint-disable @typescript-eslint/no-explicit-any */
+      getStakeholderNonPlanHoldings: (stakeholder: any, stockPlan: any) => {
+        return 50;
+      },
+    };
+
+    test("header", () => {
+      const { parentRange, cell } = prepareTestWorksheet();
+      const nonPlanPrinter = Holdings.NonPlanColumn.asChildOf(parentRange);
+      for (const stockClass of stockClassModels) {
+        nonPlanPrinter.write(stockClass, model);
+      }
+      expect(cell("A1").value).toBe("Common Stock A Non-Plan Awards");
+      expect(cell("B1").value).toBe("Common Stock B Non-Plan Awards");
+    });
+
+    test("holdings for stakeholder", () => {
+      const { parentRange, cell } = prepareTestWorksheet();
+
+      const stakeholderPrinter =
+        Holdings.StakeholderColumn.asChildOf(parentRange);
+      stakeholderPrinter.write(model.stakeholders);
+
+      const nonPlanPrinter = Holdings.NonPlanColumn.asChildOf(parentRange);
+      for (const stockClass of stockClassModels) {
+        nonPlanPrinter.write(stockClass, model);
+      }
+      expect(cell("A1").value).toBe("Stakeholder");
+      expect(cell("A2").value).toBe("Stockholder 1");
+      expect(cell("A3").value).toBe("Optionholder 42");
+      expect(cell("B1").value).toBe("Common Stock A Non-Plan Awards");
+      expect(cell("B2").value).toBe(50);
+      expect(cell("B3").value).toBe(50);
+      expect(cell("C1").value).toBe("Common Stock B Non-Plan Awards");
+      expect(cell("C2").value).toBe(50);
+      expect(cell("C3").value).toBe(50);
+      expect(cell("A7").value).toBe("Total");
+      expect(cell("B7").formula).toBe("=SUM(B2:B3)");
+      expect(cell("C7").formula).toBe("=SUM(C2:C3)");
+    });
+  });
+
   describe(Holdings.FullyDilutedShares, () => {
     const stockPlanModels = Array.of(
       {

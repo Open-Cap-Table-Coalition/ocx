@@ -463,22 +463,100 @@ describe(OCX.Model, () => {
         model.getStakeholderWarrantHoldings(model.stakeholders[0], security)
       ).toEqual(8.5);
     });
+    let securityIncrementer = 0;
+    /* eslint-disable @typescript-eslint/no-explicit-any */
+    function fakeWarrantTxn(
+      type: string,
+      attrs: { [x: string]: string | Array<any> }
+    ) {
+      securityIncrementer += 1;
+
+      return {
+        object_type: `TX_${type}`,
+        security_id: `security-${securityIncrementer}`,
+        ...attrs,
+      };
+    }
   });
 
-  let securityIncrementer = 0;
-  /* eslint-disable @typescript-eslint/no-explicit-any */
-  function fakeWarrantTxn(
-    type: string,
-    attrs: { [x: string]: string | Array<any> }
-  ) {
-    securityIncrementer += 1;
+  describe("non plan awards", () => {
+    test("target class for non plan awards", () => {
+      const model = subject();
+      const holder = fakeStakeholder("Fake Holder");
+      const fakeCommon = fakeCommonStockClass("Fake Common");
+      const fakeCommon2 = fakeCommonStockClass("Fake Common 2");
+      const fakePreferred = fakePreferredStockClass(
+        "Fake Preferred 1",
+        {
+          convertsFrom: "2",
+          to: "4",
+          converts_to_stock_class_id: fakeCommon.id,
+        },
+        "NORMAL"
+      );
+      const fakePreferred2 = fakePreferredStockClass(
+        "Fake Preferred 2",
+        {
+          convertsFrom: "4",
+          to: "2",
+          converts_to_stock_class_id: fakeCommon2.id,
+        },
+        "NORMAL"
+      );
 
-    return {
-      object_type: `TX_${type}`,
-      security_id: `security-${securityIncrementer}`,
-      ...attrs,
-    };
-  }
+      model.consume(fakePreferred);
+      model.consume(fakePreferred2);
+
+      model.consume(fakeCommon);
+      model.consume(fakeCommon2);
+
+      model.consume(holder);
+
+      model.consume(
+        fakeNonPlanTxn("EQUITY_COMPENSATION_ISSUANCE", {
+          quantity: "10",
+          stakeholder_id: "Fake Holder",
+          stock_class_id: fakePreferred.id,
+        })
+      );
+
+      model.consume(
+        fakeNonPlanTxn("EQUITY_COMPENSATION_ISSUANCE", {
+          quantity: "17",
+          stakeholder_id: "Fake Holder",
+          stock_class_id: fakePreferred2.id,
+        })
+      );
+      expect(Array.from(model.nonPlanStockIds)[0]).toBe("Fake Preferred 1");
+      expect(model.getConversionCommonStockClass(fakePreferred)).toEqual({
+        display_name: fakeCommon.name,
+        is_preferred: false,
+        board_approval_date: null,
+      });
+      expect(model.getStockClassConversionRatio(fakePreferred)).toEqual(2);
+      const security =
+        model.stockClasses.find((cls) => cls.id === "Fake Preferred 2") ||
+        model.stakeholders[1];
+      expect(
+        model.getStakeholderNonPlanHoldings(model.stakeholders[0], security)
+      ).toEqual(8.5);
+    });
+
+    let securityIncrementer = 0;
+    /* eslint-disable @typescript-eslint/no-explicit-any */
+    function fakeNonPlanTxn(
+      type: string,
+      attrs: { [x: string]: string | Array<any> }
+    ) {
+      securityIncrementer += 1;
+
+      return {
+        object_type: `TX_${type}`,
+        security_id: `security-${securityIncrementer}`,
+        ...attrs,
+      };
+    }
+  });
 
   function fakeStockIssuanceForStakeholder(id: string, stock_id: string) {
     return [
