@@ -16,7 +16,6 @@ import {
   ConversionRatioCalculator,
   WarrantSharesCalculator,
 } from "./calculations";
-import Logger from "../logging";
 
 interface StockClassModel extends WorkbookStockClassModel {
   board_approval_date: Date | null;
@@ -150,6 +149,16 @@ class Model implements WorkbookModel {
   ) {
     const calculator = new OutstandingStockPlanCalculator();
 
+    // get stock class for this plan
+    // get ratio if stock class is preferred
+    const stockClass = this.stockClasses_.find(
+      (cls) => cls.id === stockPlan.stock_class_id
+    );
+    let ratio = 1;
+    if (stockClass?.is_preferred) {
+      ratio = this.getStockClassConversionRatio(stockClass);
+    }
+
     const issuanceSecurityIds =
       this.issuedSecuritiesByStakeholderAndStockPlanIds_.get(
         `${stakeholder.id}/${stockPlan.id}`
@@ -160,7 +169,7 @@ class Model implements WorkbookModel {
       }
     }
 
-    return calculator.value;
+    return calculator.value * ratio;
   }
 
   public getStakeholderWarrantHoldings(
@@ -168,6 +177,11 @@ class Model implements WorkbookModel {
     stockClass: WorkbookStockClassModel
   ) {
     const calculator = new WarrantSharesCalculator();
+    // get ratio if stock class is preferred
+    let ratio = 1;
+    if (stockClass?.is_preferred) {
+      ratio = this.getStockClassConversionRatio(stockClass);
+    }
 
     const issuanceSecurityIds =
       this.issuedSecuritiesByStakeholderAndWarrantStockIds_.get(
@@ -180,7 +194,7 @@ class Model implements WorkbookModel {
       }
     }
 
-    return calculator.value;
+    return calculator.value * ratio;
   }
 
   public getOptionsRemainingForIssuance(stockPlan: WorkbookStockPlanModel) {
@@ -294,6 +308,7 @@ class Model implements WorkbookModel {
       plan_name: value?.plan_name,
       board_approval_date,
       initial_shares_reserved: value?.initial_shares_reserved,
+      stock_class_id: value?.stock_class_id,
     });
   }
 
@@ -369,6 +384,20 @@ class Model implements WorkbookModel {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  public getConversionCommonStockClass(value: any): any {
+    if (value?.is_preferred === false) {
+      return value;
+    }
+    const path = this.ratioCalculator.findRatio(value.id).path;
+    const stockClass = path[path.length - 1];
+    return {
+      display_name: stockClass.name,
+      is_preferred: false,
+      board_approval_date: null,
+    };
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private getStockClassRoundingType(value: any): string {
     const mechanism = Array.of(value).flat()[0]?.conversion_mechanism;
     const roundingType = mechanism?.rounding_type || "NORMAL";
@@ -379,7 +408,6 @@ class Model implements WorkbookModel {
   private getStockClassIdForWarrant(value: any): string | undefined {
     for (const trigger of value.exercise_triggers) {
       if (trigger?.conversion_right?.converts_to_stock_class_id !== undefined) {
-        Logger.info(trigger.conversion_right.converts_to_stock_class_id);
         return trigger.conversion_right.converts_to_stock_class_id;
       }
     }
