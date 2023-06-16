@@ -35,6 +35,8 @@ export interface Model {
 
   warrantStockIds?: Set<string>;
 
+  nonPlanStockIds?: Set<string>;
+
   getStakeholderStockHoldings?: (
     stakeholder: StakeholderModel,
     stockClass: StockClassModel
@@ -46,6 +48,11 @@ export interface Model {
   ) => number;
 
   getStakeholderWarrantHoldings?: (
+    stakeholder: StakeholderModel,
+    stockClass: StockClassModel
+  ) => number;
+
+  getStakeholderNonPlanHoldings?: (
     stakeholder: StakeholderModel,
     stockClass: StockClassModel
   ) => number;

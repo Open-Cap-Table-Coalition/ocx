@@ -88,7 +88,28 @@ class StakeholderSheet {
       }
     }
     for (const stockClass of warrantStockClasses) {
-      new Holdings.WarrantColumn(holdingsTable).write(stockClass, this.model);
+      const warrantRange = new Holdings.WarrantColumn(holdingsTable).write(
+        stockClass,
+        this.model
+      );
+      fullyDilutedRanges.push(warrantRange.getExtents());
+    }
+
+    const nonPlanStockClasses = [];
+    for (const id of this.nonPlanStockIds) {
+      const stockClass = this.stockClasses.find(
+        (stockClass) => stockClass.id === id
+      );
+      if (stockClass !== undefined) {
+        nonPlanStockClasses.push(stockClass);
+      }
+    }
+    for (const stockClass of nonPlanStockClasses) {
+      const nonPlanRange = new Holdings.NonPlanColumn(holdingsTable).write(
+        stockClass,
+        this.model
+      );
+      fullyDilutedRanges.push(nonPlanRange.getExtents());
     }
 
     new Holdings.TotalOutstanding(holdingsTable).write(outstandingRanges);
@@ -106,6 +127,10 @@ class StakeholderSheet {
 
   private get warrantStockIds() {
     return this.model.warrantStockIds || [];
+  }
+
+  private get nonPlanStockIds() {
+    return this.model.nonPlanStockIds || [];
   }
 
   private stockColumns() {

@@ -103,7 +103,7 @@ export class StockClassOutstandingColumn {
     myColumn
       .createNestedRange()
       .addBlankCell(Styles.default)
-      .addCell(0)
+      .addCell(0, Styles.default)
       .addBlankCell(Styles.default)
       .addSumFor(myData, Styles.footer);
 
@@ -177,7 +177,7 @@ export class StockClassAsConvertedColumn {
     myColumn
       .createNestedRange()
       .addBlankCell(Styles.default)
-      .addCell(0)
+      .addCell(0, Styles.default)
       .addBlankCell(Styles.default)
       .addSumFor(myData, Styles.footer);
 
@@ -317,7 +317,7 @@ export class WarrantColumn {
     myColumn
       .createNestedRange()
       .addBlankCell(Styles.default)
-      .addCell(0)
+      .addCell(0, Styles.default)
       .addBlankCell(Styles.default)
       .addSumFor(myData, Styles.footer);
 
@@ -337,6 +337,74 @@ export class WarrantColumn {
 
   public static asChildOf(parent: WorksheetRangePrinter) {
     return new WarrantColumn(parent);
+  }
+}
+
+export class NonPlanColumn {
+  public constructor(private readonly parent: WorksheetRangePrinter) {}
+
+  public write(
+    stockClass: StockClassModel,
+    model: Model
+  ): WorksheetRangePrinter {
+    const myColumn = this.parent.createNestedRange({
+      orientation: "top-to-bottom",
+    });
+    let targetClass = stockClass;
+
+    // if class is preferred
+    // get target common class
+    if (stockClass.is_preferred) {
+      targetClass = model.getConversionCommonStockClass
+        ? model.getConversionCommonStockClass(stockClass)
+        : stockClass;
+    }
+
+    myColumn
+      .createNestedRange({
+        style: Styles.subheader,
+        rowHeight: 50.0,
+      })
+      .addCell(this.nonPlanHeadingFor(targetClass));
+
+    const myData = myColumn.createNestedRange({
+      style: Styles.default,
+    });
+
+    let largestHolding = 0;
+    model.stakeholders.forEach((s) => {
+      const holding = model.getStakeholderNonPlanHoldings
+        ? model.getStakeholderNonPlanHoldings(s, stockClass)
+        : 0;
+      myData.addCell(holding);
+      if (holding > largestHolding) {
+        largestHolding = holding;
+      }
+    });
+
+    myColumn
+      .createNestedRange()
+      .addBlankCell(Styles.default)
+      .addCell(0, Styles.default)
+      .addBlankCell(Styles.default)
+      .addSumFor(myData, Styles.footer);
+
+    myColumn.setWidth(
+      Math.max(
+        14,
+        (largestHolding * model.stakeholders.length).toString().length
+      )
+    );
+
+    return myData;
+  }
+
+  private nonPlanHeadingFor(stockClass: StockClassModel) {
+    return `${stockClass.display_name} Non-Plan Awards`;
+  }
+
+  public static asChildOf(parent: WorksheetRangePrinter) {
+    return new NonPlanColumn(parent);
   }
 }
 
@@ -368,8 +436,8 @@ export class TotalOutstanding {
 
     myColumn
       .createNestedRange()
-      .addBlankCell(Styles.default)
-      .addCell(0)
+      .addBlankCell(Styles.withLeftHandBorder(Styles.default))
+      .addCell(0, Styles.withLeftHandBorder(Styles.default))
       .addBlankCell(Styles.withLeftHandBorder(Styles.default))
       .addSumFor(myData, Styles.withLeftHandBorder(Styles.footer));
 
@@ -402,7 +470,7 @@ export class TotalAsConverted {
     const myTotal = myColumn
       .createNestedRange()
       .addBlankCell(Styles.default)
-      .addCell(0)
+      .addCell(0, Styles.default)
       .addBlankCell(Styles.default)
       .addSumFor(myData, Styles.footer);
 
@@ -442,7 +510,7 @@ export class TotalAsConverted {
     myColumn
       .createNestedRange()
       .addBlankCell(Styles.default)
-      .addCell(0)
+      .addCell(0, Styles.default)
       .addBlankCell(Styles.default)
       .addSumFor(myData, Styles.footer__percentage);
 
@@ -482,7 +550,7 @@ export class FullyDilutedShares {
     const myTotal = myColumn
       .createNestedRange()
       .addBlankCell(Styles.default)
-      .addCell(0)
+      .addCell(0, Styles.default)
       .addBlankCell(Styles.default)
       .addSumFor(myData, Styles.footer);
 
@@ -522,7 +590,7 @@ export class FullyDilutedShares {
     myColumn
       .createNestedRange()
       .addBlankCell(Styles.default)
-      .addCell(0)
+      .addCell(0, Styles.default)
       .addBlankCell(Styles.default)
       .addSumFor(myData, Styles.footer__percentage);
 
