@@ -128,7 +128,7 @@ export class StockClassOutstandingColumn {
       const ratioToFourPlaces = ratio.toFixed(4);
       suffix = `\n(outstanding) (${
         ratio !== Number(ratioToFourPlaces) ? "~" : ""
-      } ${ratioToFourPlaces})`;
+      }${ratioToFourPlaces})`;
     }
 
     return `${stockClass.display_name}${suffix}`;

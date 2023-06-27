@@ -449,7 +449,7 @@ describe("Holdings Columns", () => {
       );
 
       expect(cell("A1").value).toBe(
-        "Class A Preferred Stock Converted\n(outstanding) (~ 2.6667)"
+        "Class A Preferred Stock Converted\n(outstanding) (~2.6667)"
       );
       expect(cell("B1").value).toBe(
         "Class A Preferred Stock Converted\n(as converted)"
