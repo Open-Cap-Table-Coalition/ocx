@@ -35,6 +35,8 @@ export interface Model {
 
   warrantStockIds?: Set<string>;
 
+  warrantsSources?: Map<string, string>;
+
   nonPlanStockIds?: Set<string>;
 
   getStakeholderStockHoldings?: (
@@ -87,4 +89,10 @@ export interface WorksheetLinePrinter {
   ) => void;
   setRowHeight: (row: number, height: number) => void;
   setColWidth: (col: number, width: number) => void;
+  mergeCells(
+    startRow: number,
+    startCol: number,
+    endRow: number,
+    endCol: number
+  ): void;
 }
