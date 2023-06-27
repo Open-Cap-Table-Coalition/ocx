@@ -695,13 +695,13 @@ export class WarrantsNotes {
       case "MACHINE_ESTIMATED":
         return "Reflects the machine estimated amount of an adjustable warrant.";
       case "INSTRUMENT_FIXED":
-        return "Reflects the fixed amount of an adjustable warrant.";
+        return "Reflects the fixed amount of a warrant.";
       case "INSTRUMENT_MAX":
         return "Reflects the maximum amount of an adjustable warrant.";
       case "INSTRUMENT_MIN":
         return "Reflects the minimum amount of an adjustable warrant.";
       default:
-        return "There is no specified source for this warrant";
+        return "There is no specified source for the amount of this warrant";
         break;
     }
   }

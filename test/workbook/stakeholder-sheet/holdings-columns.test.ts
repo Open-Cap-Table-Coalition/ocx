@@ -445,7 +445,7 @@ describe("Holdings Columns", () => {
       WarrantsNotesPrinter.write("UNSPECIFIED", { value: 3 });
 
       expect(cell("A1").value).toBe(
-        "*** {Notes re: warrant from vendor} There is no specified source for this warrant"
+        "*** {Notes re: warrant from vendor} There is no specified source for the amount of this warrant"
       );
     });
   });
