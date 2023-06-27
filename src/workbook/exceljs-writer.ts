@@ -65,6 +65,17 @@ class ExcelJSLinePrinter {
   public setColWidth(col: number, width: number) {
     this.worksheet.getColumn(col).width = width;
   }
+
+  public mergeCells(
+    startRow: number,
+    startCol: number,
+    endRow: number,
+    endCol: number
+  ) {
+    const startAddress = this.worksheet.getCell(startRow, startCol).address;
+    const endAddress = this.worksheet.getCell(endRow, endCol).address;
+    this.worksheet.mergeCells(`${startAddress}:${endAddress}`);
+  }
 }
 
 export default ExcelJSWriter;

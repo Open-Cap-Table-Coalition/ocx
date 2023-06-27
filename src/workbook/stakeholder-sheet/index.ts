@@ -6,7 +6,7 @@ import {
 } from "../interfaces";
 import WorksheetRangePrinter from "../worksheet-range-printer";
 
-import { CapitalizationByStakeholderHeader } from "./headers";
+import { CapitalizationByStakeholderHeader, NotesHeader } from "./headers";
 import * as Holdings from "./holdings-columns";
 import { ExtentsCollection } from "../extents";
 
@@ -19,6 +19,8 @@ class StakeholderSheet {
   ) {
     this.sheet = WorksheetRangePrinter.create(worksheet, "top-to-bottom");
     this.createCapitalizationByStakeholderTable();
+    this.addHorizontalSeparator();
+    this.createNotesTable();
   }
 
   private createCapitalizationByStakeholderTable() {
@@ -117,6 +119,32 @@ class StakeholderSheet {
     new Holdings.FullyDilutedShares(holdingsTable).write(fullyDilutedRanges);
   }
 
+  private addHorizontalSeparator() {
+    this.sheet
+      .createNestedRange({
+        orientation: "left-to-right",
+      })
+      .addBlankCell();
+  }
+
+  private createNotesTable() {
+    new NotesHeader(this.sheet).write();
+    const holdingsTable = this.sheet.createNestedRange({
+      orientation: "top-to-bottom",
+    });
+    const notesObj = { value: 1 };
+    new Holdings.OutstandingNotes(holdingsTable).write(notesObj);
+    new Holdings.FDNotes(holdingsTable).write(notesObj);
+    for (const id of this.warrantStockIds) {
+      const source =
+        this.warrantsSources instanceof Map
+          ? this.warrantsSources.get(id)
+          : "UNSPECIFIED";
+      new Holdings.WarrantsNotes(holdingsTable).write(source, notesObj);
+    }
+    notesObj.value += 1;
+  }
+
   private get stockClasses() {
     return this.model.stockClasses || [];
   }
@@ -131,6 +159,10 @@ class StakeholderSheet {
 
   private get nonPlanStockIds() {
     return this.model.nonPlanStockIds || [];
+  }
+
+  private get warrantsSources() {
+    return this.model.warrantsSources || [];
   }
 
   private stockColumns() {

@@ -601,3 +601,126 @@ export class FullyDilutedShares {
     return new FullyDilutedShares(parent);
   }
 }
+
+export class OutstandingNotes {
+  public constructor(private readonly parent: WorksheetRangePrinter) {}
+
+  public write(notesObj: { value: number }) {
+    const myColumn = this.parent.createNestedRange({
+      orientation: "left-to-right",
+      rowHeight: 28,
+    });
+
+    const notes = "*".repeat(notesObj.value);
+    const content = `${notes} Outstanding Shares include all shares of capital stock that are issued and outstanding, but DO NOT include (1) shares of capital stock underlying outstanding warrants and stock options, (2) shares under Stock Plans remaining for issuance or (3) conversion shares for Outstanding Convertible Securities such as convertible notes or SAFEs.`;
+    notesObj.value += 1;
+    myColumn.addCell(content, {
+      ...Styles.text,
+      alignment: { vertical: "middle", horizontal: "left", wrapText: true },
+    });
+
+    const startColumn = myColumn.getExtents().topLeft.col;
+    const endColumn = myColumn.getExtents().btmRight.col + 9;
+    const row = myColumn.getCurrentRow();
+
+    myColumn.mergeCells(row, startColumn, row, endColumn);
+
+    myColumn.break();
+  }
+
+  public static asChildOf(parent: WorksheetRangePrinter) {
+    return new OutstandingNotes(parent);
+  }
+}
+
+export class FDNotes {
+  public constructor(private readonly parent: WorksheetRangePrinter) {}
+
+  public write(notesObj: { value: number }) {
+    const myColumn = this.parent.createNestedRange({
+      orientation: "left-to-right",
+      rowHeight: 28,
+    });
+
+    const notes = "*".repeat(notesObj.value);
+    const content = `${notes} Fully Diluted Shares and % Fully Diluted include (1) Outstanding Shares (as converted to Common Stock), (2) shares of capital stock underlying outstanding warrants and stock options, (3) shares under Stock Plans remaining for issuance, but DO NOT include conversion shares for Outstanding Convertible Securities such as convertible notes or SAFEs.`;
+    notesObj.value += 1;
+    myColumn.addCell(content, {
+      ...Styles.text,
+      alignment: { vertical: "middle", horizontal: "left", wrapText: true },
+    });
+    const startColumn = myColumn.getExtents().topLeft.col;
+    const endColumn = myColumn.getExtents().btmRight.col + 9;
+    const row = myColumn.getCurrentRow();
+
+    myColumn.mergeCells(row, startColumn, row, endColumn);
+  }
+
+  public static asChildOf(parent: WorksheetRangePrinter) {
+    return new FDNotes(parent);
+  }
+}
+
+export class WarrantsNotes {
+  public constructor(private readonly parent: WorksheetRangePrinter) {}
+
+  public write(source: string | undefined, notesObj: { value: number }) {
+    const myColumn = this.parent.createNestedRange({
+      orientation: "left-to-right",
+    });
+    const notes = "*".repeat(notesObj.value);
+    const content = `${notes} {Notes re: warrant from vendor} ${this.getNotes(
+      source
+    )}`;
+    myColumn.addCell(content, {
+      ...Styles.text,
+      alignment: { vertical: "middle", horizontal: "left", wrapText: true },
+    });
+    const startColumn = myColumn.getExtents().topLeft.col;
+    const endColumn = myColumn.getExtents().btmRight.col + 9;
+    const row = myColumn.getCurrentRow();
+
+    myColumn.mergeCells(row, startColumn, row, endColumn);
+  }
+
+  public static asChildOf(parent: WorksheetRangePrinter) {
+    return new WarrantsNotes(parent);
+  }
+
+  private getNotes(source: string | undefined) {
+    switch (source) {
+      case "HUMAN_ESTIMATED":
+        return "Reflects the human estimated amount of an adjustable warrant.";
+        break;
+      case "MACHINE_ESTIMATED":
+        return "Reflects the machine estimated amount of an adjustable warrant.";
+      case "INSTRUMENT_FIXED":
+        return "Reflects the fixed amount of a warrant.";
+      case "INSTRUMENT_MAX":
+        return "Reflects the maximum amount of an adjustable warrant.";
+      case "INSTRUMENT_MIN":
+        return "Reflects the minimum amount of an adjustable warrant.";
+      default:
+        return "There is no specified source for the amount of this warrant";
+        break;
+    }
+  }
+}
+
+export class HorizontalSeparator {
+  public constructor(private readonly parent: WorksheetRangePrinter) {}
+
+  public write() {
+    const myColumn = this.parent.createNestedRange({
+      orientation: "left-to-right",
+    });
+
+    myColumn
+      .createNestedRange({
+        style: Styles.subheader,
+        rowHeight: 40.0,
+      })
+      .addBlankCell(Styles.default);
+    // myColumn.setWidth(longestStakeholderNameLen);
+  }
+}

@@ -138,6 +138,11 @@ abstract class WorksheetRangePrinter {
     return this;
   }
 
+  public setHeight(height: number): WorksheetRangePrinter {
+    this.printer.setRowHeight(this.cursor.row, height);
+    return this;
+  }
+
   public addCell(
     value: Date | string | number,
     style?: Partial<Style>
@@ -228,6 +233,20 @@ abstract class WorksheetRangePrinter {
       otherRange.extents.btmRight
     );
     return this.addFormulaCell(`SUM(${topLeftCell}:${bottomRightCell})`, style);
+  }
+
+  public mergeCells(
+    startRow: number,
+    startCol: number,
+    endRow: number,
+    endCol: number
+  ) {
+    this.printer.mergeCells(startRow, startCol, endRow, endCol);
+    return this;
+  }
+
+  public getCurrentRow(): number {
+    return this.cursor.row;
   }
 
   public abstract get orientation(): RangePrinterOrientation;

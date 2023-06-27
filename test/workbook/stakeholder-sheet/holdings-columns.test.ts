@@ -405,4 +405,48 @@ describe("Holdings Columns", () => {
       expect(cell("B2").formula).toBe("=CEILING(A2 * 0.7, 1)");
     });
   });
+
+  describe(Holdings.OutstandingNotes, () => {
+    test("outstanding notes", () => {
+      const { parentRange, cell, makeExtents } = prepareTestWorksheet();
+
+      const outstandingNotesPrinter =
+        Holdings.OutstandingNotes.asChildOf(parentRange);
+
+      outstandingNotesPrinter.write({ value: 1 });
+
+      expect(cell("A1").value).toBe(
+        "* Outstanding Shares include all shares of capital stock that are issued and outstanding, but DO NOT include (1) shares of capital stock underlying outstanding warrants and stock options, (2) shares under Stock Plans remaining for issuance or (3) conversion shares for Outstanding Convertible Securities such as convertible notes or SAFEs."
+      );
+    });
+  });
+
+  describe(Holdings.FDNotes, () => {
+    test("FD notes", () => {
+      const { parentRange, cell, makeExtents } = prepareTestWorksheet();
+
+      const FDNotesPrinter = Holdings.FDNotes.asChildOf(parentRange);
+
+      FDNotesPrinter.write({ value: 2 });
+
+      expect(cell("A1").value).toBe(
+        "** Fully Diluted Shares and % Fully Diluted include (1) Outstanding Shares (as converted to Common Stock), (2) shares of capital stock underlying outstanding warrants and stock options, (3) shares under Stock Plans remaining for issuance, but DO NOT include conversion shares for Outstanding Convertible Securities such as convertible notes or SAFEs."
+      );
+    });
+  });
+
+  describe(Holdings.WarrantsNotes, () => {
+    test("Warrants notes", () => {
+      const { parentRange, cell, makeExtents } = prepareTestWorksheet();
+
+      const WarrantsNotesPrinter =
+        Holdings.WarrantsNotes.asChildOf(parentRange);
+
+      WarrantsNotesPrinter.write("UNSPECIFIED", { value: 3 });
+
+      expect(cell("A1").value).toBe(
+        "*** {Notes re: warrant from vendor} There is no specified source for the amount of this warrant"
+      );
+    });
+  });
 });

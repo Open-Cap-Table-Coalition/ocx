@@ -35,6 +35,7 @@ class Model implements WorkbookModel {
   private ratioCalculator = new ConversionRatioCalculator();
   public warrantStockIds: Set<string> = new Set();
   public nonPlanStockIds: Set<string> = new Set();
+  public warrantsSources = new Map<string, string>();
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private transactionsBySecurityId_ = new Map<string, Set<any>>();
@@ -372,6 +373,11 @@ class Model implements WorkbookModel {
         ids.add(value.security_id);
         this.issuedSecuritiesByStakeholderAndWarrantStockIds_.set(key, ids);
         this.warrantStockIds.add(stock_class_id);
+        const source =
+          value.quantity_source !== undefined
+            ? value.quantity_source
+            : "UNSPECIFIED";
+        this.warrantsSources.set(stock_class_id, source);
       }
     }
     const txns =
