@@ -404,6 +404,57 @@ describe("Holdings Columns", () => {
       expect(cell("A2").value).toBe(50);
       expect(cell("B2").formula).toBe("=CEILING(A2 * 0.7, 1)");
     });
+
+    test("indicator for approximated conversion stock multiplier", () => {
+      const modelWithRoundedRatio = {
+        asOfDate: new Date(),
+        issuerName: "Fred",
+        stakeholders: Array.of(
+          {
+            display_name: "Stockholder 1",
+          },
+          {
+            display_name: "Optionholder 42",
+          }
+        ),
+        // eslint-disable-next-line
+        /* eslint-disable @typescript-eslint/no-unused-vars */
+        /* eslint-disable @typescript-eslint/no-explicit-any */
+        getStakeholderStockHoldings: (stakeholder: any, stockClass: any) => {
+          return 50;
+        },
+
+        getStockClassConversionRatio: (stockClass: any) => {
+          return 2.66666665;
+        },
+      };
+      const stockClasses = Array.of({
+        display_name: "Class A Preferred Stock Converted",
+        is_preferred: true,
+      });
+      const { parentRange, cell, makeExtents } = prepareTestWorksheet();
+
+      const stockClassPrinter =
+        Holdings.StockClassOutstandingColumn.asChildOf(parentRange);
+      const stockConvertedPrinter =
+        Holdings.StockClassAsConvertedColumn.asChildOf(parentRange);
+      const outstandingRange = stockClassPrinter.write(
+        stockClasses[0],
+        modelWithRoundedRatio
+      );
+      stockConvertedPrinter.write(
+        stockClasses[0],
+        outstandingRange,
+        modelWithRoundedRatio
+      );
+
+      expect(cell("A1").value).toBe(
+        "Class A Preferred Stock Converted\n(outstanding) (~2.6667)"
+      );
+      expect(cell("B1").value).toBe(
+        "Class A Preferred Stock Converted\n(as converted)"
+      );
+    });
   });
 
   describe(Holdings.OutstandingNotes, () => {

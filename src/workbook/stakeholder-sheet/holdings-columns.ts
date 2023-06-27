@@ -122,10 +122,13 @@ export class StockClassOutstandingColumn {
   ) {
     let suffix = "";
     if (stockClass.is_preferred) {
-      const ratioToFourPlaces = model.getStockClassConversionRatio
+      const ratio = model.getStockClassConversionRatio
         ? model.getStockClassConversionRatio(stockClass)
         : 1;
-      suffix = `\n(outstanding) (${ratioToFourPlaces.toFixed(4)})`;
+      const ratioToFourPlaces = ratio.toFixed(4);
+      suffix = `\n(outstanding) (${
+        ratio !== Number(ratioToFourPlaces) ? "~" : ""
+      }${ratioToFourPlaces})`;
     }
 
     return `${stockClass.display_name}${suffix}`;
