@@ -322,6 +322,7 @@ describe("Holdings Columns", () => {
       expect(cell("A3").formula).toBe("=SUM(X3,Y3)");
       expect(cell("B2").formula).toBe("=A2 / $A$7");
       expect(cell("B3").formula).toBe("=A3 / $A$7");
+      expect(cell("B2").style.numFmt).toEqual("0.00%;[Red]-0.00%;-;@");
     });
   });
 
