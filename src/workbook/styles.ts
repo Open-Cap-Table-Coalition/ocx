@@ -66,7 +66,7 @@ class Styles {
   public static get default__percentage(): Partial<Style> {
     return {
       ...Styles.default,
-      numFmt: "0.00%",
+      numFmt: "0.00%;[Red]-0.00%;-;@",
     };
   }
 
